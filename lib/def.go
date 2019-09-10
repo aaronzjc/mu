@@ -54,13 +54,13 @@ type Spider interface {
 	Store(page Page) bool
 }
 
-func (s *Site) Craw(link Link) (Page, error) {
+func (s *Site) Craw(link Link, headers map[string]string) (Page, error) {
 	var page Page
 	var err error
 	if s.CrawType == CrawApi {
 		page, err = CrawJSON(link)
 	} else if s.CrawType == CrawHtml {
-		page, err = CrawHTML(link)
+		page, err = CrawHTML(link, headers)
 	} else {
 		err = errors.New("[error] No matched CrawType")
 	}

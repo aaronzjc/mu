@@ -37,10 +37,15 @@ func CrawJSON(link Link) (Page, error) {
 	}, nil
 }
 
-func CrawHTML(link Link) (Page, error) {
+func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", link.Url, nil)
 	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
+	if len(headers) > 0 {
+		for k, v := range headers {
+			req.Header.Add(k, v)
+		}
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("[error] CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())

@@ -74,11 +74,22 @@
 <script type="text/javascript">
     var vn = new Vue({
         el: "#app",
-        beforeCreate: function () {
+        created: function () {
             this.fetchConfig(this.fetchList);
         },
         data: {
-            tabs: [],
+            tabs: [
+                {
+                    "name": "",
+                    "key": undefined,
+                    "tags": [
+                        {
+                            "name": "",
+                            "key": undefined
+                        }
+                    ]
+                }
+            ],
             selected: {
                 tab: 0,
                 tag: 0
@@ -97,6 +108,11 @@
                 })
             },
             fetchList: function () {
+                var key = this.tabs[this.selected.tab]["key"];
+                var hkey = this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"];
+                if (hkey === undefined || key === undefined) {
+                    return false;
+                }
                 axios.get('http://mu.memosa.cn/aj', {
                     params: {
                         key: this.tabs[this.selected.tab]["key"],

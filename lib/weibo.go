@@ -41,7 +41,7 @@ func (w *Weibo) BuildUrl() ([]Link, error) {
 }
 
 func (w *Weibo) CrawPage(link Link) (Page, error) {
-	page, err := w.Craw(link)
+	page, err := w.Craw(link, nil)
 	if err != nil {
 		return Page{}, err
 	}
