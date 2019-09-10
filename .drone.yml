@@ -34,3 +34,8 @@ steps:
       registry: uhub.service.ucloud.cn
       repo: uhub.service.ucloud.cn/memosa/mu
       tags: latest
+
+volumes:
+  - name: dockercache
+    host:
+      path: /cache/docker
