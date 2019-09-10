@@ -19,5 +19,5 @@ COPY ./bin/mu /app/
 COPY ./public /app/
 RUN chown -R app:app /app
 USER app
-EXPOSE 80
+EXPOSE 7980
 CMD ["/app/mu"]

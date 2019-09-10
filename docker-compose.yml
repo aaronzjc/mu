@@ -19,7 +19,7 @@ services:
   mu:
     image: uhub.service.ucloud.cn/memosa/mu:latest
     ports:
-      - 7788:80
+      - 7980:7980
     depends_on:
       - redis
     networks:
