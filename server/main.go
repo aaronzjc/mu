@@ -74,7 +74,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 
 	// 微博
 	weibo := Tab{
-		Name: "抽屉",
+		Name: "微博",
 		Key: lib.RedisWeibo,
 		Tags: (func() []Tag {
 			var tags []Tag

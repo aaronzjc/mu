@@ -71,7 +71,7 @@ func RedisConn() *redis.Client {
 	})
 }
 
-func SaveToRedis(key string,hkey string, data string) {
+func SaveToRedis(key string, hkey string, data string) {
 	client := RedisConn()
 	client.HSet(key, hkey, data)
 }

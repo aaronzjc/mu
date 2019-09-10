@@ -81,7 +81,7 @@ func CrawSite() {
 
 func main() {
 	cron := cron.New()
-	cron.AddFunc("0 0/5 * * *", func() {
+	cron.AddFunc("0 * * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
 	})
