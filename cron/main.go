@@ -4,6 +4,7 @@ import (
 	"crawler/lib"
 	"github.com/robfig/cron"
 	"fmt"
+	"log"
 )
 
 var linkPool = make(chan lib.Link, 3)
@@ -81,10 +82,10 @@ func CrawSite() {
 
 func main() {
 	cron := cron.New()
-	cron.AddFunc("0 * * * *", func() {
+	log.Fatal(cron.AddFunc("0 * * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
-	})
+	}))
 	cron.Start()
 
 	CrawSite()
