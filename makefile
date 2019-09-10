@@ -1,3 +1,4 @@
+CGO_ENABLED=0
 GO111MODULE=on
 GOOS=linux
 
