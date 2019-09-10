@@ -12,7 +12,7 @@ steps:
     image: plugins/docker
     settins:
       repo: uhub.service.ucloud.cn/memosa/crawler
-      target: crawler
+      build_target: crawler
       tags: latest
       username:
         from_secret: docker_user
@@ -27,7 +27,7 @@ steps:
         path: /var/lib/docker
     settins:
       repo: uhub.service.ucloud.cn/memosa/mu
-      target: mu
+      build_target: mu
       tags: latest
       username:
         from_secret: docker_user
