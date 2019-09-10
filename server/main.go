@@ -98,7 +98,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 
 func aj(w http.ResponseWriter, req *http.Request) {
 	client := redis.NewClient(&redis.Options{
-		Addr: "crawler:6379",
+		Addr: "10.8.77.119:6379",
 	})
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
