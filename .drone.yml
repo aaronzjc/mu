@@ -31,3 +31,17 @@ steps:
       password:
         from_secret: docker_password
       registry: uhub.service.ucloud.cn
+
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host: 152.32.170.64.ipssh.net
+      username: jincheng
+      password:
+        from_secret: host_password
+      port: 22
+      script:
+        - cd /data/docker_services/services
+        - docker-compose -f crawler.yml down
+        - docker-compose -f crawler.yml pull
+        - docker-compose -f crawler.yml up -d
