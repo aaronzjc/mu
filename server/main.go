@@ -115,7 +115,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var hotJson lib.HotJson
-	err := json.Unmarshal([]byte(data), &hotJson)
+	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
 		log.Fatalf("[error] aj req error " + err.Error())
 		w.Write([]byte(`{"list": []}`))
