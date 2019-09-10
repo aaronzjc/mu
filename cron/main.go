@@ -2,8 +2,8 @@ package main
 
 import (
 	"crawler/lib"
-	"github.com/robfig/cron"
 	"fmt"
+	"github.com/robfig/cron"
 	"log"
 )
 
@@ -82,10 +82,15 @@ func CrawSite() {
 
 func main() {
 	cron := cron.New()
-	log.Fatal(cron.AddFunc("0 * * * *", func() {
+	err := cron.AddFunc("0 */15 * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
-	}))
+	})
+
+	if err != nil {
+		log.Fatal("[error] cron add err " + err.Error())
+		return
+	}
 	cron.Start()
 
 	CrawSite()
