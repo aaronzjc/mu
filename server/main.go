@@ -106,9 +106,9 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	data, _ := client.HGet(key, hkey).Result()
+	data, err := client.HGet(key, hkey).Result()
 
-	if data == "" {
+	if err != nil {
 		log.Fatalf("[info] aj req empty ")
 		w.Write([]byte(`{"list": []}`))
 		return
