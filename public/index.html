@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MU</title>
     <link rel="stylesheet" href="asserts/bulma.min.css">
-    <script defer src="asserts/all.js"></script>
+    <link rel="stylesheet" href="asserts/nprogress.css">
     <script src="asserts/vue.js"></script>
-    <script src="asserts/axios.min.js"></script>
+    <script type="text/javascript" src="asserts/axios.min.js"></script>
+    <script type="text/javascript" src="asserts/nprogress.js"></script>
     <style>
         .section {
             padding-top: 1rem;
@@ -108,6 +109,7 @@
                 })
             },
             fetchList: function () {
+                NProgress.start();
                 var key = this.tabs[this.selected.tab]["key"];
                 var hkey = this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"];
                 if (hkey === undefined || key === undefined) {
@@ -121,6 +123,7 @@
                 }).then(function (resp) {
                     var list = resp.data.list;
                     this.list = list;
+                    NProgress.done();
                 }.bind(this)).catch(function (err) {
 
                 })
