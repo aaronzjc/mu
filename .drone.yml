@@ -12,8 +12,8 @@ steps:
     image: plugins/docker
     settins:
       repo: uhub.service.ucloud.cn/memosa/crawler
-      build_target: crawler
-      tags: latest
+      target: crawler
+      tags: ["latest"]
       username:
         from_secret: docker_user
       password:
@@ -22,20 +22,12 @@ steps:
 
   - name: release mu
     image: plugins/docker
-    volumes:
-      - name: dockercache
-        path: /var/lib/docker
     settins:
       repo: uhub.service.ucloud.cn/memosa/mu
-      build_target: mu
-      tags: latest
+      target: mu
+      tags: ["latest"]
       username:
         from_secret: docker_user
       password:
         from_password: docker_password
       registry: uhub.service.ucloud.cn
-
-volumes:
-  - name: dockercache
-    host:
-      path: /cache/docker
