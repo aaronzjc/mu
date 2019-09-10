@@ -81,7 +81,7 @@ func (v *V2ex) CrawPage(link Link) (Page, error) {
 
 func (v *V2ex) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T,
+		T: page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 

@@ -75,7 +75,7 @@ func (w *Weibo) CrawPage(link Link) (Page, error) {
 
 func (w *Weibo) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T,
+		T: page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 

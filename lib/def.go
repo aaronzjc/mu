@@ -44,7 +44,7 @@ type Hot struct {
 }
 
 type HotJson struct {
-	T 			time.Time	`json:"t"`
+	T 			string		`json:"t"`
 	List 		[]Hot 		`json:"list"`
 }
 

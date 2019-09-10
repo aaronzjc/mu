@@ -70,7 +70,7 @@ func (z *Zhihu) CrawPage(link Link) (Page, error) {
 
 func (v *Zhihu) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T,
+		T: page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 

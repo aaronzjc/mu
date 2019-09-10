@@ -42,6 +42,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .hot-ts {
+            color: #939393;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +66,7 @@
                 <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']">{{ tag.name }}</span>
             </div>
         </div>
+        <p class="hot-ts" v-if="t != '' ">更新时间: {{ t }}</p>
         <div class="columns">
             <div class="column hot-list">
                 <div class="hot" v-for="(hot, idx) in list">
@@ -95,7 +100,8 @@
                 tab: 0,
                 tag: 0
             },
-            list: []
+            list: [],
+            t: ""
         },
         methods: {
             fetchConfig: function (callback) {
@@ -123,6 +129,7 @@
                 }).then(function (resp) {
                     var list = resp.data.list;
                     this.list = list;
+                    this.t = resp.data.t;
                     NProgress.done();
                 }.bind(this)).catch(function (err) {
 
