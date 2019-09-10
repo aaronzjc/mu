@@ -17,7 +17,7 @@ steps:
       username:
         from_secret: docker_user
       password:
-        from_password: docker_password
+        from_secret: docker_password
       registry: uhub.service.ucloud.cn
 
   - name: release mu
@@ -29,5 +29,5 @@ steps:
       username:
         from_secret: docker_user
       password:
-        from_password: docker_password
+        from_secret: docker_password
       registry: uhub.service.ucloud.cn
