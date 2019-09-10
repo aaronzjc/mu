@@ -16,7 +16,7 @@ RUN apk add --no-cache ca-certificates tzdata \
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir -p /app/public
 COPY ./bin/mu /app/
-COPY ./public /app/
+COPY ./public /app/public
 RUN chown -R app:app /app
 USER app
 EXPOSE 7980
