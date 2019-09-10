@@ -19,98 +19,74 @@ type Tab struct {
 	Tags 		[]Tag 			`json:"tags"`
 }
 
+func JSON(w http.ResponseWriter, data []byte) {
+	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(data)
+}
+
 func config(w http.ResponseWriter, req *http.Request) {
 	var tabs []Tab
+
+	var fetchTags = func(tabs []map[string]string) []Tag {
+		var tags []Tag
+		for _, v := range tabs {
+			tags = append(tags, Tag{
+				Name: v["name"],
+				Key: v["tag"],
+			})
+		}
+
+		return tags
+	}
+
 	// V2ex
-	v2ex := Tab{
+	tabs = append(tabs, Tab{
 		Name: "v2ex",
 		Key: lib.RedisV2ex,
-		Tags: (func() []Tag {
-			var tags []Tag
-			for _, v := range lib.V2exTabs {
-				tags = append(tags, Tag{
-					Name: v["name"],
-					Key: v["tag"],
-				})
-			}
-			return tags
-		})(),
-	}
-	tabs = append(tabs, v2ex)
+		Tags: fetchTags(lib.V2exTabs),
+	})
 
 	// 抽屉
-	chouti := Tab{
+	tabs = append(tabs, Tab{
 		Name: "抽屉",
 		Key: lib.RedisCt,
-		Tags: (func() []Tag {
-			var tags []Tag
-			for _, v := range lib.ChoutiTabs {
-				tags = append(tags, Tag{
-					Name: v["name"],
-					Key: v["tag"],
-				})
-			}
-			return tags
-		})(),
-	}
-	tabs = append(tabs, chouti)
+		Tags: fetchTags(lib.ChoutiTabs),
+	})
 
 	// 知乎
-	zhihu := Tab{
+	tabs = append(tabs, Tab{
 		Name: "知乎",
 		Key: lib.RedisZhihu,
-		Tags: (func() []Tag {
-			var tags []Tag
-			for _, v := range lib.ZhihuTabs {
-				tags = append(tags, Tag{
-					Name: v["name"],
-					Key: v["tag"],
-				})
-			}
-			return tags
-		})(),
-	}
-	tabs = append(tabs, zhihu)
+		Tags: fetchTags(lib.ZhihuTabs),
+	})
 
 	// 微博
-	weibo := Tab{
+	tabs = append(tabs, Tab{
 		Name: "微博",
 		Key: lib.RedisWeibo,
-		Tags: (func() []Tag {
-			var tags []Tag
-			for _, v := range lib.WeiboTabs {
-				tags = append(tags, Tag{
-					Name: v["name"],
-					Key: v["tag"],
-				})
-			}
-			return tags
-		})(),
-	}
-	tabs = append(tabs, weibo)
+		Tags: fetchTags(lib.WeiboTabs),
+	})
 
 	data, _ := json.Marshal(tabs)
 
-	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write([]byte(data))
+	JSON(w, data)
 }
 
 func aj(w http.ResponseWriter, req *http.Request) {
 	client := redis.NewClient(&redis.Options{
 		Addr: "10.8.77.119:6379",
+		Password: "",
+		DB: 0,
 	})
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
-
-	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	data, err := client.HGet(key, hkey).Result()
 
 	if err != nil {
 		log.Println("[info] aj req empty " + err.Error())
-		w.Write([]byte(`{"list": []}`))
+		JSON(w, []byte(`{"list": []}`))
 		return
 	}
 
@@ -118,14 +94,12 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
 		log.Println("[error] aj req error " + err.Error())
-		w.Write([]byte(`{"list": []}`))
+		JSON(w, []byte(`{"list": []}`))
 		return
 	}
 
 	js, _ := json.Marshal(hotJson)
-	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write([]byte(js))
+	JSON(w, []byte(js))
 }
 
 func main() {
