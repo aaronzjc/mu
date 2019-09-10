@@ -58,7 +58,7 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 
 	var list HotList
 	if err := json.Unmarshal([]byte(page.Content), &list); err != nil {
-		log.Fatalf(err.Error())
+		log.Printf(err.Error())
 		return Page{}, err
 	}
 	if err != nil {
@@ -90,7 +90,7 @@ func (c *Chouti) Store(page Page) bool {
 
 	data, err := json.Marshal(hotJson)
 	if err != nil {
-		log.Fatalf("[error] Json_encode chouti error , err = %s\n", err.Error())
+		log.Printf("[error] Json_encode chouti error , err = %s\n", err.Error())
 		return false
 	}
 	SaveToRedis(RedisCt, page.Link.Tag, string(data))

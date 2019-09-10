@@ -109,7 +109,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	data, err := client.HGet(key, hkey).Result()
 
 	if err != nil {
-		log.Fatalf("[info] aj req empty ")
+		log.Println("[info] aj req empty " + err.Error())
 		w.Write([]byte(`{"list": []}`))
 		return
 	}
@@ -117,7 +117,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	var hotJson lib.HotJson
 	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
-		log.Fatalf("[error] aj req error " + err.Error())
+		log.Println("[error] aj req error " + err.Error())
 		w.Write([]byte(`{"list": []}`))
 		return
 	}

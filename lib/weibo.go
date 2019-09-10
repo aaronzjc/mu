@@ -81,7 +81,7 @@ func (w *Weibo) Store(page Page) bool {
 
 	data, err := json.Marshal(hotJson)
 	if err != nil {
-		log.Fatalf("[error] Json_encode weibo error , err = %s\n", err.Error())
+		log.Printf("[error] Json_encode weibo error , err = %s\n", err.Error())
 		return false
 	}
 	SaveToRedis(RedisWeibo, page.Link.Tag, string(data))

@@ -87,7 +87,7 @@ func (v *V2ex) Store(page Page) bool {
 
 	data, err := json.Marshal(hotJson)
 	if err != nil {
-		log.Fatalf("[error] Json_encode v2ex error , err = %s\n", err.Error())
+		log.Printf("[error] Json_encode v2ex error , err = %s\n", err.Error())
 		return false
 	}
 	SaveToRedis(RedisV2ex, page.Link.Tag, string(data))

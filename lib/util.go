@@ -16,7 +16,7 @@ func CrawJSON(link Link) (Page, error) {
 	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalf("[error] CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
+		log.Printf("[error] CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
 		return Page{}, err
 	}
 
@@ -26,7 +26,7 @@ func CrawJSON(link Link) (Page, error) {
 
 	var list HotList
 	if err := json.Unmarshal(body, &list); err != nil {
-		log.Fatalf(err.Error())
+		log.Printf(err.Error())
 		return Page{}, err
 	}
 
@@ -43,7 +43,7 @@ func CrawHTML(link Link) (Page, error) {
 	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalf("[error] CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
+		log.Printf("[error] CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
 		return Page{}, err
 	}
 
@@ -53,7 +53,7 @@ func CrawHTML(link Link) (Page, error) {
 	bodyStr := string(body)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
 	if err != nil {
-		log.Fatalf("[error] Encode html error , err = %s\n", err.Error())
+		log.Printf("[error] Encode html error , err = %s\n", err.Error())
 	}
 
 	return Page{
