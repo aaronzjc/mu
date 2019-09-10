@@ -103,19 +103,22 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
 
+	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	data, _ := client.HGet(key, hkey).Result()
 
 	var hotJson lib.HotJson
 	err := json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
 		log.Fatalf("[error] aj req error " + err.Error())
-		return
+		w.Write([]byte(`{"list": []}`))
+	} else {
+		js, _ := json.Marshal(hotJson)
+		w.Header().Set("content-type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Write([]byte(js))
 	}
-
-	js, _ := json.Marshal(hotJson)
-	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write([]byte(js))
 }
 
 func main() {
