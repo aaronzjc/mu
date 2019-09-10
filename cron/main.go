@@ -79,11 +79,9 @@ func CrawSite() {
 	}
 }
 
-const DEBUG = true
-
 func main() {
 	cron := cron.New()
-	cron.AddFunc("0 30 * * *", func() {
+	cron.AddFunc("0 0/15 * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
 	})
