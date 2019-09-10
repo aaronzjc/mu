@@ -87,7 +87,7 @@
         },
         methods: {
             fetchConfig: function (callback) {
-                axios.get('http://127.0.0.1:8899/config').then(function (resp) {
+                axios.get('http://mu.memosa.cn/config').then(function (resp) {
                     this.tabs = resp.data;
                     if (typeof callback == "function") {
                         callback();
@@ -97,7 +97,7 @@
                 })
             },
             fetchList: function () {
-                axios.get('http://127.0.0.1:8899/aj', {
+                axios.get('http://mu.memosa.cn/aj', {
                     params: {
                         key: this.tabs[this.selected.tab]["key"],
                         hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]

@@ -82,27 +82,12 @@ func CrawSite() {
 const DEBUG = true
 
 func main() {
-	if DEBUG {
-		AddSites()
-		CrawSite()
-		return
-	}
 	cron := cron.New()
-	cron.AddFunc("0 * * * *", func() {
+	cron.AddFunc("0 30 * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
 	})
 	cron.Start()
 
 	CrawSite()
-
-	//links, _ := v.BuildUrl()
-	//for _, link := range links {
-	//	p, err := v.CrawPage(link)
-	//	if err != nil {
-	//		fmt.Println("%w", err)
-	//		break
-	//	}
-	//	v.Store(p)
-	//}
 }
