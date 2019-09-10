@@ -15,10 +15,10 @@ steps:
         from_secret: docker_user
       password:
         from_password: docker_password
-    target: crawler
-    registry: uhub.service.ucloud.cn
-    repo: uhub.service.ucloud.cn/memosa/crawler
-    tags: latest
+      target: crawler
+      registry: uhub.service.ucloud.cn
+      repo: uhub.service.ucloud.cn/memosa/crawler
+      tags: latest
 
   - name: release mu
     image: plugins/docker
@@ -30,7 +30,7 @@ steps:
         from_secret: docker_user
       password:
         from_password: docker_password
-    target: mu
-    registry: uhub.service.ucloud.cn
-    repo: uhub.service.ucloud.cn/memosa/mu
-    tags: latest
+      target: mu
+      registry: uhub.service.ucloud.cn
+      repo: uhub.service.ucloud.cn/memosa/mu
+      tags: latest
