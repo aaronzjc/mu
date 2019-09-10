@@ -42,6 +42,6 @@ steps:
       port: 22
       script:
         - cd /data/docker_services/services
-        - docker-compose -f crawler.yml down
-        - docker-compose -f crawler.yml pull
-        - docker-compose -f crawler.yml up -d
+        - sudo docker-compose -f crawler.yml down
+        - sudo docker-compose -f crawler.yml pull
+        - sudo docker-compose -f crawler.yml up -d
