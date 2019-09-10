@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MU</title>
+    <link rel="stylesheet" href="asserts/bulma.min.css">
+    <script defer src="asserts/all.js"></script>
+    <script src="asserts/vue.js"></script>
+    <script src="asserts/axios.min.js"></script>
+    <style>
+        .section {
+            padding-top: 1rem;
+        }
+        .logo {
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: Monaco;
+        }
+        .container {
+            width: 960px;
+        }
+        .hot-list {
+            flex-basis: unset;
+            width: 100%;
+        }
+        .tab-tag {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            cursor: pointer;
+        }
+        .hot {
+            width: 100%;
+            height: 2.5rem;
+            line-height: 2.5rem;
+        }
+        .hot a {
+            display: block;
+            max-width: 98%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<section class="section">
+    <div class="container" id="app">
+        <div class="logo">MU</div>
+        <div class="columns">
+            <div class="column">
+                <div class="tabs">
+                    <ul>
+                        <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)"><a>{{ tab.name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column tab-tag tags">
+                <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']">{{ tag.name }}</span>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column hot-list">
+                <div class="hot" v-for="(hot, idx) in list">
+                    <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    var vn = new Vue({
+        el: "#app",
+        created: function () {
+            this.fetchConfig(this.fetchList);
+        },
+        data: {
+            tabs: [],
+            selected: {
+                tab: 0,
+                tag: 0
+            },
+            list: []
+        },
+        methods: {
+            fetchConfig: function (callback) {
+                axios.get('http://127.0.0.1:8899/config').then(function (resp) {
+                    this.tabs = resp.data;
+                    if (typeof callback == "function") {
+                        callback();
+                    }
+                }.bind(this)).catch(function (err) {
+
+                })
+            },
+            fetchList: function () {
+                axios.get('http://127.0.0.1:8899/aj', {
+                    params: {
+                        key: this.tabs[this.selected.tab]["key"],
+                        hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
+                    }
+                }).then(function (resp) {
+                    var list = resp.data.list;
+                    this.list = list;
+                }.bind(this)).catch(function (err) {
+
+                })
+            },
+            switchTab: function (idx) {
+                this.selected.tab = idx;
+                this.selected.tag = 0;
+                this.fetchList()
+            },
+            switchTag: function (idx) {
+                this.selected.tag = idx;
+                this.fetchList()
+            }
+        }
+    })
+</script>
+</body>
+</html>

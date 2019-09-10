@@ -1,0 +1,36 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: build crawler&mu
+    image: golang:1.13-alpine
+    commands:
+      - make crawler
+      - make mu
+
+  - name: release crawler
+    image: plugins/docker
+    settins:
+      username:
+        from_secret: docker_user
+      password:
+        from_password: docker_password
+    target: crawler
+    registry: uhub.service.ucloud.cn
+    repo: uhub.service.ucloud.cn/memosa/crawler
+    tags: latest
+
+  - name: release mu
+    image: plugins/docker
+    volumes:
+      - name: dockercache
+        path: /var/lib/docker
+    settins:
+      username:
+        from_secret: docker_user
+      password:
+        from_password: docker_password
+    target: mu
+    registry: uhub.service.ucloud.cn
+    repo: uhub.service.ucloud.cn/memosa/mu
+    tags: latest
