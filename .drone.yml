@@ -3,7 +3,7 @@ name: default
 
 steps:
   - name: build crawler&mu
-    image: golang:1.13-alpine
+    image: golang:1.13-stretch
     commands:
       - make crawler
       - make mu
