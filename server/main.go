@@ -3,7 +3,6 @@ package main
 import (
 	"crawler/lib"
 	"encoding/json"
-	"fmt"
 	"github.com/go-redis/redis"
 	"log"
 	"net/http"
@@ -125,7 +124,7 @@ func main() {
 	http.HandleFunc("/aj", aj)
 	http.HandleFunc("/config", config)
 
-	fmt.Println("listen on :80")
+	log.Println("listen on :7980")
 
-	http.ListenAndServe(":80", nil)
+	log.Fatal(http.ListenAndServe(":7980", nil))
 }
