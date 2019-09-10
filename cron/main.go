@@ -23,34 +23,42 @@ func AddSites() {
 	var spList []lib.Spider
 	spList = append(spList, &lib.V2ex{
 		Site: lib.Site{
-			Root: "https://www.v2ex.com",
-			Domain: "www.v2ex.com",
-			Desc: "way to explore",
-			CrawType:lib.CrawHtml,
+			Root:     "https://www.v2ex.com",
+			Domain:   "www.v2ex.com",
+			Desc:     "way to explore",
+			CrawType: lib.CrawHtml,
 		},
 	})
 	spList = append(spList, &lib.Chouti{
 		Site: lib.Site{
-			Root: "https://dig.chouti.com",
-			Domain: "https://dig.chouti.com",
-			Desc: "抽屉新热榜",
-			CrawType:lib.CrawApi,
+			Root:     "https://dig.chouti.com",
+			Domain:   "https://dig.chouti.com",
+			Desc:     "抽屉新热榜",
+			CrawType: lib.CrawApi,
 		},
 	})
 	spList = append(spList, &lib.Zhihu{
 		Site: lib.Site{
-			Root: "https://zhihu.com",
-			Domain: "www.zhihu.com",
-			Desc: "知乎热榜",
-			CrawType:lib.CrawHtml,
+			Root:     "https://zhihu.com",
+			Domain:   "www.zhihu.com",
+			Desc:     "知乎热榜",
+			CrawType: lib.CrawHtml,
 		},
 	})
 	spList = append(spList, &lib.Weibo{
 		Site: lib.Site{
-			Root: "https://s.weibo.com",
-			Domain: "www.weibo.com",
-			Desc: "微博热搜",
-			CrawType:lib.CrawHtml,
+			Root:     "https://s.weibo.com",
+			Domain:   "www.weibo.com",
+			Desc:     "微博热搜",
+			CrawType: lib.CrawHtml,
+		},
+	})
+	spList = append(spList, &lib.Hacker{
+		Site: lib.Site{
+			Root:     "https://news.ycombinator.com/",
+			Domain:   "news.ycombinator.com",
+			Desc:     "Hacker News",
+			CrawType: lib.CrawHtml,
 		},
 	})
 
@@ -62,16 +70,16 @@ func AddSites() {
 func CrawSite() {
 	for {
 		select {
-		case l := <- linkPool:
+		case l := <-linkPool:
 			go func() {
 				sp := l.Sp
 				page, err := sp.CrawPage(l)
 				if err != nil {
-					fmt.Println("%w", err)
+					return
 				}
 				pagePool <- page
 			}()
-		case p := <- pagePool:
+		case p := <-pagePool:
 			go func() {
 				sp := p.Link.Sp
 				sp.Store(p)

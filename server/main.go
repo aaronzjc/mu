@@ -9,14 +9,14 @@ import (
 )
 
 type Tag struct {
-	Name 		string 			`json:"name"`
-	Key 		string 			`json:"key"`
+	Name string `json:"name"`
+	Key  string `json:"key"`
 }
 
 type Tab struct {
-	Name 		string 			`json:"name"`
-	Key 		string 			`json:"key"`
-	Tags 		[]Tag 			`json:"tags"`
+	Name string `json:"name"`
+	Key  string `json:"key"`
+	Tags []Tag  `json:"tags"`
 }
 
 func JSON(w http.ResponseWriter, data []byte) {
@@ -33,7 +33,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 		for _, v := range tabs {
 			tags = append(tags, Tag{
 				Name: v["name"],
-				Key: v["tag"],
+				Key:  v["tag"],
 			})
 		}
 
@@ -43,29 +43,36 @@ func config(w http.ResponseWriter, req *http.Request) {
 	// V2ex
 	tabs = append(tabs, Tab{
 		Name: "v2ex",
-		Key: lib.RedisV2ex,
+		Key:  lib.RedisV2ex,
 		Tags: fetchTags(lib.V2exTabs),
 	})
 
 	// 抽屉
 	tabs = append(tabs, Tab{
 		Name: "抽屉",
-		Key: lib.RedisCt,
+		Key:  lib.RedisCt,
 		Tags: fetchTags(lib.ChoutiTabs),
 	})
 
 	// 知乎
 	tabs = append(tabs, Tab{
 		Name: "知乎",
-		Key: lib.RedisZhihu,
+		Key:  lib.RedisZhihu,
 		Tags: fetchTags(lib.ZhihuTabs),
 	})
 
 	// 微博
 	tabs = append(tabs, Tab{
 		Name: "微博",
-		Key: lib.RedisWeibo,
+		Key:  lib.RedisWeibo,
 		Tags: fetchTags(lib.WeiboTabs),
+	})
+
+	// HackerNews
+	tabs = append(tabs, Tab{
+		Name: "Hacker",
+		Key:  lib.RedisHacker,
+		Tags: fetchTags(lib.HackerTabs),
 	})
 
 	data, _ := json.Marshal(tabs)
@@ -75,9 +82,9 @@ func config(w http.ResponseWriter, req *http.Request) {
 
 func aj(w http.ResponseWriter, req *http.Request) {
 	client := redis.NewClient(&redis.Options{
-		Addr: "10.8.77.119:6379",
+		Addr:     "10.8.77.119:6379",
 		Password: "",
-		DB: 0,
+		DB:       0,
 	})
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
@@ -86,7 +93,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		log.Println("[info] aj req empty " + err.Error())
-		JSON(w, []byte(`{"list": []}`))
+		JSON(w, []byte(`{"list": [], "t":""}`))
 		return
 	}
 
@@ -94,7 +101,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
 		log.Println("[error] aj req error " + err.Error())
-		JSON(w, []byte(`{"list": []}`))
+		JSON(w, []byte(`{"list": [], "t":""}`))
 		return
 	}
 
