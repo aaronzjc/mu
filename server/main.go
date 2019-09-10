@@ -108,17 +108,24 @@ func aj(w http.ResponseWriter, req *http.Request) {
 
 	data, _ := client.HGet(key, hkey).Result()
 
+	if data == "" {
+		log.Fatalf("[info] aj req empty ")
+		w.Write([]byte(`{"list": []}`))
+		return
+	}
+
 	var hotJson lib.HotJson
 	err := json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
 		log.Fatalf("[error] aj req error " + err.Error())
 		w.Write([]byte(`{"list": []}`))
-	} else {
-		js, _ := json.Marshal(hotJson)
-		w.Header().Set("content-type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Write([]byte(js))
+		return
 	}
+
+	js, _ := json.Marshal(hotJson)
+	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write([]byte(js))
 }
 
 func main() {
