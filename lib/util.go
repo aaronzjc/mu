@@ -65,7 +65,7 @@ func CrawHTML(link Link) (Page, error) {
 
 func RedisConn() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr: "127.0.0.1:6379",
+		Addr: "crawler:6379",
 	})
 }
 
