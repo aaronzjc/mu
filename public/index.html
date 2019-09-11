@@ -114,7 +114,7 @@
         },
         methods: {
             fetchConfig: function (callback) {
-                axios.get('http://mu.memosa.cn/config').then(function (resp) {
+                axios.get('https://mu.memosa.cn/config').then(function (resp) {
                     this.tabs = resp.data;
                     if (typeof callback == "function") {
                         callback();
@@ -130,7 +130,7 @@
                 if (hkey === undefined || key === undefined) {
                     return false;
                 }
-                axios.get('http://mu.memosa.cn/aj', {
+                axios.get('https://mu.memosa.cn/aj', {
                     params: {
                         key: this.tabs[this.selected.tab]["key"],
                         hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
