@@ -1,29 +1,10 @@
 version: '3'
 
 services:
-  redis:
-    image: redis
-    restart: always
-    volumes:
-      - /var/lib/redis:/data/
-    networks:
-      - crawler
-
   crawler:
     image: uhub.service.ucloud.cn/memosa/crawler:latest
-    depends_on:
-      - redis
-    networks:
-      - crawler
 
   mu:
     image: uhub.service.ucloud.cn/memosa/mu:latest
     ports:
       - 7980:7980
-    depends_on:
-      - redis
-    networks:
-      - crawler
-
-networks:
-  crawler:

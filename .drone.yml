@@ -45,3 +45,7 @@ steps:
         - sudo docker-compose -f crawler.yml down
         - sudo docker-compose -f crawler.yml pull
         - sudo docker-compose -f crawler.yml up -d
+
+  trigger:
+    branch:
+      - master
