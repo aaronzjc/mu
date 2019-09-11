@@ -74,7 +74,7 @@ func (h *Hacker) Store(page Page) bool {
 		log.Printf("[error] Json_encode hacker news error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(RedisV2ex, page.Link.Tag, string(data))
+	SaveToRedis(RedisHacker, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store hacker news %s end", page.Link.Tag)
 

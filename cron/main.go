@@ -90,7 +90,7 @@ func CrawSite() {
 
 func main() {
 	cron := cron.New()
-	err := cron.AddFunc("0 */15 * * *", func() {
+	err := cron.AddFunc("0 */30 * * *", func() {
 		fmt.Println("start crawling ...")
 		AddSites()
 	})
