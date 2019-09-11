@@ -86,6 +86,8 @@ func aj(w http.ResponseWriter, req *http.Request) {
 		Password: "",
 		DB:       0,
 	})
+	defer client.Close()
+
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
 
