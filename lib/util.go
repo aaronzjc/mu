@@ -10,6 +10,59 @@ import (
 	"strings"
 )
 
+func NewSite(t string) Site {
+	switch t {
+	case SITE_V2EX:
+		return Site{
+			Name: "v2ex",
+			Key: t,
+			Root:     "https://www.v2ex.com",
+			Desc:     "way to explore",
+			CrawType: CrawHtml,
+			Tabs: V2exTabs,
+		}
+	case SITE_CT:
+		return Site{
+			Name: "抽屉",
+			Key: t,
+			Root:     "https://dig.chouti.com",
+			Desc:     "抽屉新热榜",
+			CrawType: CrawApi,
+			Tabs:ChoutiTabs,
+		}
+	case SITE_WEIBO:
+		return Site{
+			Name: "微博",
+			Key: t,
+			Root:     "https://s.weibo.com",
+			Desc:     "微博热搜",
+			CrawType: CrawHtml,
+			Tabs: WeiboTabs,
+		}
+	case SITE_ZHIHU:
+		return Site{
+			Name: "知乎",
+			Key: t,
+			Root:     "https://zhihu.com",
+			Desc:     "知乎热榜",
+			CrawType: CrawHtml,
+			Tabs: ZhihuTabs,
+		}
+	case SITE_HACKER:
+		return Site{
+			Name: "Hacker",
+			Key: t,
+			Root:     "https://news.ycombinator.com/",
+			Desc:     "Hacker News",
+			CrawType: CrawHtml,
+			Tabs: HackerTabs,
+		}
+	default:
+		log.Fatalln("Unknown site name", t)
+		return Site{}
+	}
+}
+
 func CrawJSON(link Link) (Page, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", link.Url, nil)

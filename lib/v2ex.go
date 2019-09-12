@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const RedisV2ex = "v2ex"
+const SITE_V2EX = "v2ex"
 
 var V2exTabs = []map[string]string{
 	{
@@ -90,7 +90,7 @@ func (v *V2ex) Store(page Page) bool {
 		log.Printf("[error] Json_encode v2ex error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(RedisV2ex, page.Link.Tag, string(data))
+	SaveToRedis(SITE_V2EX, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store v2ex %s end", page.Link.Tag)
 

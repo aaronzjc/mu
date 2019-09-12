@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const RedisZhihu = "zhihu"
+const SITE_ZHIHU = "zhihu"
 
 var ZhihuTabs = []map[string]string{
 	{
@@ -79,7 +79,7 @@ func (v *Zhihu) Store(page Page) bool {
 		log.Printf("[error] Json_encode zhihu error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(RedisZhihu, page.Link.Tag, string(data))
+	SaveToRedis(SITE_ZHIHU, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store zhihu %s end", page.Link.Tag)
 

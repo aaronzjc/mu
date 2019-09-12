@@ -41,40 +41,22 @@ func config(w http.ResponseWriter, req *http.Request) {
 		return tags
 	}
 
-	// V2ex
-	tabs = append(tabs, Tab{
-		Name: "v2ex",
-		Key:  lib.RedisV2ex,
-		Tags: fetchTags(lib.V2exTabs),
-	})
+	sites := []string{
+		lib.SITE_V2EX,
+		lib.SITE_CT,
+		lib.SITE_ZHIHU,
+		lib.SITE_WEIBO,
+		lib.SITE_HACKER,
+	}
 
-	// 抽屉
-	tabs = append(tabs, Tab{
-		Name: "抽屉",
-		Key:  lib.RedisCt,
-		Tags: fetchTags(lib.ChoutiTabs),
-	})
-
-	// 知乎
-	tabs = append(tabs, Tab{
-		Name: "知乎",
-		Key:  lib.RedisZhihu,
-		Tags: fetchTags(lib.ZhihuTabs),
-	})
-
-	// 微博
-	tabs = append(tabs, Tab{
-		Name: "微博",
-		Key:  lib.RedisWeibo,
-		Tags: fetchTags(lib.WeiboTabs),
-	})
-
-	// HackerNews
-	tabs = append(tabs, Tab{
-		Name: "Hacker",
-		Key:  lib.RedisHacker,
-		Tags: fetchTags(lib.HackerTabs),
-	})
+	for _, s := range sites {
+		st := lib.NewSite(s)
+		tabs = append(tabs, Tab{
+			Name:st.Name,
+			Key: st.Key,
+			Tags: fetchTags(st.Tabs),
+		})
+	}
 
 	data, _ := json.Marshal(tabs)
 

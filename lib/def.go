@@ -12,10 +12,12 @@ const (
 )
 
 type Site struct {
+	Name 		string
+	Key 		string
 	Root 		string
-	Domain  	string
 	Desc 		string
 	CrawType	int
+	Tabs 		[]map[string]string
 }
 
 type Link struct {

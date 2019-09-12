@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const RedisHacker = "hacker"
+const SITE_HACKER = "hacker"
 
 var HackerTabs = []map[string]string{
 	{
@@ -74,7 +74,7 @@ func (h *Hacker) Store(page Page) bool {
 		log.Printf("[error] Json_encode hacker news error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(RedisHacker, page.Link.Tag, string(data))
+	SaveToRedis(SITE_HACKER, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store hacker news %s end", page.Link.Tag)
 

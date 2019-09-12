@@ -21,45 +21,21 @@ func AddSite(s lib.Spider) {
 
 func AddSites() {
 	var spList []lib.Spider
+
 	spList = append(spList, &lib.V2ex{
-		Site: lib.Site{
-			Root:     "https://www.v2ex.com",
-			Domain:   "www.v2ex.com",
-			Desc:     "way to explore",
-			CrawType: lib.CrawHtml,
-		},
+		Site: lib.NewSite(lib.SITE_V2EX),
 	})
 	spList = append(spList, &lib.Chouti{
-		Site: lib.Site{
-			Root:     "https://dig.chouti.com",
-			Domain:   "https://dig.chouti.com",
-			Desc:     "抽屉新热榜",
-			CrawType: lib.CrawApi,
-		},
+		Site: lib.NewSite(lib.SITE_CT),
 	})
 	spList = append(spList, &lib.Zhihu{
-		Site: lib.Site{
-			Root:     "https://zhihu.com",
-			Domain:   "www.zhihu.com",
-			Desc:     "知乎热榜",
-			CrawType: lib.CrawHtml,
-		},
+		Site: lib.NewSite(lib.SITE_ZHIHU),
 	})
 	spList = append(spList, &lib.Weibo{
-		Site: lib.Site{
-			Root:     "https://s.weibo.com",
-			Domain:   "www.weibo.com",
-			Desc:     "微博热搜",
-			CrawType: lib.CrawHtml,
-		},
+		Site: lib.NewSite(lib.SITE_WEIBO),
 	})
 	spList = append(spList, &lib.Hacker{
-		Site: lib.Site{
-			Root:     "https://news.ycombinator.com/",
-			Domain:   "news.ycombinator.com",
-			Desc:     "Hacker News",
-			CrawType: lib.CrawHtml,
-		},
+		Site: lib.NewSite(lib.SITE_HACKER),
 	})
 
 	for _, v := range spList {

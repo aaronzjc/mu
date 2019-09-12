@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const RedisWeibo = "weibo"
+const SITE_WEIBO = "weibo"
 
 var WeiboTabs = []map[string]string{
 	{
@@ -84,7 +84,7 @@ func (w *Weibo) Store(page Page) bool {
 		log.Printf("[error] Json_encode weibo error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(RedisWeibo, page.Link.Tag, string(data))
+	SaveToRedis(SITE_WEIBO, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store Weibo %s end", page.Link.Tag)
 
