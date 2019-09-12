@@ -12,42 +12,42 @@ const (
 )
 
 type Site struct {
-	Name 		string
-	Key 		string
-	Root 		string
-	Desc 		string
-	CrawType	int
-	Tabs 		[]map[string]string
+	Name     string
+	Key      string
+	Root     string
+	Desc     string
+	CrawType int
+	Tabs     []map[string]string
 }
 
 type Link struct {
-	Key 	string
-	Url 	string
-	Tag 	string
-	Sp		Spider
+	Key string
+	Url string
+	Tag string
+	Sp  Spider
 }
 
 type Page struct {
-	Link 		Link
-	Content		string
+	Link    Link
+	Content string
 
-	Doc 		*goquery.Document
-	Json 		[]map[string]interface{}
+	Doc  *goquery.Document
+	Json []map[string]interface{}
 
-	List 		[]Hot
-	T 			time.Time
+	List []Hot
+	T    time.Time
 }
 
 type Hot struct {
-	Id 			int 		`json:"id"`
-	Title 		string 		`json:"title"`
-	Rank 		float64 	`json:"rank"`
-	OriginUrl	string 		`json:"origin_url"`
+	Id        int     `json:"id"`
+	Title     string  `json:"title"`
+	Rank      float64 `json:"rank"`
+	OriginUrl string  `json:"origin_url"`
 }
 
 type HotJson struct {
-	T 			string		`json:"t"`
-	List 		[]Hot 		`json:"list"`
+	T    string `json:"t"`
+	List []Hot  `json:"list"`
 }
 
 type Spider interface {

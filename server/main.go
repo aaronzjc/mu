@@ -51,8 +51,8 @@ func config(w http.ResponseWriter, req *http.Request) {
 	for _, s := range sites {
 		st := lib.NewSite(s)
 		tabs = append(tabs, Tab{
-			Name:st.Name,
-			Key: st.Key,
+			Name: st.Name,
+			Key:  st.Key,
 			Tags: fetchTags(st.Tabs),
 		})
 	}

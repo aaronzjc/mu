@@ -38,7 +38,7 @@ func (v *V2ex) BuildUrl() ([]Link, error) {
 			Key: url,
 			Url: url,
 			Tag: tab["tag"],
-			Sp: v,
+			Sp:  v,
 		}
 		list = append(list, link)
 	}
@@ -64,7 +64,7 @@ func (v *V2ex) CrawPage(link Link) (Page, error) {
 			comment = "0"
 		}
 		data = append(data, Hot{
-			Title: text,
+			Title:     text,
 			OriginUrl: fmt.Sprintf("%s%s", v.Root, url),
 			Rank: (func() float64 {
 				val, _ := strconv.ParseFloat(comment, 32)
@@ -81,7 +81,7 @@ func (v *V2ex) CrawPage(link Link) (Page, error) {
 
 func (v *V2ex) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T.Format("2006-01-02 15:04:05"),
+		T:    page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 

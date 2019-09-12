@@ -15,7 +15,7 @@ const SITE_WEIBO = "weibo"
 var WeiboTabs = []map[string]string{
 	{
 		"tag":  "hot",
-		"url": "https://s.weibo.com/top/summary?cate=realtimehot",
+		"url":  "https://s.weibo.com/top/summary?cate=realtimehot",
 		"name": "热搜",
 	},
 }
@@ -32,7 +32,7 @@ func (w *Weibo) BuildUrl() ([]Link, error) {
 			Key: url,
 			Url: url,
 			Tag: tab["tag"],
-			Sp: w,
+			Sp:  w,
 		}
 		list = append(list, link)
 	}
@@ -53,12 +53,12 @@ func (w *Weibo) CrawPage(link Link) (Page, error) {
 		text = re.ReplaceAllString(text, "")
 		url := s.Find("a").AttrOr("href", "#")
 		rank := s.Find("a").Find("span").Find("em").Text()
-		if text == ""{
+		if text == "" {
 			return
 		}
 
 		data = append(data, Hot{
-			Title: text,
+			Title:     text,
 			OriginUrl: fmt.Sprintf("%s%s", w.Root, url),
 			Rank: (func() float64 {
 				f, _ := strconv.ParseFloat(rank, 64)
@@ -75,7 +75,7 @@ func (w *Weibo) CrawPage(link Link) (Page, error) {
 
 func (w *Weibo) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T.Format("2006-01-02 15:04:05"),
+		T:    page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 

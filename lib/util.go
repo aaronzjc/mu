@@ -14,48 +14,48 @@ func NewSite(t string) Site {
 	switch t {
 	case SITE_V2EX:
 		return Site{
-			Name: "v2ex",
-			Key: t,
+			Name:     "v2ex",
+			Key:      t,
 			Root:     "https://www.v2ex.com",
 			Desc:     "way to explore",
 			CrawType: CrawHtml,
-			Tabs: V2exTabs,
+			Tabs:     V2exTabs,
 		}
 	case SITE_CT:
 		return Site{
-			Name: "抽屉",
-			Key: t,
+			Name:     "抽屉",
+			Key:      t,
 			Root:     "https://dig.chouti.com",
 			Desc:     "抽屉新热榜",
 			CrawType: CrawApi,
-			Tabs:ChoutiTabs,
+			Tabs:     ChoutiTabs,
 		}
 	case SITE_WEIBO:
 		return Site{
-			Name: "微博",
-			Key: t,
+			Name:     "微博",
+			Key:      t,
 			Root:     "https://s.weibo.com",
 			Desc:     "微博热搜",
 			CrawType: CrawHtml,
-			Tabs: WeiboTabs,
+			Tabs:     WeiboTabs,
 		}
 	case SITE_ZHIHU:
 		return Site{
-			Name: "知乎",
-			Key: t,
+			Name:     "知乎",
+			Key:      t,
 			Root:     "https://zhihu.com",
 			Desc:     "知乎热榜",
 			CrawType: CrawHtml,
-			Tabs: ZhihuTabs,
+			Tabs:     ZhihuTabs,
 		}
 	case SITE_HACKER:
 		return Site{
-			Name: "Hacker",
-			Key: t,
+			Name:     "Hacker",
+			Key:      t,
 			Root:     "https://news.ycombinator.com/",
 			Desc:     "Hacker News",
 			CrawType: CrawHtml,
-			Tabs: HackerTabs,
+			Tabs:     HackerTabs,
 		}
 	default:
 		log.Fatalln("Unknown site name", t)
@@ -84,9 +84,9 @@ func CrawJSON(link Link) (Page, error) {
 	}
 
 	return Page{
-		Link: link,
+		Link:    link,
 		Content: string(body),
-		Json: nil,
+		Json:    nil,
 	}, nil
 }
 
@@ -115,17 +115,17 @@ func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	}
 
 	return Page{
-		Link: link,
+		Link:    link,
 		Content: bodyStr,
-		Doc: doc,
+		Doc:     doc,
 	}, nil
 }
 
 func RedisConn() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr: "10.8.77.119:6379",
+		Addr:     "10.8.77.119:6379",
 		Password: "",
-		DB: 0,
+		DB:       0,
 	})
 }
 

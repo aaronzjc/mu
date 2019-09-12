@@ -12,25 +12,25 @@ const SITE_CT = "chouti"
 var ChoutiTabs = []map[string]string{
 	{
 		"url":  "/link/hot",
-		"tag": "hot",
+		"tag":  "hot",
 		"name": "新热榜",
 	},
 	{
 		"url":  "/top/24hr",
-		"tag": "24hr",
+		"tag":  "24hr",
 		"name": "24小时最热",
 	},
 	{
 		"url":  "/top/72hr",
-		"tag": "72hr",
+		"tag":  "72hr",
 		"name": "3天最热最热",
 	},
 }
 
 type HotList struct {
-	Data 	[]map[string]interface{} 		`json:"data"`
-	Code 	int 							`json:"code"`
-	Success bool 							`json:"success"`
+	Data    []map[string]interface{} `json:"data"`
+	Code    int                      `json:"code"`
+	Success bool                     `json:"success"`
 }
 
 type Chouti struct {
@@ -44,7 +44,7 @@ func (c *Chouti) BuildUrl() ([]Link, error) {
 			Key: item["url"],
 			Url: fmt.Sprintf("%s%s", c.Root, item["url"]),
 			Tag: item["tag"],
-			Sp: c,
+			Sp:  c,
 		}
 
 		list = append(list, link)
@@ -69,10 +69,10 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 	var data []Hot
 	for _, v := range page.Json {
 		data = append(data, Hot{
-			Id: int(v["id"].(float64)),
-			Title: v["title"].(string),
+			Id:        int(v["id"].(float64)),
+			Title:     v["title"].(string),
 			OriginUrl: v["originalUrl"].(string),
-			Rank: v["score"].(float64),
+			Rank:      v["score"].(float64),
 		})
 	}
 
@@ -84,7 +84,7 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 
 func (c *Chouti) Store(page Page) bool {
 	hotJson := &HotJson{
-		T: page.T.Format("2006-01-02 15:04:05"),
+		T:    page.T.Format("2006-01-02 15:04:05"),
 		List: page.List,
 	}
 
