@@ -6,7 +6,6 @@ import (
 	"github.com/go-redis/redis"
 	"log"
 	"net/http"
-	"time"
 )
 
 type Tag struct {
@@ -64,8 +63,6 @@ func config(w http.ResponseWriter, req *http.Request) {
 }
 
 func aj(w http.ResponseWriter, req *http.Request) {
-	t := time.Now()
-
 	client := redis.NewClient(&redis.Options{
 		Addr:     "10.8.77.119:6379",
 		Password: "",
@@ -73,16 +70,10 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	})
 	defer client.Close()
 
-	elapsed := time.Since(t)
-	log.Println("redis connect", elapsed)
-
 	key := req.URL.Query()["key"][0]
 	hkey := req.URL.Query()["hkey"][0]
 
 	data, err := client.HGet(key, hkey).Result()
-
-	elapsed = time.Since(t)
-	log.Println("redis hget", elapsed)
 
 	if err != nil {
 		log.Println("[info] aj req empty " + err.Error())
@@ -99,8 +90,7 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	}
 
 	js, _ := json.Marshal(hotJson)
-	elapsed = time.Since(t)
-	log.Println("Marshal data", elapsed)
+
 	JSON(w, []byte(js))
 }
 
