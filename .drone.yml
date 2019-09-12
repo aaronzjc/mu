@@ -41,7 +41,7 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - cd /data/docker_services/services
+        - cd /data/docker_ucloud/apps
         - sudo docker-compose -f crawler.yml down
         - sudo docker-compose -f crawler.yml pull
         - sudo docker-compose -f crawler.yml up -d
