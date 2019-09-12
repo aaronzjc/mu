@@ -87,6 +87,10 @@
 </section>
 
 <script type="text/javascript">
+    const API = {
+        config: "https://mu.memosa.cn/config",
+        list: "https://mu.memosa.cn/aj"
+    }
     var vn = new Vue({
         el: "#app",
         created: function () {
@@ -114,7 +118,7 @@
         },
         methods: {
             fetchConfig: function (callback) {
-                axios.get('https://mu.memosa.cn/config').then(function (resp) {
+                axios.get(API.config).then(function (resp) {
                     this.tabs = resp.data;
                     if (typeof callback == "function") {
                         callback();
@@ -130,7 +134,7 @@
                 if (hkey === undefined || key === undefined) {
                     return false;
                 }
-                axios.get('https://mu.memosa.cn/aj', {
+                axios.get(API.list, {
                     params: {
                         key: this.tabs[this.selected.tab]["key"],
                         hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
