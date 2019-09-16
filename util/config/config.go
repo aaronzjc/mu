@@ -1,4 +1,4 @@
-package util
+package config
 
 import (
 	"encoding/json"
@@ -22,13 +22,15 @@ type Config struct {
 
 func FindConfigFile() (string, error) {
 	pwd, _ := os.Getwd()
-	currPath := path.Join(pwd, "app.json")
-	if _, err := os.Stat(currPath); !os.IsNotExist(err) {
-		return currPath, nil
+	scanPath := []string{
+		pwd,
+		filepath.Dir(pwd),
 	}
-	currPath = path.Join(filepath.Dir(pwd), "app.json")
-	if _, err := os.Stat(currPath); !os.IsNotExist(err) {
-		return currPath, nil
+	for _, v := range scanPath {
+		file := path.Join(v, "app.json")
+		if _, err := os.Stat(file); !os.IsNotExist(err) {
+			return file, nil
+		}
 	}
 
 	return "", errors.New("couldn't find config file")

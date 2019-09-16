@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/util/cache"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
@@ -90,7 +91,7 @@ func (v *V2ex) Store(page Page) bool {
 		log.Printf("[error] Json_encode v2ex error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(SITE_V2EX, page.Link.Tag, string(data))
+	cache.SaveToRedis(SITE_V2EX, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store v2ex %s end", page.Link.Tag)
 

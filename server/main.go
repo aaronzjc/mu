@@ -2,7 +2,8 @@ package main
 
 import (
 	"crawler/lib"
-	"crawler/util"
+	"crawler/util/cache"
+	"crawler/util/config"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -26,7 +27,7 @@ func JSON(w http.ResponseWriter, data []byte) {
 	w.Write(data)
 }
 
-func config(w http.ResponseWriter, req *http.Request) {
+func siteMap(w http.ResponseWriter, req *http.Request) {
 	var tabs []Tab
 
 	var fetchTags = func(tabs []map[string]string) []Tag {
@@ -64,7 +65,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 }
 
 func aj(w http.ResponseWriter, req *http.Request) {
-	client := lib.RedisConn()
+	client := cache.RedisConn()
 	defer client.Close()
 
 	key := req.URL.Query()["key"][0]
@@ -101,12 +102,12 @@ func welcome() {
 }
 
 func main() {
-	appConfig := util.NewConfig()
+	appConfig := config.NewConfig()
 
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/", fs)
 	http.HandleFunc("/aj", aj)
-	http.HandleFunc("/config", config)
+	http.HandleFunc("/config", siteMap)
 
 	welcome()
 	log.Println("listen on " + appConfig.Addr)

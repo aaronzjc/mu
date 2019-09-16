@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/util/cache"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
@@ -84,7 +85,7 @@ func (w *Weibo) Store(page Page) bool {
 		log.Printf("[error] Json_encode weibo error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(SITE_WEIBO, page.Link.Tag, string(data))
+	cache.SaveToRedis(SITE_WEIBO, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store Weibo %s end", page.Link.Tag)
 

@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/util/cache"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
@@ -74,7 +75,7 @@ func (h *Hacker) Store(page Page) bool {
 		log.Printf("[error] Json_encode hacker news error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(SITE_HACKER, page.Link.Tag, string(data))
+	cache.SaveToRedis(SITE_HACKER, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store hacker news %s end", page.Link.Tag)
 

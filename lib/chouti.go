@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/util/cache"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -93,7 +94,7 @@ func (c *Chouti) Store(page Page) bool {
 		log.Printf("[error] Json_encode chouti error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(SITE_CT, page.Link.Tag, string(data))
+	cache.SaveToRedis(SITE_CT, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store chouti %s end", page.Link.Tag)
 
