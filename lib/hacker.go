@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
-	"regexp"
+	"strings"
 	"time"
 )
 
@@ -50,8 +50,8 @@ func (h *Hacker) CrawPage(link Link) (Page, error) {
 	doc.Find(".athing").Each(func(i int, s *goquery.Selection) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
 		text := s.Find(".title").Find("a").Text()
-		re := regexp.MustCompile(`<span>.*</span>$`)
-			text = re.ReplaceAllString(text, "")
+		sp := s.Find(".title").Find("a span").Text()
+		text = strings.Replace(text, sp, "", 0)
 		if text == "" || url == "" {
 			return
 		}
