@@ -79,7 +79,7 @@ func main() {
 	}
 
 	cronJob := cron.New()
-	err := cronJob.AddFunc("0 */30 * * *", func() {
+	err := cronJob.AddFunc("*/30 * * * *", func() {
 		fmt.Println("start crawling ...")
 		addSites()
 	})
