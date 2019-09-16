@@ -1,10 +1,12 @@
 package lib
 
 import (
+	"crawler/util/cache"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
+	"regexp"
 	"time"
 )
 
@@ -48,6 +50,8 @@ func (h *Hacker) CrawPage(link Link) (Page, error) {
 	doc.Find(".athing").Each(func(i int, s *goquery.Selection) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
 		text := s.Find(".title").Find("a").Text()
+		re := regexp.MustCompile(`<span>.*</span>$`)
+			text = re.ReplaceAllString(text, "")
 		if text == "" || url == "" {
 			return
 		}
@@ -74,7 +78,7 @@ func (h *Hacker) Store(page Page) bool {
 		log.Printf("[error] Json_encode hacker news error , err = %s\n", err.Error())
 		return false
 	}
-	SaveToRedis(SITE_HACKER, page.Link.Tag, string(data))
+	cache.SaveToRedis(SITE_HACKER, page.Link.Tag, string(data))
 
 	log.Printf("[info] Store hacker news %s end", page.Link.Tag)
 

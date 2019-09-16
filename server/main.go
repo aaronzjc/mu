@@ -2,8 +2,10 @@ package main
 
 import (
 	"crawler/lib"
+	"crawler/util/cache"
+	"crawler/util/config"
 	"encoding/json"
-	"github.com/go-redis/redis"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -25,7 +27,7 @@ func JSON(w http.ResponseWriter, data []byte) {
 	w.Write(data)
 }
 
-func config(w http.ResponseWriter, req *http.Request) {
+func siteMap(w http.ResponseWriter, req *http.Request) {
 	var tabs []Tab
 
 	var fetchTags = func(tabs []map[string]string) []Tag {
@@ -51,8 +53,8 @@ func config(w http.ResponseWriter, req *http.Request) {
 	for _, s := range sites {
 		st := lib.NewSite(s)
 		tabs = append(tabs, Tab{
-			Name:st.Name,
-			Key: st.Key,
+			Name: st.Name,
+			Key:  st.Key,
 			Tags: fetchTags(st.Tabs),
 		})
 	}
@@ -63,11 +65,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 }
 
 func aj(w http.ResponseWriter, req *http.Request) {
-	client := redis.NewClient(&redis.Options{
-		Addr:     "10.8.77.119:6379",
-		Password: "",
-		DB:       0,
-	})
+	client := cache.RedisConn()
 	defer client.Close()
 
 	key := req.URL.Query()["key"][0]
@@ -94,13 +92,25 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	JSON(w, []byte(js))
 }
 
+func welcome() {
+	fmt.Println(` __  __ _   _`)
+	fmt.Println(`|  \/  | | | |`)
+	fmt.Println(`| |\/| | | | |`)
+	fmt.Println(`| |  | | |_| |`)
+	fmt.Println(`|_|  |_|\___/`)
+	fmt.Println("welcome ~")
+}
+
 func main() {
+	appConfig := config.NewConfig()
+
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/", fs)
 	http.HandleFunc("/aj", aj)
-	http.HandleFunc("/config", config)
+	http.HandleFunc("/config", siteMap)
 
-	log.Println("listen on :7980")
+	welcome()
+	log.Println("listen on " + appConfig.Addr)
 
-	log.Fatal(http.ListenAndServe(":7980", nil))
+	log.Fatal(http.ListenAndServe(appConfig.Addr, nil))
 }

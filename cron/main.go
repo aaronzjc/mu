@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"github.com/robfig/cron"
 	"log"
+	"os"
+	"strings"
 )
 
 var linkPool = make(chan lib.Link, 3)
 var pagePool = make(chan lib.Page, 3)
 
-func AddSite(s lib.Spider) {
+func addSite(s lib.Spider) {
 	links, _ := s.BuildUrl()
 	for _, link := range links {
 		go func(link lib.Link) {
@@ -19,7 +21,7 @@ func AddSite(s lib.Spider) {
 	}
 }
 
-func AddSites() {
+func addSites() {
 	var spList []lib.Spider
 
 	spList = append(spList, &lib.V2ex{
@@ -39,11 +41,11 @@ func AddSites() {
 	})
 
 	for _, v := range spList {
-		go AddSite(v)
+		go addSite(v)
 	}
 }
 
-func CrawSite() {
+func start() {
 	for {
 		select {
 		case l := <-linkPool:
@@ -64,18 +66,29 @@ func CrawSite() {
 	}
 }
 
+func dev() {
+	addSites()
+	start()
+}
+
 func main() {
-	cron := cron.New()
-	err := cron.AddFunc("0 */30 * * *", func() {
+	env := strings.ToLower(os.Getenv("APP_ENV"))
+	if env != "prod" && env != "production" {
+		dev()
+		return
+	}
+
+	cronJob := cron.New()
+	err := cronJob.AddFunc("0 */30 * * *", func() {
 		fmt.Println("start crawling ...")
-		AddSites()
+		addSites()
 	})
 
 	if err != nil {
 		log.Fatal("[error] cron add err " + err.Error())
 		return
 	}
-	cron.Start()
+	cronJob.Start()
 
-	CrawSite()
+	start()
 }
