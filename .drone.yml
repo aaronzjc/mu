@@ -8,7 +8,6 @@ steps:
     commands:
       - make crawler
       - make mu
-      - echo $app > app.json
 
   - name: release crawler
     image: plugins/docker
@@ -43,7 +42,7 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - cd /data/docker_ucloud/apps
+        - cd /data/docker_ucloud/apps/crawler
         - sudo docker-compose -f crawler.yml down
         - sudo docker-compose -f crawler.yml pull
         - sudo docker-compose -f crawler.yml up -d

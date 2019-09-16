@@ -12,11 +12,11 @@ import (
 var appConfig Config
 
 type Config struct {
-	AppName		string 		`json:"app_name"`
-	Addr 		string 		`json:"addr"`
-	Redis 		struct{
-		Host 		string		`json:"host"`
-		Port		int			`json:"port"`
+	AppName string `json:"app_name"`
+	Addr    string `json:"addr"`
+	Redis   struct {
+		Host string `json:"host"`
+		Port int    `json:"port"`
 	}
 }
 
