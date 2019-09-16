@@ -51,7 +51,7 @@ func (h *Hacker) CrawPage(link Link) (Page, error) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
 		text := s.Find(".title").Find("a").Text()
 		re := regexp.MustCompile(`<span>.*</span>$`)
-		text = re.ReplaceAllString(text, "")
+			text = re.ReplaceAllString(text, "")
 		if text == "" || url == "" {
 			return
 		}
