@@ -4,9 +4,11 @@ name: default
 steps:
   - name: build crawler&mu
     image: golang:1.13-stretch
+    secrets: [ app ]
     commands:
       - make crawler
       - make mu
+      - echo $app > app.json
 
   - name: release crawler
     image: plugins/docker
