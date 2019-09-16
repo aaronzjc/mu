@@ -48,7 +48,7 @@ func NewConfig() Config {
 	}
 	configData, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		panic("config file read error")
+		panic("config file read error " + err.Error())
 	}
 
 	err = json.Unmarshal(configData, &appConfig)
