@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/robfig/cron"
 	"log"
+	"os"
+	"strings"
 )
 
 var linkPool = make(chan lib.Link, 3)
@@ -64,12 +66,20 @@ func start() {
 	}
 }
 
-func main() {
+func dev() {
 	addSites()
 	start()
-	return
-	cron := cron.New()
-	err := cron.AddFunc("0 */30 * * *", func() {
+}
+
+func main() {
+	env := strings.ToLower(os.Getenv("APP_ENV"))
+	if env != "prod" && env != "production" {
+		dev()
+		return
+	}
+
+	cronJob := cron.New()
+	err := cronJob.AddFunc("0 */30 * * *", func() {
 		fmt.Println("start crawling ...")
 		addSites()
 	})
@@ -78,7 +88,7 @@ func main() {
 		log.Fatal("[error] cron add err " + err.Error())
 		return
 	}
-	cron.Start()
+	cronJob.Start()
 
 	start()
 }
