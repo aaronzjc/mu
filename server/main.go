@@ -2,7 +2,9 @@ package main
 
 import (
 	"crawler/lib"
+	"crawler/util"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -89,13 +91,25 @@ func aj(w http.ResponseWriter, req *http.Request) {
 	JSON(w, []byte(js))
 }
 
+func welcome() {
+	fmt.Println(` __  __ _   _`)
+	fmt.Println(`|  \/  | | | |`)
+	fmt.Println(`| |\/| | | | |`)
+	fmt.Println(`| |  | | |_| |`)
+	fmt.Println(`|_|  |_|\___/`)
+	fmt.Println("welcome ~")
+}
+
 func main() {
+	appConfig := util.NewConfig()
+
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/", fs)
 	http.HandleFunc("/aj", aj)
 	http.HandleFunc("/config", config)
 
-	log.Println("listen on :7980")
+	welcome()
+	log.Println("listen on " + appConfig.Addr)
 
-	log.Fatal(http.ListenAndServe(":7980", nil))
+	log.Fatal(http.ListenAndServe(appConfig.Addr, nil))
 }
