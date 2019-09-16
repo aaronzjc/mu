@@ -1,7 +1,9 @@
 package lib
 
 import (
+	"crawler/util"
 	"encoding/json"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-redis/redis"
 	"io/ioutil"
@@ -122,14 +124,24 @@ func CrawHTML(link Link, headers map[string]string) (Page, error) {
 }
 
 func RedisConn() *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:     "10.8.77.119:6379",
+	config := util.NewConfig()
+	client := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", config.Redis.Host, config.Redis.Port),
 		Password: "",
 		DB:       0,
 	})
+	_, err := client.Ping().Result()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return client
 }
 
 func SaveToRedis(key string, hkey string, data string) {
 	client := RedisConn()
-	client.HSet(key, hkey, data)
+	_, err := client.HSet(key, hkey, data).Result()
+	if err != nil {
+		log.Printf("[error] SaveToRedis error , err = %s\n", err.Error())
+	}
 }

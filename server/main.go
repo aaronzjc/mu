@@ -3,7 +3,6 @@ package main
 import (
 	"crawler/lib"
 	"encoding/json"
-	"github.com/go-redis/redis"
 	"log"
 	"net/http"
 )
@@ -63,11 +62,7 @@ func config(w http.ResponseWriter, req *http.Request) {
 }
 
 func aj(w http.ResponseWriter, req *http.Request) {
-	client := redis.NewClient(&redis.Options{
-		Addr:     "10.8.77.119:6379",
-		Password: "",
-		DB:       0,
-	})
+	client := lib.RedisConn()
 	defer client.Close()
 
 	key := req.URL.Query()["key"][0]

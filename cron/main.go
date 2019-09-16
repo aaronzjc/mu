@@ -10,7 +10,7 @@ import (
 var linkPool = make(chan lib.Link, 3)
 var pagePool = make(chan lib.Page, 3)
 
-func AddSite(s lib.Spider) {
+func addSite(s lib.Spider) {
 	links, _ := s.BuildUrl()
 	for _, link := range links {
 		go func(link lib.Link) {
@@ -19,7 +19,7 @@ func AddSite(s lib.Spider) {
 	}
 }
 
-func AddSites() {
+func addSites() {
 	var spList []lib.Spider
 
 	spList = append(spList, &lib.V2ex{
@@ -39,11 +39,11 @@ func AddSites() {
 	})
 
 	for _, v := range spList {
-		go AddSite(v)
+		go addSite(v)
 	}
 }
 
-func CrawSite() {
+func start() {
 	for {
 		select {
 		case l := <-linkPool:
@@ -65,10 +65,13 @@ func CrawSite() {
 }
 
 func main() {
+	addSites()
+	start()
+	return
 	cron := cron.New()
 	err := cron.AddFunc("0 */30 * * *", func() {
 		fmt.Println("start crawling ...")
-		AddSites()
+		addSites()
 	})
 
 	if err != nil {
@@ -77,5 +80,5 @@ func main() {
 	}
 	cron.Start()
 
-	CrawSite()
+	start()
 }
