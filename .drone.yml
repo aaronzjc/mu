@@ -41,8 +41,8 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - sudo docker service update mu_crawler
-        - sudo docker service update mu_mu
+        - sudo docker service update --force mu_crawler
+        - sudo docker service update --force mu_mu
 
 trigger:
   branch:
