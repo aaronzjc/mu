@@ -41,8 +41,8 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - sudo docker service update --force --image uhub.service.ucloud.cn/memosa/crawler:latest mu_crawler
-        - sudo docker service update --force --image uhub.service.ucloud.cn/memosa/mu:latest  mu_mu
+        - sudo docker service update --with-registry-auth --force --image uhub.service.ucloud.cn/memosa/crawler:latest mu_crawler
+        - sudo docker service update --with-registry-auth --force --image uhub.service.ucloud.cn/memosa/mu:latest  mu_mu
 
 trigger:
   branch:
