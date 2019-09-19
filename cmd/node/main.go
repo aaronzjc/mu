@@ -1,8 +1,7 @@
 package main
 
 import (
-	"crawler/lib"
-	"fmt"
+	"crawler/internal/lib"
 	"github.com/robfig/cron/v3"
 	"log"
 	"os"
@@ -80,7 +79,7 @@ func main() {
 
 	cronJob := cron.New()
 	_, err := cronJob.AddFunc("*/30 * * * *", func() {
-		fmt.Println("start crawling ...")
+		log.Printf("[info] start crawling ...\n")
 		addSites()
 	})
 

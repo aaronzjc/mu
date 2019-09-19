@@ -22,3 +22,18 @@
 make crawler # 编译cron，抓取数据
 make mu # 编译前端展示
 ```
+
+### 目录介绍
+
+非标准目录结构，尽可能按照官方推荐的方式。
+
+```text
+|- cmd              程序入口
+    |- master       web程序
+    |- node         后台程序
+|- deploy           部署脚本
+|- lib              私有库
+|- public           编译后的前端页面
+|- util             工具操作库，例如数据库，缓存等
+|- web              前端代码
+```

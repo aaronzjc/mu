@@ -1,7 +1,7 @@
 package lib
 
 import (
-	"crawler/util/cache"
+	"crawler/internal/util/cache"
 	"encoding/json"
 	"fmt"
 	"log"

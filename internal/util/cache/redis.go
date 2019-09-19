@@ -1,14 +1,14 @@
 package cache
 
 import (
-	"crawler/util/config"
+	config2 "crawler/internal/util/config"
 	"fmt"
 	"github.com/go-redis/redis"
 	"log"
 )
 
 func RedisConn() *redis.Client {
-	c := config.NewConfig()
+	c := config2.NewConfig()
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", c.Redis.Host, c.Redis.Port),
 		Password: "",
