@@ -13,12 +13,12 @@ vue:
 	cd web && npm install && npm run build
 
 .PHONY: mu-staging
-dev-mu:
+mu-staging:
 	go build -o ./bin/mu ./cmd/master/main.go && ./bin/mu
 
 .PHONY: vue-staging
 vue-staging:
-	cd web && npm install && npm run build-staging
+	cd web && mv .env.staging .env && npm install && npm run build
 
 .PHONY: clean
 clean:
