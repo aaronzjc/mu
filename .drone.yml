@@ -1,5 +1,5 @@
 kind: pipeline
-name: default
+name: production
 
 steps:
   - name: build frontend
@@ -56,7 +56,7 @@ trigger:
 ---
 
 kind: pipeline
-name: default
+name: dev
 
 steps:
   - name: build frontend
