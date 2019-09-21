@@ -46,8 +46,8 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - sudo docker service --force --with-registry-auth update mu_crawler
-        - sudo docker service --force --with-registry-auth update mu_mu
+        - sudo docker service --force --with-registry-auth --image uhub.service.ucloud.cn/memosa/crawler:latest update mu_crawler
+        - sudo docker service --force --with-registry-auth --image uhub.service.ucloud.cn/memosa/mu:latest update mu_mu
 
 trigger:
   branch:
@@ -90,7 +90,7 @@ steps:
         from_secret: host_password
       port: 22
       script:
-        - sudo docker service update --force --with-registry-auth dev_mu_dev_mu
+        - sudo docker service update --force --with-registry-auth --image uhub.service.ucloud.cn/memosa/mu:dev dev_mu_dev_mu
 
 trigger:
   branch:
