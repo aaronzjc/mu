@@ -18,7 +18,7 @@ dev-mu:
 
 .PHONY: vue-staging
 vue-staging:
-	cd web && cnpm install && npm run build-staging
+	cd web && npm install && npm run build-staging
 
 .PHONY: clean
 clean:
