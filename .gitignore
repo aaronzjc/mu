@@ -1,6 +1,6 @@
 bin/
 .DS_Store
-fakedist
+dist
 
 # Editor directories and files
 .idea
