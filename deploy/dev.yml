@@ -8,9 +8,9 @@ services:
     ports:
       - 7990:7980
     configs:
-      - source: app_mu_config
+      - source: app_mu_dev_config
         target: /app/app.json
 
 configs:
-  app_mu_config:
+  app_mu_dev_config:
     external: true

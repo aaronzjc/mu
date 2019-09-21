@@ -1,7 +1,7 @@
 FROM alpine:3.7
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir -p /app/public && mkdir -p /app/bin
+RUN mkdir -p /app/dist && mkdir -p /app/bin
 COPY ./bin/mu /app/bin/
 COPY ./dist /app/dist
 WORKDIR /app/bin
