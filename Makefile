@@ -14,7 +14,7 @@ mu:
 
 .PHONY: vue
 vue:
-	cd web && npm run build
+	cd web && npm install && npm run build
 
 .PHONY: clean
 clean:
