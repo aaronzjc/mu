@@ -52,3 +52,45 @@ steps:
 trigger:
   branch:
     - master
+
+---
+
+kind: pipeline
+name: default
+
+steps:
+  - name: build frontend
+      image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.0
+      commands:
+        - make vue
+
+  - name: build crawler&mu
+    image: golang:1.13-stretch
+    commands:
+      - make mu
+
+  - name: release mu
+    image: plugins/docker
+    settings:
+      repo: uhub.service.ucloud.cn/memosa/mu
+      tags: dev
+      username:
+        from_secret: docker_user
+      password:
+        from_secret: docker_password
+      registry: uhub.service.ucloud.cn
+
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host: 152.32.170.64
+      username: jincheng
+      password:
+        from_secret: host_password
+      port: 22
+      script:
+        - sudo docker service update dev_dev_mu
+
+trigger:
+  branch:
+    - dev

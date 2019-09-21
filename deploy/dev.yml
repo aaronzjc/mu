@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  dev_mu:
+    image: uhub.service.ucloud.cn/memosa/mu:dev
+    deploy:
+      replicas: 1
+    ports:
+      - 7990:7980
+    configs:
+      - source: app_mu_config
+        target: /app/app.json
+
+configs:
+  app_mu_config:
+    external: true

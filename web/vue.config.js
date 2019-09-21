@@ -1,5 +1,5 @@
 module.exports = {
-    outputDir: "../fakedist",
+    outputDir: "../dist",
     assetsDir: "static",
     pages: {
         index: {

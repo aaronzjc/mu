@@ -6,18 +6,21 @@ import (
 	"crawler/internal/route/admin/site"
 	"crawler/internal/route/front"
 	"github.com/gin-contrib/cors"
+	"os"
+	"path/filepath"
 )
 
 func RegisterStatic() {
 	r := app.App.Gin
 
-	path := "/Users/jincheng3/go/src/crawler"
+	pwd, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	path := filepath.Dir(pwd)
 
-	r.StaticFile("/", path + "/public/index.html")
-	r.StaticFile("/admin", path + "/public/admin.html")
+	r.StaticFile("/", path + "/dist/index.html")
+	r.StaticFile("/admin", path + "/dist/admin.html")
 
-	r.StaticFile("favicon.png", path + "/public/favicon.png")
-	r.Static("/static", path + "/public/")
+	r.StaticFile("favicon.png", path + "/dist/favicon.png")
+	r.Static("/static", path + "/dist/static")
 }
 
 func RegisterRoutes() {
