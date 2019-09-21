@@ -1,5 +1,9 @@
 GO111MODULE=on
 
+.PHONY: dev-mu
+dev-mu:
+	go build -o ./bin/mu ./cmd/master/main.go && ./bin/mu
+
 .PHONY: crawler
 crawler:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/crawler ./cmd/node/main.go

@@ -5,20 +5,20 @@
             <div class="column">
                 <div class="tabs">
                     <ul>
-                        <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)"><a>{{ tab.name }}</a></li>
+                        <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="columns">
             <div class="column tab-tag tags">
-                <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']">{{ tag.name }}</span>
+                <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
             </div>
         </div>
         <p class="hot-ts" v-if="t != '' ">更新时间: {{ t }}</p>
         <div class="columns">
             <div class="column hot-list">
-                <div class="hot" v-for="(hot, idx) in list">
+                <div class="hot" v-for="(hot, idx) in list" :key="idx">
                     <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
                 </div>
             </div>
@@ -34,14 +34,14 @@
 </template>
 
 <script>
-import axios from "axios"
 import NProgress from 'nprogress'
 import 'bulma/css/bulma.css'
 import 'nprogress/nprogress.css'
+import Get from "../tools/http"
 
 const API = {
-    config: "https://mu.memosa.cn/config",
-    list: "https://mu.memosa.cn/aj"
+    config: "/config",
+    list: "/aj"
 };
 
 export default {
@@ -73,14 +73,12 @@ export default {
     },
     methods: {
         fetchConfig: function (callback) {
-            axios.get(API.config).then(function (resp) {
+            Get(API.config).then(function (resp) {
                 this.tabs = resp.data;
                 if (typeof callback == "function") {
                     callback();
                 }
-            }.bind(this)).catch(function (err) {
-
-            })
+            }.bind(this))
         },
         fetchList: function () {
             NProgress.start();
@@ -89,7 +87,7 @@ export default {
             if (hkey === undefined || key === undefined) {
                 return false;
             }
-            axios.get(API.list, {
+            Get(API.list, {
                 params: {
                     key: this.tabs[this.selected.tab]["key"],
                     hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
@@ -99,9 +97,7 @@ export default {
                 this.list = list;
                 this.t = resp.data.t;
                 NProgress.done();
-            }.bind(this)).catch(function (err) {
-
-            })
+            }.bind(this))
         },
         switchTab: function (idx) {
             this.selected.tab = idx;

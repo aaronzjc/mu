@@ -17,7 +17,14 @@ type Config struct {
 	Redis   struct {
 		Host string `json:"host"`
 		Port int    `json:"port"`
-	}
+	} `json:"redis"`
+	Db struct {
+		Host     string `json:"host"`
+		Port     int 	`json:"port"`
+		User     string `json:"user"`
+		Password string `json:"password"`
+		Database string `json:"database"`
+	} `json:"db"`
 }
 
 func FindConfigFile() (string, error) {
@@ -53,7 +60,7 @@ func NewConfig() Config {
 
 	err = json.Unmarshal(configData, &appConfig)
 	if err != nil {
-		panic("config file decode error")
+		panic("config file decode error " + err.Error())
 	}
 
 	return appConfig

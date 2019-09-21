@@ -14,7 +14,7 @@ module.exports = {
             template: "public/admin.html",
             filename: "admin.html",
             title: "后台",
-            chunks: ['chunk-vendors', 'chunk-common', 'index']
+            chunks: ['chunk-vendors', 'chunk-common', 'admin']
         }
     }
 }
