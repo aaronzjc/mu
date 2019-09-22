@@ -22,7 +22,7 @@ mu-staging:
 
 .PHONY: vue-staging
 vue-staging:
-	cd web && mv .env.staging .env && npm install && npm run build
+	cd web && npm install && npm run build
 
 .PHONY: clean
 clean:

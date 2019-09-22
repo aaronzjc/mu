@@ -56,7 +56,7 @@ trigger:
 ---
 
 kind: pipeline
-name: dev
+name: staging
 
 steps:
   - name: build vue-staging
