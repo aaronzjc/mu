@@ -374,160 +374,108 @@
 </template>
 
 <script>
-    import {Get, Post} from "../tools/http";
-    import NProgress from 'nprogress'
-    import 'nprogress/nprogress.css'
+import {Get, Post} from "../tools/http";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import {nodeType, crawType} from "../def";
 
-    const initEdit = {
-        id: 0,
-        name: "",
-        root: "",
-        key: "",
-        desc: "",
-        type: 1,
-        tags: [],
-        cron: "",
-        enable: 0,
-        node_option: 1,
-        node_type: 1,
-        node_hosts: [],
-    };
-    export default {
-        name: "Site",
-        created() {
-            this.fetchList();
-        },
-        data: () => {
-            return {
-                viewModal: false,
-                editModal: false,
+const initEdit = {
+    id: 0,
+    name: "",
+    root: "",
+    key: "",
+    desc: "",
+    type: 1,
+    tags: [],
+    cron: "",
+    enable: 0,
+    node_option: 1,
+    node_type: 1,
+    node_hosts: [],
+};
+export default {
+    name: "Site",
+    created() {
+        this.fetchList();
+    },
+    data: () => {
+        return {
+            viewModal: false,
+            editModal: false,
 
-                typeMap: {
-                    1: "JSON",
-                    2: "HTML"
-                },
+            typeMap: crawType,
 
-                nodeTypeMap: {
-                    1: "国内",
-                    2: "海外"
-                },
+            nodeTypeMap: nodeType,
 
-                nodes: {
-                    1: {
-                        id: 1,
-                        ip: "127.0.0.1",
-                        name: "ucloud",
-                        "enable": 1,
-                    },
-                    2: {
-                        id: 2,
-                        ip: "127.0.0.2",
-                        name: "ali",
-                        "enable": 1,
-                    },
-                    3: {
-                        id: 3,
-                        ip: "127.0.0.3",
-                        name: "vultr",
-                        "enable": 1,
-                    }
-                },
+            nodes: {},
 
-                list: [
-                    {
-                        "id": 1,
-                        "name": "V2ex",
-                        "key": "v2ex",
-                        "root": "https://v2ex.com",
-                        "desc": "一个创意工作者社区",
-                        "tags": [
-                            {
-                                "key": "all",
-                                "name": "全部",
-                                "enable": 1,
-                            },
-                            {
-                                "key": "hot",
-                                "name": "最热",
-                                "enable": 1,
-                            }
-                        ],
-                        "type": 1,
-                        "cron": "*/30 * * * *",
-                        "node_option": 2,
-                        "node_type": 1,
-                        "node_hosts": [
-                            1,2,3
-                        ],
-                        "enable": 1
-                    }
-                ],
+            list: [],
 
-                editForm: {
-                    id: 0,
-                    name: "",
-                    root: "",
-                    key: "",
-                    desc: "",
-                    type: 1,
-                    tags: [],
-                    cron: "",
-                    enable: 0,
-                    node_option: 1,
-                    node_type: 1,
-                    node_hosts: [],
-                },
-
-                viewForm: {
-
-                }
-            }
-        },
-        methods: {
-            fetchList() {
-                NProgress.start();
-                Get("/site/list").then(resp => {
-                    if (resp.data.code === 10000) {
-                        this.nodes = resp.data.data.nodeList;
-                        this.list = resp.data.data.siteList;
-                    } else {
-                        alert(resp.data.msg);
-                    }
-                    NProgress.done();
-                })
+            editForm: {
+                id: 0,
+                name: "",
+                root: "",
+                key: "",
+                desc: "",
+                type: 1,
+                tags: [],
+                cron: "",
+                enable: 0,
+                node_option: 1,
+                node_type: 1,
+                node_hosts: [],
             },
-            save() {
-                Post("/site/update", this.editForm).then(resp => {
-                    if (resp.data.code === 10000) {
-                        alert("保存成功");
-                        this.closeEdit();
-                    } else {
-                        alert(resp.data.msg);
-                    }
-                });
-            },
-            edit(idx) {
-                this.editModal = true;
-                this.editForm = this.list[idx];
-            },
-            view(idx) {
-                this.viewModal = true;
-                this.viewForm = this.list[idx];
-            },
-            closeView() {
-                this.viewModal = false;
-            },
-            closeEdit() {
-                this.editModal = false;
-                this.editForm = JSON.parse(JSON.stringify(initEdit));
-            },
-            toggle(idx) {
-                var c = this.editForm.tags[idx]["enable"];
-                var r = c === 0 ? 1 : 0 ;
-                this.editForm.tags[idx]["enable"] = r;
+
+            viewForm: {
+
             }
         }
+    },
+    methods: {
+        fetchList() {
+            NProgress.start();
+            Get("/site/list").then(resp => {
+                if (resp.data.code === 10000) {
+                    this.nodes = resp.data.data.nodeList;
+                    this.list = resp.data.data.siteList;
+                } else {
+                    alert(resp.data.msg);
+                }
+                NProgress.done();
+            })
+        },
+        save() {
+            Post("/site/update", this.editForm).then(resp => {
+                if (resp.data.code === 10000) {
+                    alert("保存成功");
+                    this.closeEdit();
+                } else {
+                    alert(resp.data.msg);
+                }
+            });
+        },
+        edit(idx) {
+            this.editModal = true;
+            this.editForm = this.list[idx];
+        },
+        view(idx) {
+            this.viewModal = true;
+            this.viewForm = this.list[idx];
+        },
+        closeView() {
+            this.viewModal = false;
+        },
+        closeEdit() {
+            this.editModal = false;
+            this.editForm = JSON.parse(JSON.stringify(initEdit));
+        },
+        toggle(idx) {
+            var c = this.editForm.tags[idx]["enable"];
+            var r = c === 0 ? 1 : 0 ;
+            this.editForm.tags[idx]["enable"] = r;
+        }
     }
+}
 </script>
 
 <style lang="scss" scoped>

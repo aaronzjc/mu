@@ -196,6 +196,7 @@
 import {Get, Post} from "../tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import {nodeType} from "../def";
 
 export default {
     name: "Node",
@@ -207,10 +208,7 @@ export default {
             editModal: false,
             viewModal: false,
 
-            typeMap: {
-                1: "海外",
-                2: "大陆"
-            },
+            typeMap: nodeType,
 
             list: [],
 
