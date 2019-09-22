@@ -4,6 +4,7 @@ import (
 	"crawler/internal/util/config"
 	"crawler/internal/util/db"
 	"github.com/gin-gonic/gin"
+	"log"
 	"os"
 	"strings"
 )
@@ -20,10 +21,12 @@ type Instance struct {
 }
 
 func (ins *Instance) initConfig() {
+	defer log.Printf("[info] init config complete.\n")
 	ins.Config = config.NewConfig()
 }
 
 func (ins *Instance) initDb() {
+	defer log.Printf("[info] init db complete.\n")
 	ins.DB = &db.DB{}
 	ins.DB.Connect(&App.Config)
 }

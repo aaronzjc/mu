@@ -2,6 +2,7 @@ package model
 
 import (
 	"crawler/internal/app"
+	"crawler/internal/lib"
 	"encoding/json"
 	"errors"
 	"log"
@@ -43,7 +44,7 @@ type SiteJson struct {
 	Key        string   `json:"key"`
 	Root       string   `json:"root"`
 	Desc       string   `json:"desc"`
-	Tags       []Tag    `form:"tags"`
+	Tags       []Tag    `json:"tags"`
 	Type       int8 	`json:"type"`
 	Cron       string   `json:"cron"`
 	NodeOption int8     `json:"node_option"`
@@ -68,7 +69,7 @@ func (s *Site) CheckArgs() error {
 }
 
 func (s *Site) Create() error {
-	tmp, err := s.FetchRows("key = ? or root = ?", s.Key, s.Root)
+	tmp, err := s.FetchRows("`key` = ? or `root` = ?", s.Key, s.Root)
 	if err != nil {
 		return errors.New("create site error " + err.Error())
 	}
@@ -110,6 +111,18 @@ func (s *Site) FetchInfo() (Site, error) {
 	return tmp, nil
 }
 
+func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
+	db := app.App.DB.Conn
+
+	var site Site
+	db = db.Where(query, args...).First(&site)
+	if err := db.Error; err != nil && !db.RecordNotFound() {
+		log.Printf("[error] FetchRows err %v, exp %s \n", err, db.QueryExpr())
+		return Site{}, errors.New("fetchRow site failed")
+	}
+	return site, nil
+}
+
 func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
 	db := app.App.DB.Conn
 
@@ -117,7 +130,7 @@ func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
 	db = db.Where(query, args...).Find(&list)
 	if err := db.Error; err != nil {
 		log.Printf("[error] FetchRows err %v, exp %s \n", err, db.QueryExpr())
-		return nil, errors.New("fetchrows site failed")
+		return nil, errors.New("fetchRows site failed")
 	}
 	return list, nil
 }
@@ -159,4 +172,44 @@ func (s *Site) FormatJson() (SiteJson, error) {
 		NodeHosts: hosts,
 		Enable: s.Enable,
 	}, nil
+}
+
+func (s *Site) InitSites() {
+	var row Site
+	var err error
+	avaSites := lib.AvailableSites()
+	for _, siteKey := range avaSites {
+		site := lib.NewSite(siteKey)
+		row, err = s.FetchRow(" `key` = ? ", site.Key)
+		if err != nil {
+			panic("init sites fetch failed " + err.Error())
+		}
+
+		if row.ID > 0 {
+			continue
+		}
+
+		var tags []Tag
+		for _, tag := range site.Tabs {
+			tags = append(tags, Tag{
+				Key: tag["tag"],
+				Name: tag["name"],
+				Enable: 1,
+			})
+		}
+		tagStr, _ := json.Marshal(tags)
+
+		row = Site{
+			Name: site.Name,
+			Key: site.Key,
+			Root: site.Root,
+			Desc: site.Desc,
+			Tags: string(tagStr),
+			Type: site.CrawType,
+		}
+		err = row.Create()
+		if err != nil {
+			panic("init sites create failed " + err.Error())
+		}
+	}
 }

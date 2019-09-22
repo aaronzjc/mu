@@ -120,7 +120,7 @@ type Site struct {
 	Key      string
 	Root     string
 	Desc     string
-	CrawType int
+	CrawType int8
 	Tabs     []map[string]string
 }
 
@@ -191,5 +191,15 @@ func NewSite(t string) Site {
 	default:
 		log.Fatalln("Unknown site name", t)
 		return Site{}
+	}
+}
+
+func AvailableSites() []string {
+	return []string{
+		SITE_V2EX,
+		SITE_CT,
+		SITE_ZHIHU,
+		SITE_WEIBO,
+		SITE_HACKER,
 	}
 }

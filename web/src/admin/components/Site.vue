@@ -32,8 +32,8 @@
                     <tr v-for="(item, idx) in list" :key="idx">
                         <td>{{ item.name }}</td>
                         <td>{{ item.root }}</td>
-                        <td><span class="tag is-warning">{{ item.cron }}</span></td>
-                        <td><span class="tag is-light">{{ typeMap[item.type] }}</span></td>
+                        <td><span class="tag is-warning" v-if="item.cron !== '' ">{{ item.cron }}</span></td>
+                        <td><span class="tag is-light" v-if="item.type != 0">{{ typeMap[item.type] }}</span></td>
                         <td>
                             <template v-if="item.node_option === 1">
                                 <span class="tag is-light">{{ nodeTypeMap[item.node_type] }}</span>
@@ -319,7 +319,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <span class="tag is-warning">{{ viewForm.cron }}</span>
+                                    <span class="tag is-warning" v-if="viewForm.cron != ''">{{ viewForm.cron }}</span>
                                 </div>
                             </div>
                         </div>

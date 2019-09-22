@@ -16,5 +16,10 @@ module.exports = {
             title: "后台",
             chunks: ['chunk-vendors', 'chunk-common', 'admin']
         }
+    },
+    configureWebpack:{
+        performance: {
+            hints: false
+        }
     }
-}
+};
