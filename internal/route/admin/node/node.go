@@ -40,15 +40,9 @@ func Info(c *gin.Context) {
 		return
 	}
 
-	req.JSON(c, req.CodeSuccess, "成功", model.NodeJson{
-		ID: node.ID,
-		Name: node.Name,
-		Ip: node.Ip,
-		Type: node.Type,
-		Enable: node.Enable,
-		Ping: node.Ping,
-		CreateAt: node.CreateAt.Format("2006-01-02 15:04:05"),
-	})
+	json, _ := node.FormatJson()
+
+	req.JSON(c, req.CodeSuccess, "成功", json)
 	return
 }
 
@@ -74,15 +68,8 @@ func List(c *gin.Context) {
 
 	var result []model.NodeJson
 	for _, node := range nodes {
-		result = append(result, model.NodeJson{
-			ID: node.ID,
-			Name: node.Name,
-			Ip: node.Ip,
-			Type: node.Type,
-			Enable: node.Enable,
-			Ping: node.Ping,
-			CreateAt: node.CreateAt.Format("2006-01-02 15:04:05"),
-		})
+		item, _ := node.FormatJson()
+		result = append(result, item)
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", result)

@@ -197,7 +197,6 @@ import {Get, Post} from "../tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-
 export default {
     name: "Node",
     created() {

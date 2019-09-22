@@ -45,7 +45,6 @@ func (node *Node) CheckArgs() error {
 }
 
 func (node *Node) Create() error {
-	var n Node
 	tmp, err := node.FetchInfo()
 	if err != nil {
 		return errors.New("create node err")
@@ -54,9 +53,7 @@ func (node *Node) Create() error {
 	if tmp.ID > 0 {
 		return errors.New(fmt.Sprintf("node with %s exists", node.Ip))
 	}
-	if n.ID > 0 {
 
-	}
 	db := app.App.DB.Conn
 	db = db.Create(&node)
 	if err = db.Error; err != nil {
@@ -102,4 +99,18 @@ func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
 	}
 
 	return list, nil
+}
+
+func (node *Node) FormatJson() (NodeJson, error) {
+	json := NodeJson{
+		ID: node.ID,
+		Name: node.Name,
+		Ip: node.Ip,
+		Type: node.Type,
+		Enable: node.Enable,
+		Ping: node.Ping,
+		CreateAt: node.CreateAt.Format("2006-01-02 15:04:05"),
+	}
+
+	return json, nil
 }
