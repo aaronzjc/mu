@@ -14,6 +14,7 @@ var appConfig Config
 type Config struct {
 	AppName string `json:"app_name"`
 	Addr    string `json:"addr"`
+	Domain 	string `json:"domain"`
 	Redis   struct {
 		Host string `json:"host"`
 		Port int    `json:"port"`

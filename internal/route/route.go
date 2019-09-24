@@ -20,6 +20,7 @@ func RegisterStatic() {
 
 	r.StaticFile("/", path + "/public/index.html")
 	r.StaticFile("/admin", path + "/public/admin.html")
+	r.StaticFile("/admin/login", path + "/public/login.html")
 
 	r.StaticFile("favicon.png", path + "/public/favicon.png")
 	r.Static("/static", path + "/public/static")
@@ -32,6 +33,7 @@ func RegisterRoutes() {
 		AllowOriginFunc:  func(origin string) bool { return true },
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+		AllowCredentials: true,
 	})
 	r.Use(c)
 
@@ -39,12 +41,13 @@ func RegisterRoutes() {
 	r.GET("/aj", front.Aj)
 	r.GET("/config", front.Config)
 
-	r.GET("/auth", auth.Auth)
-
 	// 后台管理路由
+	r.GET("/admin/auth", auth.Auth)
+	r.GET("/admin/callback", auth.Callback)
 	api := r.Group("/api")
 	api.Use(middleware.Auth())
 	{
+		api.GET("/info", auth.Info)
 		// 节点管理
 		api.GET("/node", node.Info)
 		api.GET("/node/list", node.List)

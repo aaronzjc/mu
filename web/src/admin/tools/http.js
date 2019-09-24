@@ -2,15 +2,18 @@ import axios from "axios";
 
 const client = axios.create({
     baseURL: process.env.VUE_APP_API_ADMIN,
-    timeout: 1000
+    timeout: 1000,
+    withCredentials: true
 });
 
 client.interceptors.response.use(resp => {
-    console.log(resp)
     let res = resp.data;
     if (res.code === 10002) {
         window.location.href = res.data.url;
+        return false;
     }
+
+    return resp;
 });
 
 export function Get(url, params, headers) {

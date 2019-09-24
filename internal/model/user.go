@@ -118,15 +118,15 @@ func (u *User) Auth() error {
 	return nil
 }
 
-func (u *User) CheckToken() (bool, string) {
-	login, _ := u.FetchRow("`id` = ? AND `token`", u.ID, u.Token)
+func (u *User) CheckToken() (bool, error) {
+	login, _ := u.FetchRow("`username` = ? AND `token` = ?", u.Username, u.Token)
 	if login.ID <= 0 {
-		return false, "user not exists"
+		return false, errors.New("user not exists")
 	}
-	if login.ExpireAt >= time.Now().Unix() {
-		return false, "token expired"
+	if login.ExpireAt <= time.Now().Unix() {
+		return false, errors.New("token expired")
 	}
-	return true, ""
+	return true, nil
 }
 
 func (u *User) FormatJson() (UserJson, error) {

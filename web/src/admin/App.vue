@@ -1,5 +1,5 @@
 <template>
-  <section id="app" class="section">
+  <section id="app">
       <Dashboard></Dashboard>
   </section>
 </template>
