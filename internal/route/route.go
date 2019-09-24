@@ -2,9 +2,11 @@ package route
 
 import (
 	"crawler/internal/app"
+	"crawler/internal/route/admin/auth"
 	"crawler/internal/route/admin/node"
 	"crawler/internal/route/admin/site"
 	"crawler/internal/route/front"
+	"crawler/internal/route/middleware"
 	"github.com/gin-contrib/cors"
 	"os"
 	"path/filepath"
@@ -16,11 +18,11 @@ func RegisterStatic() {
 	pwd, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	path := filepath.Dir(pwd)
 
-	r.StaticFile("/", path + "/dist/index.html")
-	r.StaticFile("/admin", path + "/dist/admin.html")
+	r.StaticFile("/", path + "/public/index.html")
+	r.StaticFile("/admin", path + "/public/admin.html")
 
-	r.StaticFile("favicon.png", path + "/dist/favicon.png")
-	r.Static("/static", path + "/dist/static")
+	r.StaticFile("favicon.png", path + "/public/favicon.png")
+	r.Static("/static", path + "/public/static")
 }
 
 func RegisterRoutes() {
@@ -37,8 +39,11 @@ func RegisterRoutes() {
 	r.GET("/aj", front.Aj)
 	r.GET("/config", front.Config)
 
+	r.GET("/auth", auth.Auth)
+
 	// 后台管理路由
 	api := r.Group("/api")
+	api.Use(middleware.Auth())
 	{
 		// 节点管理
 		api.GET("/node", node.Info)

@@ -5,6 +5,14 @@ const client = axios.create({
     timeout: 1000
 });
 
+client.interceptors.response.use(resp => {
+    console.log(resp)
+    let res = resp.data;
+    if (res.code === 10002) {
+        window.location.href = res.data.url;
+    }
+});
+
 export function Get(url, params, headers) {
     if (!params) {
         params = {};

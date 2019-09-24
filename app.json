@@ -11,5 +11,12 @@
         "user": "root",
         "password": "root",
         "database": "mu"
-    }
+    },
+    "auth": {
+        "github": {
+            "client_id": "7c8e95b5fc5ea1ee747d",
+            "client_secret": "b9b273b6e473a12f87dfd5559e15ac5d98e93ea1"
+        }
+    },
+    "salt": "iloveu"
 }

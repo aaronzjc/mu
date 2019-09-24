@@ -4,9 +4,13 @@ import (
 	"crawler/internal/util/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
+)
+
+var (
+	Pool DB
 )
 
 type DB struct {

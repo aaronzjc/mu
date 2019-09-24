@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crawler/internal/app"
 	"crawler/internal/lib"
 	"encoding/json"
 	"errors"
@@ -77,7 +76,7 @@ func (s *Site) Create() error {
 		return errors.New("同key或者同root的站点已经存在")
 	}
 
-	db := app.App.DB.Conn
+	db := DPool().Conn
 	db = db.Create(&s)
 	if err = db.Error; err != nil {
 		log.Printf("[error] create err %v, exp %s \n", err, db.QueryExpr())
@@ -88,7 +87,7 @@ func (s *Site) Create() error {
 }
 
 func (s *Site) Update(data map[string]interface{}) error {
-	db := app.App.DB.Conn
+	db := DPool().Conn
 
 	db = db.Model(&s).Update(data)
 	if err := db.Error; err != nil {
@@ -101,7 +100,7 @@ func (s *Site) Update(data map[string]interface{}) error {
 
 func (s *Site) FetchInfo() (Site, error) {
 	var tmp Site
-	db := app.App.DB.Conn
+	db := DPool().Conn
 	db = db.Where("id = ?", s.ID).First(&tmp)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
 		log.Printf("[error] FetchInfo err %v, exp %s \n", err, db.QueryExpr())
@@ -112,7 +111,7 @@ func (s *Site) FetchInfo() (Site, error) {
 }
 
 func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
-	db := app.App.DB.Conn
+	db := DPool().Conn
 
 	var site Site
 	db = db.Where(query, args...).First(&site)
@@ -124,7 +123,7 @@ func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
 }
 
 func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
-	db := app.App.DB.Conn
+	db := DPool().Conn
 
 	var list []Site
 	db = db.Where(query, args...).Find(&list)
@@ -175,18 +174,14 @@ func (s *Site) FormatJson() (SiteJson, error) {
 }
 
 func (s *Site) InitSites() {
-	var row Site
-	var err error
+	var tagStr []byte
+
 	avaSites := lib.AvailableSites()
 	for _, siteKey := range avaSites {
 		site := lib.NewSite(siteKey)
-		row, err = s.FetchRow(" `key` = ? ", site.Key)
+		row, err := s.FetchRow(" `key` = ? ", site.Key)
 		if err != nil {
 			panic("init sites fetch failed " + err.Error())
-		}
-
-		if row.ID > 0 {
-			continue
 		}
 
 		var tags []Tag
@@ -197,7 +192,20 @@ func (s *Site) InitSites() {
 				Enable: 1,
 			})
 		}
-		tagStr, _ := json.Marshal(tags)
+		tagStr, _ = json.Marshal(tags)
+
+		if row.ID > 0 {
+			err = row.Update(map[string]interface{}{
+				"name": site.Name,
+				"root": site.Root,
+				"tags": string(tagStr),
+				"type": site.CrawType,
+			})
+			if err != nil {
+				panic("init sites update failed " + err.Error())
+			}
+			continue
+		}
 
 		row = Site{
 			Name: site.Name,

@@ -1,8 +1,8 @@
 package app
 
 import (
+	"crawler/internal/model"
 	"crawler/internal/util/config"
-	"crawler/internal/util/db"
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
@@ -17,18 +17,11 @@ var (
 type Instance struct {
 	Gin		*gin.Engine
 	Config  config.Config
-	DB 		*db.DB
 }
 
 func (ins *Instance) initConfig() {
 	defer log.Printf("[info] init config complete.\n")
 	ins.Config = config.NewConfig()
-}
-
-func (ins *Instance) initDb() {
-	defer log.Printf("[info] init db complete.\n")
-	ins.DB = &db.DB{}
-	ins.DB.Connect(&App.Config)
 }
 
 func init() {
@@ -42,5 +35,7 @@ func init() {
 	}
 
 	App.initConfig()
-	App.initDb()
+
+	// 初始化数据库
+	(&model.Site{}).InitSites()
 }

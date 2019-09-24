@@ -1,5 +1,5 @@
 module.exports = {
-    outputDir: "../dist",
+    outputDir: "../public",
     assetsDir: "static",
     pages: {
         index: {

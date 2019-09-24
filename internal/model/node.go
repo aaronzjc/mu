@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crawler/internal/app"
 	"errors"
 	"fmt"
 	"log"
@@ -54,7 +53,7 @@ func (node *Node) Create() error {
 		return errors.New(fmt.Sprintf("node with %s exists", node.Ip))
 	}
 
-	db := app.App.DB.Conn
+	db := DPool().Conn
 	db = db.Create(&node)
 	if err = db.Error; err != nil {
 		log.Printf("[error] create err %v, exp %s \n", err, db.QueryExpr())
@@ -65,7 +64,7 @@ func (node *Node) Create() error {
 }
 
 func (node *Node) Update(data map[string]interface{}) error {
-	db := app.App.DB.Conn
+	db := DPool().Conn
 
 	db = db.Model(&node).Update(data)
 	if err := db.Error; err != nil {
@@ -78,7 +77,7 @@ func (node *Node) Update(data map[string]interface{}) error {
 
 func (node *Node) FetchInfo() (Node, error) {
 	var n Node
-	db := app.App.DB.Conn
+	db := DPool().Conn
 	db = db.Where("id = ?", node.ID).First(&n)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
 		log.Printf("[error] FetchInfo err %v, exp %s \n", err, db.QueryExpr())
@@ -89,7 +88,7 @@ func (node *Node) FetchInfo() (Node, error) {
 }
 
 func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
-	db := app.App.DB.Conn
+	db := DPool().Conn
 
 	var list []Node
 	db = db.Where(query, args...).Find(&list)

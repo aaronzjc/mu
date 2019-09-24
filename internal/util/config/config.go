@@ -25,6 +25,13 @@ type Config struct {
 		Password string `json:"password"`
 		Database string `json:"database"`
 	} `json:"db"`
+	Auth struct {
+		Github	struct {
+			ClientId 		string 	`json:"client_id"`
+			ClientSecret 	string 	`json:"client_secret"`
+		}	`json:"github"`
+	}	`json:"auth"`
+	Salt 	string 	`json:"salt"`
 }
 
 func FindConfigFile() (string, error) {

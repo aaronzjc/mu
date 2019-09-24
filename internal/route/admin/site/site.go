@@ -4,7 +4,6 @@ import (
 	"crawler/internal/model"
 	"crawler/internal/util/req"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,12 +34,12 @@ func Info(c *gin.Context) {
 		return
 	}
 
-	json, err := site.FormatJson()
+	jsonObj, err := site.FormatJson()
 	if err != nil {
 		req.JSON(c, req.CodeError, err.Error(), nil)
 		return
 	}
-	req.JSON(c, req.CodeSuccess, "成功", json)
+	req.JSON(c, req.CodeSuccess, "成功", jsonObj)
 	return
 }
 
@@ -111,8 +110,6 @@ func UpdateSite(c *gin.Context) {
 		NodeType: r.NodeType,
 		NodeHosts: string(hostsBytes),
 	}
-	fmt.Println(r.NodeHosts)
-	fmt.Println(m.NodeHosts)
 	err = m.CheckArgs()
 	if err != nil {
 		req.JSON(c, req.CodeError, err.Error(), nil)
