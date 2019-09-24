@@ -74,7 +74,7 @@ steps:
     settings:
       repo: uhub.service.ucloud.cn/memosa/mu
       tags: dev
-      target: mu
+      dockerfile: Dockerfile.staging
       username:
         from_secret: docker_user
       password:
