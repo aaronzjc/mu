@@ -163,7 +163,7 @@ func (j *Job) ExecJob() {
 	defer cancel()
 
 	var result *rpc.Result
-	result, err = client.Craw(ctx, &rpc.Job{Name: j.Site.Name})
+	result, err = client.Craw(ctx, &rpc.Job{Name: j.Site.Key})
 	if err != nil {
 		log.Printf("[error] remote craw err %v", err)
 		return

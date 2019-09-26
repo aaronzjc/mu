@@ -5,7 +5,7 @@ import (
 	"crawler/internal/route/admin/auth"
 	"crawler/internal/route/admin/node"
 	"crawler/internal/route/admin/site"
-	"crawler/internal/route/front"
+	"crawler/internal/route/index"
 	"crawler/internal/route/middleware"
 	"github.com/gin-contrib/cors"
 	"os"
@@ -38,8 +38,8 @@ func RegisterRoutes() {
 	r.Use(c)
 
 	// 前端路由
-	r.GET("/aj", front.Aj)
-	r.GET("/config", front.Config)
+	r.GET("/aj", index.Aj)
+	r.GET("/config", index.Config)
 
 	// 后台管理路由
 	r.GET("/admin/auth", auth.Auth)

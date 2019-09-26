@@ -7,7 +7,7 @@ steps:
     commands:
       - make vue
 
-  - name: build crawler&mu
+  - name: build production
     image: golang:1.13-stretch
     commands:
       - make crawler
@@ -64,7 +64,7 @@ steps:
     commands:
       - make vue-staging
 
-  - name: build mu-staging
+  - name: build staging
     image: golang:1.13-stretch
     commands:
       - make mu-staging

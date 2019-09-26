@@ -151,8 +151,6 @@ func (s *Site) FormatJson() (SiteJson, error) {
 		if err != nil {
 			return SiteJson{}, errors.New("标签解析失败")
 		}
-	} else {
-		tags = []Tag{}
 	}
 
 	if s.NodeHosts != "" {

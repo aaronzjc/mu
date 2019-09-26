@@ -456,7 +456,7 @@ export default {
         },
         edit(idx) {
             this.editModal = true;
-            this.editForm = this.list[idx];
+            this.editForm = Object.assign({}, this.list[idx]);
         },
         view(idx) {
             this.viewModal = true;

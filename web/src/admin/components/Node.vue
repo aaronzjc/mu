@@ -235,8 +235,10 @@ export default {
                     alert(resp.data.msg);
                 } else {
                     this.cancel();
-                    alert("操作成功")
+                    alert("保存成功")
                 }
+
+                this.fetchList()
             });
         },
         view(idx) {
@@ -257,7 +259,7 @@ export default {
         },
         edit(idx) {
             this.viewModal = false;
-            this.editForm = this.list[idx];
+            this.editForm = Object.assign({}, this.list[idx]);
             this.editModal = true;
         },
         cancel() {

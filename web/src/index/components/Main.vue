@@ -74,13 +74,20 @@ export default {
     methods: {
         fetchConfig: function (callback) {
             Get(API.config).then(function (resp) {
-                this.tabs = resp.data;
+                if (resp.data.code === 10000) {
+                    this.tabs = resp.data.data;
+                } else {
+                    alert(resp.data.msg);
+                }
                 if (typeof callback == "function") {
                     callback();
                 }
             }.bind(this))
         },
         fetchList: function () {
+            if (this.tabs.length === 0) {
+                return false;
+            }
             NProgress.start();
             var key = this.tabs[this.selected.tab]["key"];
             var hkey = this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"];
@@ -93,9 +100,11 @@ export default {
                     hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
                 }
             }).then(function (resp) {
-                var list = resp.data.list;
-                this.list = list;
-                this.t = resp.data.t;
+                if (resp.data.code === 10000) {
+                    var list = resp.data.data.list;
+                    this.list = list;
+                    this.t = resp.data.data.t;
+                }
                 NProgress.done();
             }.bind(this))
         },
