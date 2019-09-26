@@ -70,28 +70,28 @@ steps:
       - make mu-staging
 
   - name: release mu-node
-      image: plugins/docker
-      settings:
-        repo: uhub.service.ucloud.cn/memosa/crawler
-        tags: dev
-        target: crawler
-        username:
-          from_secret: docker_user
-        password:
-          from_secret: docker_password
-        registry: uhub.service.ucloud.cn
+    image: plugins/docker
+    settings:
+      repo: uhub.service.ucloud.cn/memosa/crawler
+      tags: dev
+      target: crawler
+      username:
+        from_secret: docker_user
+      password:
+        from_secret: docker_password
+      registry: uhub.service.ucloud.cn
 
   - name: release mu-master
-      image: plugins/docker
-      settings:
-        repo: uhub.service.ucloud.cn/memosa/mu
-        tags: dev
-        target: mu
-        username:
-          from_secret: docker_user
-        password:
-          from_secret: docker_password
-        registry: uhub.service.ucloud.cn
+    image: plugins/docker
+    settings:
+      repo: uhub.service.ucloud.cn/memosa/mu
+      tags: dev
+      target: mu
+      username:
+        from_secret: docker_user
+      password:
+        from_secret: docker_password
+      registry: uhub.service.ucloud.cn
 
   - name: deploy
     image: appleboy/drone-ssh
