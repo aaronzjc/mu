@@ -18,7 +18,7 @@ type ListForm struct {
 type UpsertForm struct {
 	ID 			int 		`form:"id"`
 	Name 		string		`form:"name"`
-	Ip 			string 		`form:"ip"`
+	Addr 			string 		`form:"addr"`
 	Type 		int8 		`form:"type"`
 	Enable 		int8 		`form:"enable"`
 }
@@ -86,7 +86,7 @@ func CreateOrUpdateNode(c *gin.Context) {
 
 	m := &model.Node{
 		Name: r.Name,
-		Ip: r.Ip,
+		Addr: r.Addr,
 		Type: r.Type,
 		Enable: r.Enable,
 	}
@@ -99,7 +99,7 @@ func CreateOrUpdateNode(c *gin.Context) {
 	if r.ID > 0 {
 		data := make(map[string]interface{})
 		data["name"] = r.Name
-		data["ip"] = r.Ip
+		data["addr"] = r.Addr
 		data["enable"] = r.Enable
 		data["type"] = r.Type
 

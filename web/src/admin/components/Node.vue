@@ -25,7 +25,7 @@
                     <thead>
                     <tr>
                         <th width="10%">名称</th>
-                        <th width="15%">IP</th>
+                        <th width="15%">Addr</th>
                         <th width="10%">类型</th>
                         <th width="10%">Ping</th>
                         <th width="5%">状态</th>
@@ -35,7 +35,7 @@
                     <tbody>
                     <tr v-for="(item, idx) in list" :key="idx">
                         <td>{{ item.name }}</td>
-                        <td>{{ item.ip }}</td>
+                        <td>{{ item.addr }}</td>
                         <td><span class="tag is-warning">{{ typeMap[item.type] }}</span></td>
                         <td>
                             <span :class="[ 'ping',  { 'has-background-success' : item.ping === 1 }, { 'has-background-danger' : item.ping === 0,  } ]"></span>
@@ -77,11 +77,11 @@
 
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
-                            <label class="label">IP</label>
+                            <label class="label">Addr</label>
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="IP" v-model="editForm.ip">
+                                <input class="input" type="text" placeholder="addr, ip:port" v-model="editForm.addr">
                             </div>
                         </div>
                     </div>
@@ -148,10 +148,10 @@
 
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
-                            <label class="label">IP</label>
+                            <label class="label">Addr</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ viewForm.ip }}</strong>
+                            <strong>{{ viewForm.addr }}</strong>
                         </div>
                     </div>
 
@@ -247,7 +247,7 @@ export default {
             this.editForm = {
                 "id": 0,
                 "name": "",
-                "ip": "",
+                "addr": "",
                 "type": 1,
                 "ping": 0,
                 "enable": 0
@@ -266,7 +266,7 @@ export default {
             this.editForm = {
                 "id": 0,
                 "name": "",
-                "ip": "",
+                "addr": "",
                 "type": 1,
                 "ping": 0,
                 "enable": 0

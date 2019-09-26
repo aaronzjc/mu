@@ -1,7 +1,7 @@
 package route
 
 import (
-	"crawler/internal/app"
+	"crawler/internal/app/mu"
 	"crawler/internal/route/admin/auth"
 	"crawler/internal/route/admin/node"
 	"crawler/internal/route/admin/site"
@@ -13,7 +13,7 @@ import (
 )
 
 func RegisterStatic() {
-	r := app.App.Gin
+	r := mu.App.Gin
 
 	pwd, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	path := filepath.Dir(pwd)
@@ -27,7 +27,7 @@ func RegisterStatic() {
 }
 
 func RegisterRoutes() {
-	r := app.App.Gin
+	r := mu.App.Gin
 
 	c := cors.New(cors.Config{
 		AllowOriginFunc:  func(origin string) bool { return true },

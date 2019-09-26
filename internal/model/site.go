@@ -1,7 +1,7 @@
 package model
 
 import (
-	"crawler/internal/lib"
+	"crawler/internal/svc/lib"
 	"encoding/json"
 	"errors"
 	"log"
@@ -9,11 +9,18 @@ import (
 )
 
 type CrawType int
+type NodeOption int8
+type Status int8
 
 const (
-	_        CrawType = iota
-	CrawHtml          // 1
-	CrawApi           // 2
+	CrawHtml CrawType = 1 // 网站是HTML
+	CrawApi CrawType = 2 // 网站是JSON接口
+
+	ByType	NodeOption = 1 // 通过服务器类型
+	ByHosts NodeOption = 2 // 服务器IPs
+
+	Disable Status = 0 // 禁用
+	Enable Status = 1 // 启用
 )
 
 type Site struct {
@@ -26,7 +33,7 @@ type Site struct {
 	Tags      string    `gorm:"tags"`
 	Cron      string    `gorm:"cron"`
 	Enable    int8      `gorm:"enable"`
-	NodeOption int8		`gorm:"node_option"`
+	NodeOption NodeOption		`gorm:"node_option"`
 	NodeType  int8    `gorm:"node_type"`
 	NodeHosts string    `gorm:"node_hosts"`
 }
@@ -46,7 +53,7 @@ type SiteJson struct {
 	Tags       []Tag    `json:"tags"`
 	Type       int8 	`json:"type"`
 	Cron       string   `json:"cron"`
-	NodeOption int8     `json:"node_option"`
+	NodeOption NodeOption     `json:"node_option"`
 	NodeType   int8     `json:"node_type"`
 	NodeHosts  []int    `json:"node_hosts"`
 	Enable     int8     `json:"enable"`
@@ -211,6 +218,10 @@ func (s *Site) InitSites() {
 			Name: site.Name,
 			Key: site.Key,
 			Root: site.Root,
+			Cron: "*/30 * * * *",
+			NodeOption: 1, // 默认使用分类
+			NodeType: 1, // 默认国内的机器
+			NodeHosts: "",
 			Desc: site.Desc,
 			Tags: string(tagStr),
 			Type: site.CrawType,

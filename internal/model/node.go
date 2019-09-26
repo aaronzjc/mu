@@ -8,10 +8,21 @@ import (
 	"time"
 )
 
+type NodeType int8
+type Ping int8
+
+const (
+	TypeOverseas NodeType = 1 // 海外
+	TypeMainland NodeType = 2 // 大陆
+
+	PingFailed Ping = 0
+	PingOk Ping = 1
+)
+
 type Node struct {
 	ID 			int
 	Name 		string 		`gorm:"name"`
-	Ip 			string 		`gorm:"ip"`
+	Addr 			string 		`gorm:"addr"`
 	Type 		int8 		`gorm:"type"`
 	Enable 		int8 		`gorm:"enable"`
 	Ping 		int8 		`gorm:"ping"`
@@ -21,7 +32,7 @@ type Node struct {
 type NodeJson struct {
 	ID 			int			`json:"id"`
 	Name 		string 		`json:"name"`
-	Ip 			string 		`json:"ip"`
+	Addr 			string 		`json:"addr"`
 	Type 		int8 		`json:"type"`
 	Enable 		int8 		`json:"enable"`
 	Ping 		int8 		`json:"ping"`
@@ -36,8 +47,8 @@ func (node *Node) CheckArgs() error {
 	if node.Name == "" {
 		return errors.New("参数为空")
 	}
-	if match, _ := regexp.MatchString("^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)$", node.Ip); !match {
-		return errors.New("IP不规范")
+	if match, _ := regexp.MatchString("^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+):\\d+$", node.Addr); !match {
+		return errors.New("Addr不规范")
 	}
 
 	return nil
@@ -50,7 +61,7 @@ func (node *Node) Create() error {
 	}
 
 	if tmp.ID > 0 {
-		return errors.New(fmt.Sprintf("node with %s exists", node.Ip))
+		return errors.New(fmt.Sprintf("node with %s exists", node.Addr))
 	}
 
 	db := DPool().Conn
@@ -104,7 +115,7 @@ func (node *Node) FormatJson() (NodeJson, error) {
 	json := NodeJson{
 		ID: node.ID,
 		Name: node.Name,
-		Ip: node.Ip,
+		Addr: node.Addr,
 		Type: node.Type,
 		Enable: node.Enable,
 		Ping: node.Ping,

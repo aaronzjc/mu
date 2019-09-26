@@ -1,7 +1,7 @@
 package front
 
 import (
-	"crawler/internal/lib"
+	"crawler/internal/svc/lib"
 	"crawler/internal/util/cache"
 	"encoding/json"
 	"github.com/gin-gonic/gin"

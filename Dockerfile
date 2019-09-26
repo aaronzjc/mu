@@ -4,6 +4,7 @@ RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Sha
 RUN mkdir -p /app/bin
 COPY ./bin/crawler /app/bin/
 WORKDIR /app/bin
+EXPOSE 7990
 CMD ["./crawler"]
 
 FROM alpine:3.7 as mu

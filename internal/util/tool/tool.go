@@ -14,3 +14,15 @@ func GenerateToken(input string) string {
 
 	return md5Str
 }
+
+func ArrSearch(ele string, arr []string) int {
+	res := -1
+	for idx, val := range arr {
+		if val == ele {
+			res = idx
+			break
+		}
+	}
+
+	return res
+}

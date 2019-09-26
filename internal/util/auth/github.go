@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"crawler/internal/util/config"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -28,8 +29,10 @@ type GithubAuth struct {
 	ClientSecret string
 }
 
-func (auth *GithubAuth) RedirectAuth(redirect string) string {
-	url := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s", auth.ClientId, redirect)
+func (auth *GithubAuth) RedirectAuth() string {
+	cnf := config.NewConfig()
+	callback := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/callback")
+	url := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s", auth.ClientId, callback)
 	return url
 }
 

@@ -1,7 +1,8 @@
-package app
+package mu
 
 import (
 	"crawler/internal/model"
+	"crawler/internal/svc/schedule"
 	"crawler/internal/util/config"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -22,6 +23,10 @@ type Instance struct {
 func (ins *Instance) initConfig() {
 	defer log.Printf("[info] init config complete.\n")
 	ins.Config = config.NewConfig()
+}
+
+func (ins *Instance) initCron() {
+	schedule.JobSchedule.InitJobs()
 }
 
 func init() {

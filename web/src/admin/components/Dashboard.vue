@@ -5,7 +5,9 @@
                 <div class="columns">
                     <div class="column">
                         <div class="logo has-text-centered"><img :src="login.avatar" alt=""></div>
-                        <div class="has-text-centered"><strong>欢迎 <span class="has-text-info">{{ login.username }}</span></strong></div>
+                        <div class="has-text-centered">
+                            <strong>欢迎 <span class="has-text-info">{{ login.username }}</span></strong>
+                        </div>
                     </div>
                 </div>
                 <Menu></Menu>
@@ -67,6 +69,6 @@ export default {
         }
     }
     .content {
-        padding-top: 2rem;
+        padding-top: 3rem;
     }
 </style>

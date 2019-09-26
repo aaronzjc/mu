@@ -5,6 +5,8 @@ import (
 	"crawler/internal/util/auth"
 	"crawler/internal/util/config"
 	"crawler/internal/util/req"
+	"crawler/internal/util/tool"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -29,11 +31,11 @@ func Info(c *gin.Context) {
 func Auth(c *gin.Context) {
 	cnf := config.NewConfig()
 	github := &auth.GithubAuth{
-		ClientId: cnf.Auth.Github.ClientId,
+		ClientId:     cnf.Auth.Github.ClientId,
 		ClientSecret: cnf.Auth.Github.ClientSecret,
 	}
 
-	c.Redirect(http.StatusMovedPermanently, github.RedirectAuth("http://127.0.0.1:7980/admin/callback"))
+	c.Redirect(http.StatusMovedPermanently, github.RedirectAuth())
 	c.Abort()
 }
 
@@ -42,37 +44,51 @@ func Callback(c *gin.Context) {
 
 	cnf := config.NewConfig()
 	github := &auth.GithubAuth{
-		ClientId: cnf.Auth.Github.ClientId,
+		ClientId:     cnf.Auth.Github.ClientId,
 		ClientSecret: cnf.Auth.Github.ClientSecret,
 	}
 	token, _ := github.RequestAccessToken(code)
 	gUser, _ := github.RequestUser(token)
 
-	if gUser.Username != "aaronzjc" {
-		req.JSON(c, req.CodeError, "sorry, auth failed", nil)
+	if idx := tool.ArrSearch(gUser.Username, cnf.Auth.Github.Admins); idx == -1 {
+		c.String(http.StatusForbidden, "不好意思，您没有权限。请联系管理员。")
 		return
 	}
 
 	user := model.User{
 		Username: gUser.Username,
 		Nickname: gUser.Username,
-		Avatar: gUser.Avatar,
+		Avatar:   gUser.Avatar,
+		AuthType: model.AuthGithub,
 	}
 
 	_ = user.Auth()
 
 	setCookie(c, map[string]string{
 		"_token": user.Token,
-		"_user": user.Username,
+		"_user":  user.Username,
 	})
 
-	c.Redirect(http.StatusTemporaryRedirect, "http://127.0.0.1:8080/admin")
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("%s%s", cnf.WebUrl(), "/admin"))
 	c.Abort()
+}
+
+func Logout(c *gin.Context) {
+	clearCookie(c, []string{"_token", "_user"})
+	cnf := config.NewConfig()
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("%s%s", cnf.WebUrl(), "/admin/login"))
 }
 
 func setCookie(c *gin.Context, data map[string]string) {
 	cnf := config.NewConfig()
 	for key, val := range data {
-		c.SetCookie(key, val,  86400 * 30, "", cnf.Domain, false, false)
+		c.SetCookie(key, val, 86400*30, "", cnf.Server.Host, false, false)
+	}
+}
+
+func clearCookie(c *gin.Context, keys []string) {
+	cnf := config.NewConfig()
+	for _, val := range keys {
+		c.SetCookie(val, "", -1, "", cnf.Server.Host, false, false)
 	}
 }

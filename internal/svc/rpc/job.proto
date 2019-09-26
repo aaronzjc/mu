@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package rpc;
+
+service Agent {
+    rpc Craw (Job) returns (Result) {}
+}
+
+message Job {
+    string name = 1;
+}
+
+message Result {
+    message HotList {
+        message Item {
+            string Title = 1;
+            float Rank = 2;
+            string Url = 3;
+        }
+        repeated Item item = 1;
+    }
+    map<string, HotList> Map = 1;
+
+    string T = 2;
+}

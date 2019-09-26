@@ -8,11 +8,17 @@ import (
 	"time"
 )
 
+const (
+	AuthGithub = iota
+	AuthWeibo
+)
+
 type User struct {
 	ID 		int 		`gorm:"id"`
 	Username string 	`gorm:"username"`
 	Nickname string 	`gorm:"nickname"`
 	Avatar	string 		`gorm:"avatar"`
+	AuthType int8		`gorm:"auth_type"`
 	AuthTime string 	`gorm:"auth_time"`
 	Token 	string 		`gorm:"token"`
 	ExpireAt int64 		`gorm:"expire_at"`
@@ -23,6 +29,7 @@ type UserJson struct {
 	Username string 	`json:"username"`
 	Nickname string 	`json:"nickname"`
 	Avatar	string 		`json:"avatar"`
+	AuthType int8		`json:"auth_type"`
 	AuthTime string 	`json:"auth_time"`
 	Token 	string 		`json:"token"`
 	ExpireAt int64 		`json:"expire_at"`
@@ -94,7 +101,7 @@ func (u *User) RefreshToken() error {
 }
 
 func (u *User) Auth() error {
-	tmp, _ := u.FetchRow("`username` = ?", u.Username)
+	tmp, _ := u.FetchRow("`username` = ? AND `auth_type` = ?", u.Username, u.AuthType)
 	if tmp.ID > 0 {
 		err := tmp.RefreshToken()
 		if err != nil {

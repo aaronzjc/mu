@@ -141,6 +141,69 @@ func (s *Site) Craw(link Link, headers map[string]string) (Page, error) {
 	return page, nil
 }
 
+func FSite(t string) Spider {
+	switch t {
+	case SITE_V2EX:
+		return &V2ex{
+			Site{
+				Name:     "v2ex",
+				Key:      t,
+				Root:     "https://www.v2ex.com",
+				Desc:     "way to explore",
+				CrawType: CrawHtml,
+				Tabs:     V2exTabs,
+			},
+		}
+	case SITE_CT:
+		return &Chouti{
+			Site{
+				Name:     "抽屉",
+				Key:      t,
+				Root:     "https://dig.chouti.com",
+				Desc:     "抽屉新热榜",
+				CrawType: CrawApi,
+				Tabs:     ChoutiTabs,
+			},
+		}
+	case SITE_WEIBO:
+		return &Weibo{
+			Site{
+				Name:     "微博",
+				Key:      t,
+				Root:     "https://s.weibo.com",
+				Desc:     "微博热搜",
+				CrawType: CrawHtml,
+				Tabs:     WeiboTabs,
+			},
+		}
+	case SITE_ZHIHU:
+		return &Zhihu{
+			Site{
+				Name:     "知乎",
+				Key:      t,
+				Root:     "https://zhihu.com",
+				Desc:     "知乎热榜",
+				CrawType: CrawHtml,
+				Tabs:     ZhihuTabs,
+			},
+		}
+	case SITE_HACKER:
+		return &Hacker{
+			Site{
+				Name:     "Hacker",
+				Key:      t,
+				Root:     "https://news.ycombinator.com/",
+				Desc:     "Hacker News",
+				CrawType: CrawHtml,
+				Tabs:     HackerTabs,
+			},
+		}
+	default:
+		log.Fatalln("Unknown site name", t)
+		return nil
+	}
+}
+
 func NewSite(t string) Site {
 	switch t {
 	case SITE_V2EX:

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"crawler/internal/model"
+	"crawler/internal/util/config"
 	"crawler/internal/util/req"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,9 +19,10 @@ func Auth() gin.HandlerFunc {
 			Token: token,
 		}
 
+		cnf := config.NewConfig()
 		if _, err := user.CheckToken(); err != nil {
 			log.Printf("[info] token check failed %s\n", err.Error())
-			url := fmt.Sprintf("http://127.0.0.1:7980/admin/login")
+			url := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/login")
 			req.JSON(c, req.CodeForbidden, "禁止访问", map[string]interface{}{
 				"url": url,
 			})

@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -13,26 +14,44 @@ var appConfig Config
 
 type Config struct {
 	AppName string `json:"app_name"`
-	Addr    string `json:"addr"`
-	Domain 	string `json:"domain"`
-	Redis   struct {
+	Server  struct {
+		Https bool   `json:"https"`
+		Host  string `json:"host"`
+		Addr  string `json:"addr"`
+		Web   string `json:"web"`
+	} `json:"server"`
+	Redis struct {
 		Host string `json:"host"`
 		Port int    `json:"port"`
 	} `json:"redis"`
 	Db struct {
 		Host     string `json:"host"`
-		Port     int 	`json:"port"`
+		Port     int    `json:"port"`
 		User     string `json:"user"`
 		Password string `json:"password"`
 		Database string `json:"database"`
 	} `json:"db"`
 	Auth struct {
-		Github	struct {
-			ClientId 		string 	`json:"client_id"`
-			ClientSecret 	string 	`json:"client_secret"`
-		}	`json:"github"`
-	}	`json:"auth"`
-	Salt 	string 	`json:"salt"`
+		Github struct {
+			ClientId     string   `json:"client_id"`
+			ClientSecret string   `json:"client_secret"`
+			Admins       []string `json:"admins"`
+		} `json:"github"`
+	} `json:"auth"`
+	Salt string `json:"salt"`
+}
+
+func (c *Config) ServerUrl() string {
+	proto := "http"
+	if c.Server.Https {
+		proto = "https"
+	}
+
+	return fmt.Sprintf("%s://%s%s", proto, c.Server.Host, c.Server.Addr)
+}
+
+func (c *Config) WebUrl() string {
+	return c.Server.Web
 }
 
 func FindConfigFile() (string, error) {
@@ -52,7 +71,7 @@ func FindConfigFile() (string, error) {
 }
 
 func NewConfig() Config {
-	if appConfig != (Config{}) {
+	if appConfig.AppName != "" {
 		return appConfig
 	}
 
@@ -69,6 +88,19 @@ func NewConfig() Config {
 	err = json.Unmarshal(configData, &appConfig)
 	if err != nil {
 		panic("config file decode error " + err.Error())
+	}
+
+	if appConfig.AppName == "" {
+		panic("invalid config")
+	}
+
+	// 如果前端Web为空，则表明使用Gin的Web服务。这里，更新Web地址
+	if appConfig.Server.Web == "" {
+		proto := "http"
+		if appConfig.Server.Https {
+			proto = "https"
+		}
+		appConfig.Server.Web = fmt.Sprintf("%s://%s%s", proto, appConfig.Server.Host, appConfig.Server.Addr)
 	}
 
 	return appConfig
