@@ -2,6 +2,8 @@ package site
 
 import (
 	"crawler/internal/model"
+	"crawler/internal/svc/schedule"
+	"crawler/internal/util/logger"
 	"crawler/internal/util/req"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -74,7 +76,7 @@ func List(c *gin.Context) {
 		result = append(result, item)
 	}
 
-	nodes, _ := (&model.Node{}).FetchRows("1=1")
+	nodes, _ := (&model.Node{}).FetchRows("`enable` = ?", model.Enable)
 	nodeJson := make(map[int]model.NodeJson)
 	for _, node := range nodes {
 		n, _ := node.FormatJson()
@@ -127,11 +129,34 @@ func UpdateSite(c *gin.Context) {
 	data["node_type"] = m.NodeType
 	data["node_hosts"] = m.NodeHosts
 
+	om, _ := (&model.Site{}).FetchRow("`id` = ?", m.ID)
+
 	err = m.Update(data)
 	if err != nil {
 		req.JSON(c, req.CodeError, "更新站点失败", nil)
 		return
 	}
+
+	// 检查当前更新状态，操作Job
+	s := om.Enable == m.Enable
+	if !s {
+		if m.Enable == model.Enable {
+			// add
+			_ = schedule.JobSchedule.AddJob(m)
+		} else {
+			// delete
+			schedule.JobSchedule.RemoveJob(m.Key)
+		}
+		logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
+	} else {
+		if m.Cron != om.Cron {
+			// update
+			schedule.JobSchedule.RemoveJob(m.Key)
+			_ = schedule.JobSchedule.AddJob(m)
+			logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
+		}
+	}
+
 	req.JSON(c, req.CodeSuccess, "成功", nil)
 	return
 }

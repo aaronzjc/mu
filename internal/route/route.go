@@ -52,6 +52,7 @@ func RegisterRoutes() {
 		api.GET("/node", node.Info)
 		api.GET("/node/list", node.List)
 		api.POST("/node/upsert", node.CreateOrUpdateNode)
+		api.GET("/node/del", node.Del)
 
 		// 站点管理
 		api.GET("/site", site.Info)

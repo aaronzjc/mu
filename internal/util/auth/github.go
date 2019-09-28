@@ -2,11 +2,11 @@ package auth
 
 import (
 	"crawler/internal/util/config"
+	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -45,7 +45,7 @@ func (auth *GithubAuth) RequestAccessToken(code string) (string, error) {
 	req.Header.Add("Accept", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[error] github request access_token failed %s\n", err.Error())
+		logger.Error("github request access_token failed %s .", err.Error())
 		return "", errors.New("RequestAccessToken failed")
 	}
 
@@ -71,7 +71,7 @@ func (auth *GithubAuth) RequestUser(token string) (GithubUser, error) {
 	req.Header.Add("Authorization", "token "+token)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[error] github request user failed %s\n", err.Error())
+		logger.Error("github request user failed %s .", err.Error())
 		return GithubUser{}, errors.New("RequestUser failed")
 	}
 
@@ -82,7 +82,7 @@ func (auth *GithubAuth) RequestUser(token string) (GithubUser, error) {
 	var u GithubUser
 	err = json.Unmarshal(body, &u)
 	if err != nil {
-		log.Printf("[error] github user decode failed %s\n", err.Error())
+		logger.Error("github user decode failed %s .", err.Error())
 	}
 
 	return u, nil

@@ -1,9 +1,8 @@
 GO111MODULE=on
 
-.PHONY: all
-all: vue clean crawler mu
+.PHONY: production
+production: vue clean crawler mu
 
-.PHONY: crawler mu vue
 crawler:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/crawler ./cmd/node/main.go
 
@@ -13,19 +12,24 @@ mu:
 vue:
 	cd web && npm install && npm run build
 
-.PHONY: mu-dev mu-staging crawler-staging vue-staging
+.PHONY: staging
+staging: vue-staging
+
+vue-staging:
+	cd web && npm install && npm run build-staging
+
+.PHONY: dev
+dev: mu-dev crawler-dev vue-dev
 mu-dev:
 	go build -o ./bin/mu ./cmd/master/main.go
 	./bin/mu
 
-mu-staging:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/mu ./cmd/master/main.go
+crawler-dev:
+	go build -o ./bin/crawler ./cmd/node/main.go
+	./bin/crawler
 
-crawler-staging:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/crawler ./cmd/node/main.go
-
-vue-staging:
-	cd web && mv .env.staging .env && npm install && npm run build
+vue-dev:
+	cd web && npm run serve
 
 .PHONY: clean
 clean:

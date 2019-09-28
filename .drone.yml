@@ -67,8 +67,8 @@ steps:
   - name: build staging
     image: golang:1.13-stretch
     commands:
-      - make mu-staging
-      - make crawler-staging
+      - make mu
+      - make crawler
 
   - name: release mu-node
     image: plugins/docker

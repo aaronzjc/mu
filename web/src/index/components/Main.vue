@@ -104,6 +104,8 @@ export default {
                     var list = resp.data.data.list;
                     this.list = list;
                     this.t = resp.data.data.t;
+                } else {
+                    this.list = [];
                 }
                 NProgress.done();
             }.bind(this))

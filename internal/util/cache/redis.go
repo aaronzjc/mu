@@ -2,9 +2,9 @@ package cache
 
 import (
 	config2 "crawler/internal/util/config"
+	"crawler/internal/util/logger"
 	"fmt"
 	"github.com/go-redis/redis"
-	"log"
 )
 
 func RedisConn() *redis.Client {
@@ -22,6 +22,6 @@ func SaveToRedis(key string, hkey string, data string) {
 	client := RedisConn()
 	_, err := client.HSet(key, hkey, data).Result()
 	if err != nil {
-		log.Printf("[error] SaveToRedis error , err = %s\n", err.Error())
+		logger.Error("SaveToRedis error , err = %s .", err.Error())
 	}
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"crawler/internal/app/mu"
 	"crawler/internal/route"
-	"log"
+	"crawler/internal/util/logger"
 )
 
 func main() {
@@ -11,5 +11,5 @@ func main() {
 	route.RegisterRoutes()
 	route.RegisterStatic()
 
-	log.Fatal(mu.App.Gin.Run(mu.App.Config.Server.Addr))
+	logger.Fatal(mu.App.Gin.Run(mu.App.Config.Server.Addr))
 }

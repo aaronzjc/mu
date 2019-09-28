@@ -118,7 +118,30 @@ func CreateOrUpdateNode(c *gin.Context) {
 			req.JSON(c, req.CodeError, "插入节点失败", nil)
 			return
 		}
-		req.JSON(c, req.CodeError, "成功", nil)
+		req.JSON(c, req.CodeSuccess, "成功", nil)
 		return
 	}
+}
+
+func Del(c *gin.Context) {
+	var r InfoForm
+	if err := c.ShouldBindQuery(&r); err != nil {
+		req.JSON(c, req.CodeError, "参数异常", nil)
+		return
+	}
+
+	m := &model.Node{
+		ID: r.Id,
+	}
+
+	if ok := m.Del(); !ok {
+		req.JSON(c, req.CodeError, "删除失败", nil)
+		return
+	}
+
+	// 删除了节点，需要更新站点配置的节点
+	(&model.Site{}).FixNodeId(r.Id)
+
+	req.JSON(c, req.CodeSuccess, "删除成功", nil)
+	return
 }

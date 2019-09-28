@@ -24,16 +24,18 @@
                 <table class="table is-fullwidth is-bordered">
                     <thead>
                     <tr>
+                        <th width="5%">ID</th>
                         <th width="10%">名称</th>
                         <th width="15%">Addr</th>
                         <th width="10%">类型</th>
-                        <th width="10%">Ping</th>
+                        <th width="5%">Ping</th>
                         <th width="5%">状态</th>
                         <th width="15%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(item, idx) in list" :key="idx">
+                        <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.addr }}</td>
                         <td><span class="tag is-warning">{{ typeMap[item.type] }}</span></td>
@@ -41,13 +43,14 @@
                             <span :class="[ 'ping',  { 'has-background-success' : item.ping === 1 }, { 'has-background-danger' : item.ping === 0,  } ]"></span>
                         </td>
                         <td>
-                            <span class="tag is-light">{{ item.enable ? "开启" : "关闭" }}</span>
+                            <span class="tag is-light" v-if="!item.enable">未开启</span>
+                            <span class="tag is-success" v-if="item.enable">开启</span>
                         </td>
                         <td>
                             <div class="buttons are-small">
                                 <a class="button is-primary" @click="view(idx)">查看</a>
                                 <a class="button is-warning" @click="edit(idx)">编辑</a>
-                                <a class="button is-danger">删除</a>
+                                <a class="button is-danger" @click="del(idx)">删除</a>
                             </div>
                         </td>
                     </tr>
@@ -227,6 +230,20 @@ export default {
                     this.list = resp.data.data;
                 }
                 NProgress.done();
+            })
+        },
+        del(idx) {
+            if (!confirm("确认删除吗?")) {
+                return false;
+            }
+
+            Get("/node/del", {
+                "id": this.list[idx].id
+            }).then(resp => {
+                if (resp.data.code !== 10000) {
+                    alert(resp.data.msg);
+                }
+                this.fetchList()
             })
         },
         save() {

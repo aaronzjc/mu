@@ -1,9 +1,9 @@
 package model
 
 import (
+	"crawler/internal/util/logger"
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"time"
 )
@@ -25,7 +25,7 @@ type Node struct {
 	Addr 			string 		`gorm:"addr"`
 	Type 		int8 		`gorm:"type"`
 	Enable 		int8 		`gorm:"enable"`
-	Ping 		int8 		`gorm:"ping"`
+	Ping 		Ping 		`gorm:"ping"`
 	CreateAt  	time.Time	`gorm:"create_at"`
 }
 
@@ -35,7 +35,7 @@ type NodeJson struct {
 	Addr 			string 		`json:"addr"`
 	Type 		int8 		`json:"type"`
 	Enable 		int8 		`json:"enable"`
-	Ping 		int8 		`json:"ping"`
+	Ping 		Ping 		`json:"ping"`
 	CreateAt  	string		`json:"create_at"`
 }
 
@@ -67,11 +67,22 @@ func (node *Node) Create() error {
 	db := DPool().Conn
 	db = db.Create(&node)
 	if err = db.Error; err != nil {
-		log.Printf("[error] create err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("create node err")
 	}
 
 	return nil
+}
+
+func (node *Node) Del() bool {
+	db := DPool().Conn
+	db = db.Delete(node)
+	if err := db.Error; err != nil {
+		logger.Error("delete err %v, exp %s .", err, db.QueryExpr())
+		return false
+	}
+
+	return true
 }
 
 func (node *Node) Update(data map[string]interface{}) error {
@@ -79,7 +90,7 @@ func (node *Node) Update(data map[string]interface{}) error {
 
 	db = db.Model(&node).Update(data)
 	if err := db.Error; err != nil {
-		log.Printf("[error] update err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("update err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("update node failed")
 	}
 
@@ -91,7 +102,7 @@ func (node *Node) FetchInfo() (Node, error) {
 	db := DPool().Conn
 	db = db.Where("id = ?", node.ID).First(&n)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
-		log.Printf("[error] FetchInfo err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
 		return Node{}, errors.New("fetch node info failed")
 	}
 
@@ -104,7 +115,7 @@ func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
 	var list []Node
 	db = db.Where(query, args...).Find(&list)
 	if err := db.Error; err != nil {
-		log.Printf("[error] FetchRows err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
 		return nil, errors.New("fetchrows node failed")
 	}
 

@@ -4,10 +4,10 @@ import (
 	"crawler/internal/model"
 	"crawler/internal/svc/lib"
 	"crawler/internal/util/cache"
+	"crawler/internal/util/logger"
 	"crawler/internal/util/req"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 type Tab struct {
@@ -26,7 +26,7 @@ func Aj(c *gin.Context) {
 	data, err := client.HGet(key, hkey).Result()
 
 	if err != nil {
-		log.Println("[info] aj req empty " + err.Error())
+		logger.Info("aj req empty " + err.Error())
 		req.JSON(c, req.CodeError, "没数据", nil)
 		return
 	}
@@ -34,7 +34,7 @@ func Aj(c *gin.Context) {
 	var hotJson lib.HotJson
 	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
-		log.Println("[error] aj req error " + err.Error())
+		logger.Error("aj req error " + err.Error())
 		req.JSON(c, req.CodeError, "请求失败", nil)
 		return
 	}

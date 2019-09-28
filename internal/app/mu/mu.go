@@ -4,8 +4,8 @@ import (
 	"crawler/internal/model"
 	"crawler/internal/svc/schedule"
 	"crawler/internal/util/config"
+	"crawler/internal/util/logger"
 	"github.com/gin-gonic/gin"
-	"log"
 	"os"
 	"strings"
 )
@@ -21,12 +21,13 @@ type Instance struct {
 }
 
 func (ins *Instance) initConfig() {
-	defer log.Printf("[info] init config complete.\n")
+	defer logger.Info("init config complete.")
 	ins.Config = config.NewConfig()
 }
 
-func (ins *Instance) initCron() {
+func (ins *Instance) initSchedule() {
 	schedule.JobSchedule.InitJobs()
+	schedule.JobSchedule.InitPool()
 }
 
 func init() {
@@ -39,8 +40,12 @@ func init() {
 		Gin: gin.New(),
 	}
 
+	// 初始化配置
 	App.initConfig()
 
 	// 初始化数据库
 	(&model.Site{}).InitSites()
+
+	// 初始化任务队列，rpc等
+	App.initSchedule()
 }

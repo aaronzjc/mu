@@ -1,11 +1,8 @@
 package lib
 
 import (
-	"crawler/internal/util/cache"
-	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 	"strconv"
 	"time"
 )
@@ -78,22 +75,4 @@ func (v *V2ex) CrawPage(link Link) (Page, error) {
 	page.List = data
 
 	return page, nil
-}
-
-func (v *V2ex) Store(page Page) bool {
-	hotJson := &HotJson{
-		T:    page.T.Format("2006-01-02 15:04:05"),
-		List: page.List,
-	}
-
-	data, err := json.Marshal(hotJson)
-	if err != nil {
-		log.Printf("[error] Json_encode v2ex error , err = %s\n", err.Error())
-		return false
-	}
-	cache.SaveToRedis(SITE_V2EX, page.Link.Tag, string(data))
-
-	log.Printf("[info] Store v2ex %s end", page.Link.Tag)
-
-	return true
 }

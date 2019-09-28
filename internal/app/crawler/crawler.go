@@ -4,8 +4,8 @@ import (
 	"context"
 	"crawler/internal/svc/lib"
 	"crawler/internal/svc/rpc"
+	"crawler/internal/util/logger"
 	"google.golang.org/grpc"
-	"log"
 	"net"
 	"sync"
 	"time"
@@ -23,9 +23,10 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 		go func(link lib.Link) {
 			page, err := s.CrawPage(link)
 			if err != nil {
-				log.Printf("[error] craw page error, err %v \n", err)
+				logger.Error("craw page error, err %v .", err)
 				return
 			}
+			logger.Info("craw page done %s .", link.Url)
 			pageMap[link.Tag] = page
 			wg.Done()
 		}(link)
@@ -54,14 +55,22 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 	return result, nil
 }
 
+func (agent *AgentServer) Check(ctx context.Context, msg *rpc.Ping) (*rpc.Pong, error) {
+	logger.Info("receive check")
+	return &rpc.Pong{
+		Pong: msg.Ping,
+	}, nil
+}
+
 func RegisterRpcServer(addr string) {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Fatalf("[error] bind socket failed")
+		logger.Fatal("bind socket failed")
 	}
 
 	var opts []grpc.ServerOption
 	rpcServer := grpc.NewServer(opts...)
 	rpc.RegisterAgentServer(rpcServer, &AgentServer{})
-	log.Fatal(rpcServer.Serve(lis))
+	logger.Info("server is listening on :7990")
+	logger.Fatal(rpcServer.Serve(lis))
 }

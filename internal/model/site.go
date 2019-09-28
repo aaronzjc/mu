@@ -2,9 +2,9 @@ package model
 
 import (
 	"crawler/internal/svc/lib"
+	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
-	"log"
 	"strings"
 )
 
@@ -32,7 +32,7 @@ type Site struct {
 	Type      int8      `gorm:"type"`
 	Tags      string    `gorm:"tags"`
 	Cron      string    `gorm:"cron"`
-	Enable    int8      `gorm:"enable"`
+	Enable    Status      `gorm:"enable"`
 	NodeOption NodeOption		`gorm:"node_option"`
 	NodeType  int8    `gorm:"node_type"`
 	NodeHosts string    `gorm:"node_hosts"`
@@ -56,7 +56,7 @@ type SiteJson struct {
 	NodeOption NodeOption     `json:"node_option"`
 	NodeType   int8     `json:"node_type"`
 	NodeHosts  []int    `json:"node_hosts"`
-	Enable     int8     `json:"enable"`
+	Enable     Status     `json:"enable"`
 }
 
 func (s *Site) TableName() string {
@@ -86,7 +86,7 @@ func (s *Site) Create() error {
 	db := DPool().Conn
 	db = db.Create(&s)
 	if err = db.Error; err != nil {
-		log.Printf("[error] create err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("create site err")
 	}
 
@@ -98,7 +98,7 @@ func (s *Site) Update(data map[string]interface{}) error {
 
 	db = db.Model(&s).Update(data)
 	if err := db.Error; err != nil {
-		log.Printf("[error] update err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("update err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("update site failed")
 	}
 
@@ -110,7 +110,7 @@ func (s *Site) FetchInfo() (Site, error) {
 	db := DPool().Conn
 	db = db.Where("id = ?", s.ID).First(&tmp)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
-		log.Printf("[error] FetchInfo err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
 		return Site{}, errors.New("fetch site info failed")
 	}
 
@@ -123,7 +123,7 @@ func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
 	var site Site
 	db = db.Where(query, args...).First(&site)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
-		log.Printf("[error] FetchRows err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
 		return Site{}, errors.New("fetchRow site failed")
 	}
 	return site, nil
@@ -135,7 +135,7 @@ func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
 	var list []Site
 	db = db.Where(query, args...).Find(&list)
 	if err := db.Error; err != nil {
-		log.Printf("[error] FetchRows err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
 		return nil, errors.New("fetchRows site failed")
 	}
 	return list, nil
@@ -228,5 +228,23 @@ func (s *Site) InitSites() {
 		if err != nil {
 			panic("init sites create failed " + err.Error())
 		}
+	}
+}
+
+func (s *Site) FixNodeId(delId int) {
+	sites, _ := (&Site{}).FetchRows("1 = 1 ")
+	for _, site := range sites {
+		sj, _ := site.FormatJson()
+		newHosts := []int{}
+		for _, v := range sj.NodeHosts {
+			if v == delId {
+				continue
+			}
+			newHosts = append(newHosts, v)
+		}
+		jstr, _ := json.Marshal(newHosts)
+		_ = site.Update(map[string]interface{}{
+			"node_hosts": jstr,
+		})
 	}
 }

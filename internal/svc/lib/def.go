@@ -1,11 +1,11 @@
 package lib
 
 import (
+	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -33,7 +33,6 @@ type HotJson struct {
 type Spider interface {
 	BuildUrl() ([]Link, error)
 	CrawPage(link Link) (Page, error)
-	Store(page Page) bool
 }
 
 // 链接信息
@@ -62,7 +61,7 @@ func CrawJSON(link Link) (Page, error) {
 	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[error] CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
+		logger.Error("CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
 		return Page{}, err
 	}
 
@@ -72,7 +71,7 @@ func CrawJSON(link Link) (Page, error) {
 
 	var list HotList
 	if err := json.Unmarshal(body, &list); err != nil {
-		log.Printf(err.Error())
+		logger.Error(err.Error())
 		return Page{}, err
 	}
 
@@ -94,7 +93,7 @@ func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("[error] CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
+		logger.Error("CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
 		return Page{}, err
 	}
 
@@ -104,7 +103,7 @@ func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	bodyStr := string(body)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
 	if err != nil {
-		log.Printf("[error] Encode html error , err = %s\n", err.Error())
+		logger.Error("Encode html error , err = %s\n", err.Error())
 	}
 
 	return Page{
@@ -146,16 +145,7 @@ func FSite(t string) Spider {
 	case SITE_V2EX:
 		return &V2ex{NewSite(t)}
 	case SITE_CT:
-		return &Chouti{
-			Site{
-				Name:     "抽屉",
-				Key:      t,
-				Root:     "https://dig.chouti.com",
-				Desc:     "抽屉新热榜",
-				CrawType: CrawApi,
-				Tabs:     ChoutiTabs,
-			},
-		}
+		return &Chouti{NewSite(t)}
 	case SITE_WEIBO:
 		return &Weibo{NewSite(t)}
 	case SITE_ZHIHU:
@@ -163,7 +153,7 @@ func FSite(t string) Spider {
 	case SITE_HACKER:
 		return &Hacker{NewSite(t)}
 	default:
-		log.Fatalln("Unknown site name", t)
+		logger.Fatal("Unknown site name " + t)
 		return nil
 	}
 }
@@ -216,7 +206,7 @@ func NewSite(t string) Site {
 			Tabs:     HackerTabs,
 		}
 	default:
-		log.Fatalln("Unknown site name", t)
+		logger.Fatal("Unknown site name " + t)
 		return Site{}
 	}
 }

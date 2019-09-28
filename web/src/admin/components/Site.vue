@@ -39,13 +39,19 @@
                                 <span class="tag is-light">{{ nodeTypeMap[item.node_type] }}</span>
                             </template>
                             <template v-if="item.node_option === 2">
-                                <div class="tags">
-                                    <span class="tag is-light" v-for="nodeId in item.node_hosts" :key="nodeId">{{ nodes[nodeId]["name"] }}</span>
-                                </div>
+                                <template v-if="item.node_hosts.length > 1">
+                                    <div class="tags">
+                                        <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ nodes[nodeId]["name"] }}</span>
+                                    </div>
+                                </template>
+                                <template v-if="item.node_hosts.length == 1">
+                                    <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ nodes[nodeId]["name"] }}</span>
+                                </template>
                             </template>
                         </td>
                         <td>
-                            <span class="tag is-light">{{ item.enable ? "开启" : "关闭" }}</span>
+                            <span class="tag is-light" v-if="!item.enable">未启用</span>
+                            <span class="tag is-success" v-if="item.enable">启用</span>
                         </td>
                         <td>
                             <div class="buttons are-small">
@@ -449,6 +455,7 @@ export default {
                 if (resp.data.code === 10000) {
                     alert("保存成功");
                     this.closeEdit();
+                    this.fetchList();
                 } else {
                     alert(resp.data.msg);
                 }

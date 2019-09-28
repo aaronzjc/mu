@@ -4,6 +4,7 @@ import (
 	"crawler/internal/util/config"
 	"crypto/md5"
 	"fmt"
+	"reflect"
 	"time"
 )
 
@@ -15,14 +16,15 @@ func GenerateToken(input string) string {
 	return md5Str
 }
 
-func ArrSearch(ele string, arr []string) int {
-	res := -1
-	for idx, val := range arr {
-		if val == ele {
-			res = idx
-			break
+func ArrSearch(v interface{}, in interface{}) (ok bool, i int) {
+	val := reflect.Indirect(reflect.ValueOf(in))
+	switch val.Kind() {
+	case reflect.Slice, reflect.Array:
+		for ; i < val.Len(); i++ {
+			if ok = v == val.Index(i).Interface(); ok {
+				return
+			}
 		}
 	}
-
-	return res
+	return
 }

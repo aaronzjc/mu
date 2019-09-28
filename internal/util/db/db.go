@@ -2,11 +2,11 @@ package db
 
 import (
 	"crawler/internal/util/config"
+	"crawler/internal/util/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"log"
 )
 
 var (
@@ -43,7 +43,7 @@ func (db *DB) Close() error {
 	err := db.Conn.Close()
 
 	if err != nil {
-		log.Printf("[error] db close error %v \n", err)
+		logger.Error("db close error %v .", err)
 		return err
 	}
 

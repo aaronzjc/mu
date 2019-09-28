@@ -1,10 +1,10 @@
 package model
 
 import (
+	"crawler/internal/util/logger"
 	"crawler/internal/util/tool"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -44,7 +44,7 @@ func (u *User) FetchRow(query string, args ...interface{}) (User, error) {
 	db := DPool().Conn
 	db = db.Where(query, args...).First(&tmp)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
-		log.Printf("[error] FetchRow err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("FetchRow err %v, exp %s .", err, db.QueryExpr())
 		return User{}, errors.New("fetch user info failed")
 	}
 
@@ -64,7 +64,7 @@ func (u *User) Create() error {
 	db := DPool().Conn
 	db = db.Create(&u)
 	if err = db.Error; err != nil {
-		log.Printf("[error] create err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("create user err")
 	}
 
@@ -76,7 +76,7 @@ func (u *User) Update(data map[string]interface{}) error {
 
 	db = db.Model(&u).Update(data)
 	if err := db.Error; err != nil {
-		log.Printf("[error] update err %v, exp %s \n", err, db.QueryExpr())
+		logger.Error("update err %v, exp %s .", err, db.QueryExpr())
 		return errors.New("update user failed")
 	}
 

@@ -1,10 +1,9 @@
 package lib
 
 import (
-	"crawler/internal/util/cache"
+	"crawler/internal/util/logger"
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -59,7 +58,7 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 
 	var list HotList
 	if err := json.Unmarshal([]byte(page.Content), &list); err != nil {
-		log.Printf(err.Error())
+		logger.Error("%v", err.Error())
 		return Page{}, err
 	}
 	if err != nil {
@@ -81,22 +80,4 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 	page.List = data
 
 	return page, nil
-}
-
-func (c *Chouti) Store(page Page) bool {
-	hotJson := &HotJson{
-		T:    page.T.Format("2006-01-02 15:04:05"),
-		List: page.List,
-	}
-
-	data, err := json.Marshal(hotJson)
-	if err != nil {
-		log.Printf("[error] Json_encode chouti error , err = %s\n", err.Error())
-		return false
-	}
-	cache.SaveToRedis(SITE_CT, page.Link.Tag, string(data))
-
-	log.Printf("[info] Store chouti %s end", page.Link.Tag)
-
-	return true
 }
