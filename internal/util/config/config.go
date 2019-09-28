@@ -47,7 +47,7 @@ func (c *Config) ServerUrl() string {
 		proto = "https"
 	}
 
-	return fmt.Sprintf("%s://%s%s", proto, c.Server.Host, c.Server.Addr)
+	return fmt.Sprintf("%s://%s", proto, c.Server.Addr)
 }
 
 func (c *Config) WebUrl() string {
@@ -96,11 +96,7 @@ func NewConfig() Config {
 
 	// 如果前端Web为空，则表明使用Gin的Web服务。这里，更新Web地址
 	if appConfig.Server.Web == "" {
-		proto := "http"
-		if appConfig.Server.Https {
-			proto = "https"
-		}
-		appConfig.Server.Web = fmt.Sprintf("%s://%s%s", proto, appConfig.Server.Host, appConfig.Server.Addr)
+		appConfig.Server.Web = appConfig.ServerUrl()
 	}
 
 	return appConfig
