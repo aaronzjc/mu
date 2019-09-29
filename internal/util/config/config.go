@@ -47,7 +47,7 @@ func (c *Config) ServerUrl() string {
 		proto = "https"
 	}
 
-	return fmt.Sprintf("%s://%s", proto, c.Server.Addr)
+	return fmt.Sprintf("%s://%s", proto, c.Server.Host)
 }
 
 func (c *Config) WebUrl() string {

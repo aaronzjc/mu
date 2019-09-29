@@ -138,6 +138,10 @@ func (s *Schedule) AddJob(site *model.Site) error {
 	job := &Job{
 		Site: site,
 	}
+	if _, ok := s.JobMap.Load(site.Key); ok {
+		logger.Error("add job failed, job [%s] exists.", site.Key)
+		return errors.New("job exists")
+	}
 	cronId, err := s.JobCron.AddFunc(site.Cron, job.ExecJob)
 	if err != nil {
 		logger.Error("add job %s failed err = %v.", site.Key, err)
