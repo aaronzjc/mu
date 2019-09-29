@@ -163,7 +163,7 @@ func (s *Schedule) RemoveJob(siteKey string) bool {
 		return true
 	}
 	s.JobCron.Remove(cronId.(cron.EntryID))
-	s.JobMap.Delete(cronId)
+	s.JobMap.Delete(siteKey)
 
 	logger.Info("remove job %s success .", siteKey)
 
