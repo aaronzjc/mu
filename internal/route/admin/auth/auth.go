@@ -39,6 +39,18 @@ func Auth(c *gin.Context) {
 	c.Abort()
 }
 
+func Config(c *gin.Context) {
+	cnf := config.NewConfig()
+	authCnf := []map[string]string{
+		{
+			"name": "Github登录",
+			"url": fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/auth"),
+		},
+	}
+
+	req.JSON(c, req.CodeSuccess, "成功", authCnf)
+}
+
 func Callback(c *gin.Context) {
 	code := c.Query("code")
 

@@ -1,15 +1,12 @@
 <template>
   <section id="app">
-      <Dashboard></Dashboard>
+      <router-view></router-view>
   </section>
 </template>
 
 <script>
-import Dashboard from "./components/Dashboard"
 export default {
     name: 'app',
-    components: {
-        Dashboard
-  }
+    components: {}
 }
 </script>

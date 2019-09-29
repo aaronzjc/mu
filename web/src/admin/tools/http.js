@@ -1,7 +1,8 @@
 import axios from "axios";
+import Router from "../router/router"
 
 const client = axios.create({
-    baseURL: process.env.VUE_APP_API_ADMIN,
+    baseURL: process.env.VUE_APP_URL,
     timeout: 1000,
     withCredentials: true
 });
@@ -9,7 +10,7 @@ const client = axios.create({
 client.interceptors.response.use(resp => {
     let res = resp.data;
     if (res.code === 10002) {
-        window.location.href = res.data.url;
+        Router.push({"name": "login"});
         return false;
     }
 

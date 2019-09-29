@@ -20,7 +20,6 @@ func RegisterStatic() {
 
 	r.StaticFile("/", path + "/public/index.html")
 	r.StaticFile("/admin", path + "/public/admin.html")
-	r.StaticFile("/admin/login", path + "/public/login.html")
 
 	r.StaticFile("favicon.png", path + "/public/favicon.png")
 	r.Static("/static", path + "/public/static")
@@ -40,6 +39,9 @@ func RegisterRoutes() {
 	// 前端路由
 	r.GET("/aj", index.Aj)
 	r.GET("/config", index.Config)
+
+	// Auth操作
+	r.GET("/auth_config", auth.Config)
 
 	// 后台管理路由
 	r.GET("/admin/auth", auth.Auth)

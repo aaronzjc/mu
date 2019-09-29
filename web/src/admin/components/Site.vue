@@ -440,7 +440,7 @@ export default {
     methods: {
         fetchList() {
             NProgress.start();
-            Get("/site/list").then(resp => {
+            Get("/api/site/list").then(resp => {
                 if (resp.data.code === 10000) {
                     this.nodes = resp.data.data.nodeList;
                     this.list = resp.data.data.siteList;
@@ -451,7 +451,7 @@ export default {
             })
         },
         save() {
-            Post("/site/update", this.editForm).then(resp => {
+            Post("/api/site/update", this.editForm).then(resp => {
                 if (resp.data.code === 10000) {
                     alert("保存成功");
                     this.closeEdit();

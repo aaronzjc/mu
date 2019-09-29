@@ -43,7 +43,7 @@ export default {
     },
     methods: {
         fetchLogin() {
-            Get("/info").then(resp => {
+            Get("/api/info").then(resp => {
                 if (resp.data.code === 10000) {
                     this.login = resp.data.data
                 } else {

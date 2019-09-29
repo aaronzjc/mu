@@ -223,7 +223,7 @@ export default {
     methods: {
         fetchList() {
             NProgress.start();
-            Get("/node/list").then(resp => {
+            Get("/api/node/list").then(resp => {
                 if (resp.data.code === 10001) {
                     alert(resp.data.msg);
                 } else {
@@ -237,7 +237,7 @@ export default {
                 return false;
             }
 
-            Get("/node/del", {
+            Get("/api/node/del", {
                 "id": this.list[idx].id
             }).then(resp => {
                 if (resp.data.code !== 10000) {
@@ -247,7 +247,7 @@ export default {
             })
         },
         save() {
-            Post("/node/upsert", this.editForm).then(resp => {
+            Post("/api/node/upsert", this.editForm).then(resp => {
                 if (resp.data.code === 10001) {
                     alert(resp.data.msg);
                 } else {
