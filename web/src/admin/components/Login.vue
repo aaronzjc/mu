@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import "../assets/font-awesome"
+import "@fortawesome/fontawesome-free/js/all.min.js"
 
 import {Get} from "../tools/http";
 

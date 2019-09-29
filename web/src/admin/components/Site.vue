@@ -401,7 +401,7 @@ const initEdit = {
 };
 export default {
     name: "Site",
-    created() {
+    mounted() {
         this.fetchList();
     },
     data: () => {
@@ -447,6 +447,8 @@ export default {
                 } else {
                     alert(resp.data.msg);
                 }
+                NProgress.done();
+            }).catch( () => {
                 NProgress.done();
             })
         },

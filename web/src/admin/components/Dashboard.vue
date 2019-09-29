@@ -29,7 +29,7 @@ import {Get} from "../tools/http";
 
 export default {
     name: "Dashboard",
-    created() {
+    mounted() {
         this.fetchLogin()
     },
     data: () => {
@@ -49,6 +49,9 @@ export default {
                 } else {
                     alert(resp.data.msg)
                 }
+            }).catch(err => {
+                // eslint-disable-next-line
+                console.log(err)
             })
         }
     },

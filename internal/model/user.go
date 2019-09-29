@@ -42,6 +42,8 @@ func (u *User) TableName() string {
 func (u *User) FetchRow(query string, args ...interface{}) (User, error) {
 	var tmp User
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Where(query, args...).First(&tmp)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
 		logger.Error("FetchRow err %v, exp %s .", err, db.QueryExpr())
@@ -62,6 +64,8 @@ func (u *User) Create() error {
 	}
 
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Create(&u)
 	if err = db.Error; err != nil {
 		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
@@ -73,6 +77,7 @@ func (u *User) Create() error {
 
 func (u *User) Update(data map[string]interface{}) error {
 	db := DPool().Conn
+	defer db.Close()
 
 	db = db.Model(&u).Update(data)
 	if err := db.Error; err != nil {

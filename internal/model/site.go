@@ -84,6 +84,8 @@ func (s *Site) Create() error {
 	}
 
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Create(&s)
 	if err = db.Error; err != nil {
 		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
@@ -95,6 +97,7 @@ func (s *Site) Create() error {
 
 func (s *Site) Update(data map[string]interface{}) error {
 	db := DPool().Conn
+	defer db.Close()
 
 	db = db.Model(&s).Update(data)
 	if err := db.Error; err != nil {
@@ -108,6 +111,8 @@ func (s *Site) Update(data map[string]interface{}) error {
 func (s *Site) FetchInfo() (Site, error) {
 	var tmp Site
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Where("id = ?", s.ID).First(&tmp)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
 		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
@@ -119,6 +124,7 @@ func (s *Site) FetchInfo() (Site, error) {
 
 func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
 	db := DPool().Conn
+	defer db.Close()
 
 	var site Site
 	db = db.Where(query, args...).First(&site)
@@ -131,6 +137,7 @@ func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
 
 func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
 	db := DPool().Conn
+	defer db.Close()
 
 	var list []Site
 	db = db.Where(query, args...).Find(&list)

@@ -10,8 +10,8 @@ const client = axios.create({
 client.interceptors.response.use(resp => {
     let res = resp.data;
     if (res.code === 10002) {
-        Router.push({"name": "login"});
-        Promise.reject(res)
+        Router.push({"name": "login"}).catch(() => {});
+        return Promise.reject(resp);
     }
 
     return resp;

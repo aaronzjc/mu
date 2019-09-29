@@ -65,6 +65,8 @@ func (node *Node) Create() error {
 	}
 
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Create(&node)
 	if err = db.Error; err != nil {
 		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
@@ -76,6 +78,8 @@ func (node *Node) Create() error {
 
 func (node *Node) Del() bool {
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Delete(node)
 	if err := db.Error; err != nil {
 		logger.Error("delete err %v, exp %s .", err, db.QueryExpr())
@@ -87,6 +91,7 @@ func (node *Node) Del() bool {
 
 func (node *Node) Update(data map[string]interface{}) error {
 	db := DPool().Conn
+	defer db.Close()
 
 	db = db.Model(&node).Update(data)
 	if err := db.Error; err != nil {
@@ -99,7 +104,10 @@ func (node *Node) Update(data map[string]interface{}) error {
 
 func (node *Node) FetchInfo() (Node, error) {
 	var n Node
+
 	db := DPool().Conn
+	defer db.Close()
+
 	db = db.Where("id = ?", node.ID).First(&n)
 	if err := db.Error; err != nil && !db.RecordNotFound() {
 		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
@@ -111,6 +119,7 @@ func (node *Node) FetchInfo() (Node, error) {
 
 func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
 	db := DPool().Conn
+	defer db.Close()
 
 	var list []Node
 	db = db.Where(query, args...).Find(&list)
