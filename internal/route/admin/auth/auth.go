@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func Info(c *gin.Context) {
@@ -94,13 +95,13 @@ func Logout(c *gin.Context) {
 func setCookie(c *gin.Context, data map[string]string) {
 	cnf := config.NewConfig()
 	for key, val := range data {
-		c.SetCookie(key, val, 86400*30, "", cnf.Server.Host, false, false)
+		c.SetCookie(key, val, 86400*30, "", strings.Split(cnf.Server.Host, ":")[0], false, false)
 	}
 }
 
 func clearCookie(c *gin.Context, keys []string) {
 	cnf := config.NewConfig()
 	for _, val := range keys {
-		c.SetCookie(val, "", -1, "", cnf.Server.Host, false, false)
+		c.SetCookie(val, "", -1, "", strings.Split(cnf.Server.Host, ":")[0], false, false)
 	}
 }
