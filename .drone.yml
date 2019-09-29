@@ -94,17 +94,6 @@ steps:
         from_secret: docker_password
       registry: uhub.service.ucloud.cn
 
-  - name: deploy
-    image: appleboy/drone-ssh
-    settings:
-      host: 152.32.170.64
-      username: jincheng
-      password:
-        from_secret: host_password
-      port: 22
-      script:
-        - sudo docker service update --force --with-registry-auth --image uhub.service.ucloud.cn/memosa/mu:dev dev_mu_dev_mu
-
 trigger:
   branch:
     - dev
