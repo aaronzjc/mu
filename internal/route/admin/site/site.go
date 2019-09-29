@@ -100,7 +100,7 @@ func UpdateSite(c *gin.Context) {
 
 	tagBytes, _ := json.Marshal(r.Tags)
 	hostsBytes, _ := json.Marshal(r.NodeHosts)
-	m := &model.Site{
+	m := model.Site{
 		ID: r.ID,
 		Name: r.Name,
 		Key: r.Key,

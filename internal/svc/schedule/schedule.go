@@ -125,7 +125,7 @@ func (s *Schedule) InitJobs() {
 	}
 
 	for _, site := range sites {
-		err = s.AddJob(&site)
+		err = s.AddJob(site)
 	}
 }
 
@@ -134,7 +134,7 @@ func (s *Schedule) InitPool() {
 	_, _ = s.JobCron.AddFunc("*/1 * * * *", s.CheckServer)
 }
 
-func (s *Schedule) AddJob(site *model.Site) error {
+func (s *Schedule) AddJob(site model.Site) error {
 	job := &Job{
 		Site: site,
 	}
@@ -170,7 +170,7 @@ func (s *Schedule) RemoveJob(siteKey string) bool {
 	return true
 }
 
-func (s *Schedule) UpdateJob(site *model.Site) bool {
+func (s *Schedule) UpdateJob(site model.Site) bool {
 	_, exist := s.JobMap.Load(site.Key)
 	if exist {
 		s.RemoveJob(site.Key)
@@ -230,7 +230,7 @@ func (s *Schedule) CheckServer() {
 }
 
 type Job struct {
-	Site *model.Site
+	Site model.Site
 }
 
 /**
@@ -267,6 +267,9 @@ func (j *Job) PickAgent() (model.Node, error) {
 		return model.Node{}, errors.New("no available nodes")
 	}
 	idx = rand.Int() % len(nodes)
+
+	logger.Info("job [%s] pick agent [%s]", j.Site.Key, nodes[idx].Name)
+
 	return nodes[idx], nil
 }
 
