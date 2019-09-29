@@ -297,6 +297,8 @@ func (j *Job) ExecJob() {
 		return
 	}
 
+	logger.Info("remote craw [%s] done", j.Site.Key)
+
 	hotJson := new(lib.HotJson)
 	hotJson.T = result.T
 	for tag, hots := range result.Map {
