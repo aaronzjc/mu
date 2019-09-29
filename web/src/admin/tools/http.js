@@ -11,6 +11,7 @@ client.interceptors.response.use(resp => {
     let res = resp.data;
     if (res.code === 10002) {
         Router.push({"name": "login"});
+        Promise.reject(res)
     }
 
     return resp;
