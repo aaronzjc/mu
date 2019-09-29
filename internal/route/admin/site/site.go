@@ -152,8 +152,9 @@ func UpdateSite(c *gin.Context) {
 		if m.Enable == model.Enable && m.Cron != om.Cron {
 			// update
 			schedule.JobSchedule.RemoveJob(m.Key)
-			_ = schedule.JobSchedule.AddJob(m)
-			logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
+			if err = schedule.JobSchedule.AddJob(m); err == nil {
+				logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
+			}
 		}
 	}
 
