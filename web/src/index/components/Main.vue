@@ -19,9 +19,9 @@
         <div class="columns">
             <div class="column hot-list">
                 <div class="hot" v-for="(hot, idx) in list" :key="idx">
-                    <div class="hot-opt">
-                        <span class="tag is-warning"><i class="fas fa-heart"></i></span>
-                    </div>
+<!--                    <div class="hot-opt">-->
+<!--                        <span class="tag is-warning"><i class="fas fa-heart"></i></span>-->
+<!--                    </div>-->
                     <div class="hot-item">
                         <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
                     </div>
@@ -45,7 +45,7 @@
 import NProgress from 'nprogress'
 import 'bulma/css/bulma.css'
 import 'nprogress/nprogress.css'
-import '@fortawesome/fontawesome-free/js/all.min'
+// import '@fortawesome/fontawesome-free/js/all.min'
 import Get from "../tools/http"
 
 const API = {
