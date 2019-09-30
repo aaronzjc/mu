@@ -1,8 +1,13 @@
 kind: pipeline
-name: default
+name: production
 
 steps:
-  - name: build crawler&mu
+  - name: build frontend
+    image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.0
+    commands:
+      - make vue
+
+  - name: build production
     image: golang:1.13-stretch
     commands:
       - make crawler
@@ -32,18 +37,51 @@ steps:
         from_secret: docker_password
       registry: uhub.service.ucloud.cn
 
-  - name: deploy
-    image: appleboy/drone-ssh
-    settings:
-      host: 152.32.170.64
-      username: jincheng
-      password:
-        from_secret: host_password
-      port: 22
-      script:
-        - sudo docker service update --with-registry-auth --force --image uhub.service.ucloud.cn/memosa/crawler:latest mu_crawler
-        - sudo docker service update --with-registry-auth --force --image uhub.service.ucloud.cn/memosa/mu:latest  mu_mu
-
 trigger:
   branch:
     - master
+
+---
+
+kind: pipeline
+name: staging
+
+steps:
+  - name: build vue-staging
+    image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.1
+    commands:
+      - make vue-staging
+
+  - name: build staging
+    image: golang:1.13-stretch
+    commands:
+      - make mu
+      - make crawler
+
+  - name: release mu-node
+    image: plugins/docker
+    settings:
+      repo: uhub.service.ucloud.cn/memosa/crawler
+      tags: dev
+      target: crawler
+      username:
+        from_secret: docker_user
+      password:
+        from_secret: docker_password
+      registry: uhub.service.ucloud.cn
+
+  - name: release mu-master
+    image: plugins/docker
+    settings:
+      repo: uhub.service.ucloud.cn/memosa/mu
+      tags: dev
+      target: mu
+      username:
+        from_secret: docker_user
+      password:
+        from_secret: docker_password
+      registry: uhub.service.ucloud.cn
+
+trigger:
+  branch:
+    - dev

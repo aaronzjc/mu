@@ -1,8 +1,33 @@
 {
     "app_name": "mu",
-    "addr": ":7980",
+
+    "server": {
+        "https": false,
+        "host": "127.0.0.1:7980",
+        "addr": ":7980",
+        "web": "http://127.0.0.01:8080"
+    },
+
     "redis": {
         "host": "127.0.0.1",
         "port": 6379
-    }
+    },
+
+    "db": {
+        "host": "127.0.0.1",
+        "port": 3307,
+        "user": "root",
+        "password": "root",
+        "database": "mu"
+    },
+
+    "auth": {
+        "github": {
+            "client_id": "7c8e95b5fc5ea1ee747d",
+            "client_secret": "b9b273b6e473a12f87dfd5559e15ac5d98e93ea1",
+            "admins": ["aaronzjc"]
+        }
+    },
+
+    "salt": "iloveu"
 }
