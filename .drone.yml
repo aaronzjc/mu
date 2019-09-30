@@ -3,7 +3,7 @@ name: production
 
 steps:
   - name: build frontend
-    image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.0
+    image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.1
     commands:
       - make vue
 
