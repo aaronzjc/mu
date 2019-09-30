@@ -8,19 +8,19 @@ import (
 )
 
 type InfoForm struct {
-	Id 			int 		`form:"id" binding:"required"`
+	Id int `form:"id" binding:"required"`
 }
 
 type ListForm struct {
-	Keyword 	string 		`form:"keyword"`
+	Keyword string `form:"keyword"`
 }
 
 type UpsertForm struct {
-	ID 			int 		`form:"id"`
-	Name 		string		`form:"name"`
-	Addr 			string 		`form:"addr"`
-	Type 		int8 		`form:"type"`
-	Enable 		int8 		`form:"enable"`
+	ID     int    `form:"id"`
+	Name   string `form:"name"`
+	Addr   string `form:"addr"`
+	Type   int8   `form:"type"`
+	Enable int8   `form:"enable"`
 }
 
 func Info(c *gin.Context) {
@@ -57,7 +57,7 @@ func List(c *gin.Context) {
 	m := &model.Node{}
 	var nodes []model.Node
 	if r.Keyword != "" {
-		nodes, err = m.FetchRows("name like ?", "%" + r.Keyword + "%")
+		nodes, err = m.FetchRows("name like ?", "%"+r.Keyword+"%")
 	} else {
 		nodes, err = m.FetchRows("1=1")
 	}
@@ -80,14 +80,14 @@ func CreateOrUpdateNode(c *gin.Context) {
 	var err error
 	var r UpsertForm
 	if err = c.ShouldBind(&r); err != nil {
-		req.JSON(c, req.CodeError, "参数异常 " + err.Error(), nil)
+		req.JSON(c, req.CodeError, "参数异常 "+err.Error(), nil)
 		return
 	}
 
 	m := &model.Node{
-		Name: r.Name,
-		Addr: r.Addr,
-		Type: r.Type,
+		Name:   r.Name,
+		Addr:   r.Addr,
+		Type:   r.Type,
 		Enable: r.Enable,
 	}
 	err = m.CheckArgs()

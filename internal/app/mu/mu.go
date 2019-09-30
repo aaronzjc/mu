@@ -16,8 +16,8 @@ var (
 )
 
 type Instance struct {
-	Gin		*gin.Engine
-	Config  config.Config
+	Gin    *gin.Engine
+	Config config.Config
 }
 
 func (ins *Instance) initConfig() {

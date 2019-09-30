@@ -16,7 +16,7 @@ func Auth() gin.HandlerFunc {
 
 		user := model.User{
 			Username: username,
-			Token: token,
+			Token:    token,
 		}
 
 		cnf := config.NewConfig()

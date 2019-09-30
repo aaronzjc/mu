@@ -14,25 +14,25 @@ const (
 )
 
 type User struct {
-	ID 		int 		`gorm:"id"`
-	Username string 	`gorm:"username"`
-	Nickname string 	`gorm:"nickname"`
-	Avatar	string 		`gorm:"avatar"`
-	AuthType int8		`gorm:"auth_type"`
-	AuthTime string 	`gorm:"auth_time"`
-	Token 	string 		`gorm:"token"`
-	ExpireAt int64 		`gorm:"expire_at"`
+	ID       int    `gorm:"id"`
+	Username string `gorm:"username"`
+	Nickname string `gorm:"nickname"`
+	Avatar   string `gorm:"avatar"`
+	AuthType int8   `gorm:"auth_type"`
+	AuthTime string `gorm:"auth_time"`
+	Token    string `gorm:"token"`
+	ExpireAt int64  `gorm:"expire_at"`
 }
 
 type UserJson struct {
-	ID 		int 		`json:"id"`
-	Username string 	`json:"username"`
-	Nickname string 	`json:"nickname"`
-	Avatar	string 		`json:"avatar"`
-	AuthType int8		`json:"auth_type"`
-	AuthTime string 	`json:"auth_time"`
-	Token 	string 		`json:"token"`
-	ExpireAt int64 		`json:"expire_at"`
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
+	AuthType int8   `json:"auth_type"`
+	AuthTime string `json:"auth_time"`
+	Token    string `json:"token"`
+	ExpireAt int64  `json:"expire_at"`
 }
 
 func (u *User) TableName() string {
@@ -93,7 +93,7 @@ func (u *User) RefreshToken() error {
 	expireAt := time.Now().Add(time.Hour * 24 * 30).Unix()
 
 	if err := u.Update(map[string]interface{}{
-		"token": token,
+		"token":     token,
 		"expire_at": expireAt,
 	}); err != nil {
 		return errors.New("refresh token error " + err.Error())
@@ -143,12 +143,12 @@ func (u *User) CheckToken() (bool, error) {
 
 func (u *User) FormatJson() (UserJson, error) {
 	json := UserJson{
-		ID: u.ID,
+		ID:       u.ID,
 		Username: u.Username,
 		Nickname: u.Nickname,
-		Avatar: u.Avatar,
+		Avatar:   u.Avatar,
 		AuthTime: u.AuthTime,
-		Token: u.Token,
+		Token:    u.Token,
 		ExpireAt: u.ExpireAt,
 	}
 

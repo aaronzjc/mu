@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type AgentServer struct {}
+type AgentServer struct{}
 
 func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, error) {
 	var wg sync.WaitGroup

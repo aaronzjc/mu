@@ -1,20 +1,32 @@
 version: '3.7'
 
 services:
-  crawler:
-    image: uhub.service.ucloud.cn/memosa/crawler:latest
-    deploy:
-      replicas: 1
-    configs:
-      - source: app_mu_config
-        target: /app/app.json
-
-  mu:
+  staging_master:
     image: uhub.service.ucloud.cn/memosa/mu:latest
     deploy:
       replicas: 1
     ports:
       - 7980:7980
+    configs:
+      - source: app_mu_config
+        target: /app/app.json
+
+  staging_node_1:
+    image: uhub.service.ucloud.cn/memosa/crawler:latest
+    deploy:
+      replicas: 1
+    ports:
+      - 7981:7990
+    configs:
+      - source: app_mu_config
+        target: /app/app.json
+
+  staging_node_2:
+    image: uhub.service.ucloud.cn/memosa/crawler:latest
+    deploy:
+      replicas: 1
+    ports:
+      - 7982:7990
     configs:
       - source: app_mu_config
         target: /app/app.json

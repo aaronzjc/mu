@@ -230,6 +230,8 @@ export default {
                     this.list = resp.data.data;
                 }
                 NProgress.done();
+            }).catch(() => {
+                NProgress.done();
             })
         },
         del(idx) {

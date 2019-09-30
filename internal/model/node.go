@@ -16,27 +16,27 @@ const (
 	TypeMainland NodeType = 2 // 大陆
 
 	PingFailed Ping = 0
-	PingOk Ping = 1
+	PingOk     Ping = 1
 )
 
 type Node struct {
-	ID 			int
-	Name 		string 		`gorm:"name"`
-	Addr 			string 		`gorm:"addr"`
-	Type 		int8 		`gorm:"type"`
-	Enable 		int8 		`gorm:"enable"`
-	Ping 		Ping 		`gorm:"ping"`
-	CreateAt  	time.Time	`gorm:"create_at"`
+	ID       int
+	Name     string    `gorm:"name"`
+	Addr     string    `gorm:"addr"`
+	Type     int8      `gorm:"type"`
+	Enable   int8      `gorm:"enable"`
+	Ping     Ping      `gorm:"ping"`
+	CreateAt time.Time `gorm:"create_at"`
 }
 
 type NodeJson struct {
-	ID 			int			`json:"id"`
-	Name 		string 		`json:"name"`
-	Addr 			string 		`json:"addr"`
-	Type 		int8 		`json:"type"`
-	Enable 		int8 		`json:"enable"`
-	Ping 		Ping 		`json:"ping"`
-	CreateAt  	string		`json:"create_at"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Addr     string `json:"addr"`
+	Type     int8   `json:"type"`
+	Enable   int8   `json:"enable"`
+	Ping     Ping   `json:"ping"`
+	CreateAt string `json:"create_at"`
 }
 
 func (node *Node) TableName() string {
@@ -117,7 +117,7 @@ func (node *Node) FetchInfo() (Node, error) {
 	return n, nil
 }
 
-func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
+func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error) {
 	db := DPool().Conn
 	defer db.Close()
 
@@ -133,12 +133,12 @@ func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error){
 
 func (node *Node) FormatJson() (NodeJson, error) {
 	json := NodeJson{
-		ID: node.ID,
-		Name: node.Name,
-		Addr: node.Addr,
-		Type: node.Type,
-		Enable: node.Enable,
-		Ping: node.Ping,
+		ID:       node.ID,
+		Name:     node.Name,
+		Addr:     node.Addr,
+		Type:     node.Type,
+		Enable:   node.Enable,
+		Ping:     node.Ping,
 		CreateAt: node.CreateAt.Format("2006-01-02 15:04:05"),
 	}
 

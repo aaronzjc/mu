@@ -56,7 +56,7 @@ func List(c *gin.Context) {
 	m := &model.Site{}
 	var sites []model.Site
 	if r.Keyword != "" {
-		sites, err = m.FetchRows("name like ?", "%" + r.Keyword + "%")
+		sites, err = m.FetchRows("name like ?", "%"+r.Keyword+"%")
 	} else {
 		sites, err = m.FetchRows("1=1")
 	}
@@ -94,23 +94,23 @@ func UpdateSite(c *gin.Context) {
 	var err error
 	var r UpdateForm
 	if err = c.ShouldBindJSON(&r); err != nil {
-		req.JSON(c, req.CodeError, "参数异常 " + err.Error(), nil)
+		req.JSON(c, req.CodeError, "参数异常 "+err.Error(), nil)
 		return
 	}
 
 	tagBytes, _ := json.Marshal(r.Tags)
 	hostsBytes, _ := json.Marshal(r.NodeHosts)
 	m := model.Site{
-		ID: r.ID,
-		Name: r.Name,
-		Key: r.Key,
-		Desc: r.Desc,
-		Cron: r.Cron,
-		Tags: string(tagBytes),
-		Enable: r.Enable,
+		ID:         r.ID,
+		Name:       r.Name,
+		Key:        r.Key,
+		Desc:       r.Desc,
+		Cron:       r.Cron,
+		Tags:       string(tagBytes),
+		Enable:     r.Enable,
 		NodeOption: r.NodeOption,
-		NodeType: r.NodeType,
-		NodeHosts: string(hostsBytes),
+		NodeType:   r.NodeType,
+		NodeHosts:  string(hostsBytes),
 	}
 	err = m.CheckArgs()
 	if err != nil {
@@ -159,5 +159,11 @@ func UpdateSite(c *gin.Context) {
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", nil)
+	return
+}
+
+func Debug(c *gin.Context) {
+	result := schedule.Debug()
+	req.JSON(c, req.CodeSuccess, "成功", result)
 	return
 }

@@ -45,7 +45,7 @@ func Config(c *gin.Context) {
 	authCnf := []map[string]string{
 		{
 			"name": "Github登录",
-			"url": fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/auth"),
+			"url":  fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/auth"),
 		},
 	}
 

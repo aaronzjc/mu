@@ -1,5 +1,5 @@
 <template>
-  <section id="app">
+  <section id="app" class="section">
       <Main></Main>
   </section>
 </template>
@@ -14,3 +14,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.section {
+    padding-top: 1rem;
+}
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+</style>

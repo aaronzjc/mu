@@ -14,28 +14,28 @@ type Status int8
 
 const (
 	CrawHtml CrawType = 1 // 网站是HTML
-	CrawApi CrawType = 2 // 网站是JSON接口
+	CrawApi  CrawType = 2 // 网站是JSON接口
 
-	ByType	NodeOption = 1 // 通过服务器类型
+	ByType  NodeOption = 1 // 通过服务器类型
 	ByHosts NodeOption = 2 // 服务器IPs
 
 	Disable Status = 0 // 禁用
-	Enable Status = 1 // 启用
+	Enable  Status = 1 // 启用
 )
 
 type Site struct {
-	ID        int
-	Name      string    `gorm:"name"`
-	Root      string    `gorm:"root"`
-	Key       string    `gorm:"key"`
-	Desc      string    `gorm:"desc"`
-	Type      int8      `gorm:"type"`
-	Tags      string    `gorm:"tags"`
-	Cron      string    `gorm:"cron"`
-	Enable    Status      `gorm:"enable"`
-	NodeOption NodeOption		`gorm:"node_option"`
-	NodeType  int8    `gorm:"node_type"`
-	NodeHosts string    `gorm:"node_hosts"`
+	ID         int
+	Name       string     `gorm:"name"`
+	Root       string     `gorm:"root"`
+	Key        string     `gorm:"key"`
+	Desc       string     `gorm:"desc"`
+	Type       int8       `gorm:"type"`
+	Tags       string     `gorm:"tags"`
+	Cron       string     `gorm:"cron"`
+	Enable     Status     `gorm:"enable"`
+	NodeOption NodeOption `gorm:"node_option"`
+	NodeType   int8       `gorm:"node_type"`
+	NodeHosts  string     `gorm:"node_hosts"`
 }
 
 type Tag struct {
@@ -45,17 +45,17 @@ type Tag struct {
 }
 
 type SiteJson struct {
-	ID         int      `json:"id"`
-	Name       string   `json:"name"`
-	Key        string   `json:"key"`
-	Root       string   `json:"root"`
-	Desc       string   `json:"desc"`
-	Tags       []Tag    `json:"tags"`
-	Type       int8 	`json:"type"`
-	Cron       string   `json:"cron"`
-	NodeOption NodeOption     `json:"node_option"`
-	NodeType   int8     `json:"node_type"`
-	NodeHosts  []int    `json:"node_hosts"`
+	ID         int        `json:"id"`
+	Name       string     `json:"name"`
+	Key        string     `json:"key"`
+	Root       string     `json:"root"`
+	Desc       string     `json:"desc"`
+	Tags       []Tag      `json:"tags"`
+	Type       int8       `json:"type"`
+	Cron       string     `json:"cron"`
+	NodeOption NodeOption `json:"node_option"`
+	NodeType   int8       `json:"node_type"`
+	NodeHosts  []int      `json:"node_hosts"`
 	Enable     Status     `json:"enable"`
 }
 
@@ -170,18 +170,18 @@ func (s *Site) FormatJson() (SiteJson, error) {
 	}
 
 	return SiteJson{
-		ID: s.ID,
-		Name: s.Name,
-		Key: s.Key,
-		Root: s.Root,
-		Desc: s.Desc,
-		Tags: tags,
-		Type: s.Type,
-		Cron: s.Cron,
+		ID:         s.ID,
+		Name:       s.Name,
+		Key:        s.Key,
+		Root:       s.Root,
+		Desc:       s.Desc,
+		Tags:       tags,
+		Type:       s.Type,
+		Cron:       s.Cron,
 		NodeOption: s.NodeOption,
-		NodeType: s.NodeType,
-		NodeHosts: hosts,
-		Enable: s.Enable,
+		NodeType:   s.NodeType,
+		NodeHosts:  hosts,
+		Enable:     s.Enable,
 	}, nil
 }
 
@@ -199,8 +199,8 @@ func (s *Site) InitSites() {
 		var tags []Tag
 		for _, tag := range site.Tabs {
 			tags = append(tags, Tag{
-				Key: tag["tag"],
-				Name: tag["name"],
+				Key:    tag["tag"],
+				Name:   tag["name"],
 				Enable: 1,
 			})
 		}
@@ -220,16 +220,16 @@ func (s *Site) InitSites() {
 		}
 
 		row = Site{
-			Name: site.Name,
-			Key: site.Key,
-			Root: site.Root,
-			Cron: "*/30 * * * *",
+			Name:       site.Name,
+			Key:        site.Key,
+			Root:       site.Root,
+			Cron:       "*/30 * * * *",
 			NodeOption: 1, // 默认使用分类
-			NodeType: 1, // 默认国内的机器
-			NodeHosts: "",
-			Desc: site.Desc,
-			Tags: string(tagStr),
-			Type: site.CrawType,
+			NodeType:   1, // 默认国内的机器
+			NodeHosts:  "",
+			Desc:       site.Desc,
+			Tags:       string(tagStr),
+			Type:       site.CrawType,
 		}
 		err = row.Create()
 		if err != nil {

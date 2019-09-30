@@ -25,7 +25,7 @@ type GithubUser struct {
 }
 
 type GithubAuth struct {
-	ClientId string
+	ClientId     string
 	ClientSecret string
 }
 

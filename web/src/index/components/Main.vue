@@ -19,14 +19,22 @@
         <div class="columns">
             <div class="column hot-list">
                 <div class="hot" v-for="(hot, idx) in list" :key="idx">
-                    <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
+                    <div class="hot-opt">
+                        <span class="tag is-warning"><i class="fas fa-heart"></i></span>
+                    </div>
+                    <div class="hot-item">
+                        <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="columns">
-            <div class="column">
-                <p class="copyright has-text-centered">
+            <div class="column copyright has-text-centered">
+                <p>
                     <a href="https://github.com/aaronzjc">@aaronzjc</a>开发, 源码<a href="https://github.com/aaronzjc/crawler">在此</a>，欢迎Star.
+                </p>
+                <p class="backtop">
+                    <a href="javascript:scrollTo(0,0);">回到顶部</a>
                 </p>
             </div>
         </div>
@@ -37,6 +45,7 @@
 import NProgress from 'nprogress'
 import 'bulma/css/bulma.css'
 import 'nprogress/nprogress.css'
+import '@fortawesome/fontawesome-free/js/all.min'
 import Get from "../tools/http"
 
 const API = {
@@ -123,51 +132,62 @@ export default {
 }
 </script>
 
-<style scoped>
-    * {
-        -webkit-tap-highlight-color: transparent;
-    }
-    .section {
-        padding-top: 1rem;
-    }
-    .logo {
-        text-align: center;
-        font-size: 1.2rem;
-        font-family: Monaco;
-    }
-    .logo img {
-        width: 36px;
-        height: 36px;
-    }
-    .container {
-        max-width: 960px;
-    }
-    .hot-list {
-        flex-basis: unset;
-        width: 100%;
-    }
-    .tab-tag {
-        padding-top: 0px;
-        padding-bottom: 0px;
+<style lang="scss" scoped>
+.logo {
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: Monaco;
+}
+.logo img {
+    width: 36px;
+    height: 36px;
+}
+.container {
+    max-width: 960px;
+}
+.tab-tag {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    cursor: pointer;
+}
+.hot-ts {
+    color: #939393;
+    font-size: 0.8rem;
+}
+.copyright {
+    font-size: 0.85rem;
+}
+.backtop {
+    padding-top:1rem;
+    a {
         cursor: pointer;
     }
-    .hot {
-        width: 100%;
-        height: 2.5rem;
-        line-height: 2.5rem;
+}
+.hot-list {
+    flex-basis: unset;
+    width: 100%;
+}
+.hot {
+    width: 100%;
+    height: 2.5rem;
+    line-height: 2.5rem;
+
+    display: flex;
+    flex-direction: row;
+    .hot-opt {
+        margin-right: 4px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .tag {
+            cursor: pointer;
+        }
     }
-    .hot a {
-        display: block;
+    .hot-item {
         max-width: 98%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .hot-ts {
-        color: #939393;
-        font-size: 0.8rem;
-    }
-    .copyright {
-        font-size: 0.85rem;
-    }
+}
 </style>

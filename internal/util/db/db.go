@@ -9,10 +9,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-var (
-	Pool DB
-)
-
 type DB struct {
 	Conn *gorm.DB
 }

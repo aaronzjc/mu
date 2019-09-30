@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	InfoLevel = "info"
-	WarnLevel = "warning"
-	ErrLevel = "error"
+	InfoLevel  = "info"
+	WarnLevel  = "warning"
+	ErrLevel   = "error"
 	DebugLevel = "debug"
 )
 
 func Write(level, format string, v ...interface{}) {
-	log.Printf("[" + level + "] " + format + "\n", v...)
+	log.Printf("["+level+"] "+format+"\n", v...)
 }
 func Info(format string, v ...interface{}) {
 	Write(InfoLevel, format, v...)

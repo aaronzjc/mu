@@ -18,11 +18,11 @@ func RegisterStatic() {
 	pwd, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	path := filepath.Dir(pwd)
 
-	r.StaticFile("/", path + "/public/index.html")
-	r.StaticFile("/admin", path + "/public/admin.html")
+	r.StaticFile("/", path+"/public/index.html")
+	r.StaticFile("/admin", path+"/public/admin.html")
 
-	r.StaticFile("favicon.png", path + "/public/favicon.png")
-	r.Static("/static", path + "/public/static")
+	r.StaticFile("favicon.png", path+"/public/favicon.png")
+	r.Static("/static", path+"/public/static")
 }
 
 func RegisterRoutes() {
@@ -49,6 +49,7 @@ func RegisterRoutes() {
 	api := r.Group("/api")
 	api.Use(middleware.Auth())
 	{
+		api.GET("/debug", site.Debug)
 		api.GET("/info", auth.Info)
 		// 节点管理
 		api.GET("/node", node.Info)
