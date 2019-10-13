@@ -1,0 +1,30 @@
+package auth
+
+import (
+	"crawler/internal/model"
+	"crawler/internal/route/middleware"
+	"crawler/internal/util/req"
+	"github.com/gin-gonic/gin"
+)
+
+func Info(c *gin.Context) {
+	username, err := c.Cookie(middleware.CooUser)
+	if err != nil {
+		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
+		return
+	}
+
+	login, err := (&model.User{}).FetchRow("`username` = ?", username)
+	if err != nil {
+		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
+		return
+	}
+	js, _ := login.FormatJson()
+
+	req.JSON(c, req.CodeSuccess, "userinfo", js)
+}
+
+func Logout(c *gin.Context) {
+	req.ClearCookie(c, []string{middleware.CooUser, middleware.CooToken})
+	req.JSON(c, req.CodeSuccess, "logout success", nil)
+}

@@ -19,6 +19,7 @@ const (
 // 热榜新闻
 type Hot struct {
 	Id        int     `json:"id"`
+	Key 	  string  `json:"key"`
 	Title     string  `json:"title"`
 	Rank      float64 `json:"rank"`
 	OriginUrl string  `json:"origin_url"`
@@ -33,6 +34,7 @@ type HotJson struct {
 type Spider interface {
 	BuildUrl() ([]Link, error)
 	CrawPage(link Link) (Page, error)
+	FetchKey(link string) string
 }
 
 // 链接信息

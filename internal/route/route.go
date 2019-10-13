@@ -2,11 +2,14 @@ package route
 
 import (
 	"crawler/internal/app/mu"
-	"crawler/internal/route/admin/auth"
+	adminAuth "crawler/internal/route/admin/auth"
 	"crawler/internal/route/admin/node"
 	"crawler/internal/route/admin/site"
-	"crawler/internal/route/index"
+	idxAuth "crawler/internal/route/index/auth"
+	"crawler/internal/route/index/favor"
+	"crawler/internal/route/index/hot"
 	"crawler/internal/route/middleware"
+	"crawler/internal/route/oauth"
 	"github.com/gin-contrib/cors"
 	"os"
 	"path/filepath"
@@ -36,30 +39,47 @@ func RegisterRoutes() {
 	})
 	r.Use(c)
 
-	// 前端路由
-	r.GET("/aj", index.Aj)
-	r.GET("/config", index.Config)
-
 	// Auth操作
-	r.GET("/auth_config", auth.Config)
+	r.GET("/auth_config", oauth.Config)
+	r.GET("/oauth/auth", oauth.Auth)
+	r.GET("/oauth/callback", oauth.Callback)
 
-	// 后台管理路由
-	r.GET("/admin/auth", auth.Auth)
-	r.GET("/admin/callback", auth.Callback)
-	api := r.Group("/api")
-	api.Use(middleware.Auth())
+	// 前端路由
+	r.GET("/config", hot.Tabs)
+	r.GET("/logout", idxAuth.Logout)
+	idx := r.Group("")
+	idx.Use(middleware.ApiAuth(false))
 	{
-		api.GET("/debug", site.Debug)
-		api.GET("/info", auth.Info)
+		idx.GET("/list", hot.List)
+	}
+
+	api := r.Group("/api")
+	api.Use(middleware.ApiAuth(true))
+	{
+		api.GET("/info", idxAuth.Info)
+
+		// 收藏管理
+		api.GET("/favor/config", favor.Config)
+		api.GET("/favor/list", favor.List)
+		api.POST("/favor/add", favor.Add)
+		api.POST("/favor/remove", favor.Remove)
+	}
+
+	// 后台路由管理
+	admin := r.Group("/admin")
+	admin.Use(middleware.AdminAuth())
+	{
+		admin.GET("/debug", site.Debug)
+		admin.GET("/info", adminAuth.Info)
 		// 节点管理
-		api.GET("/node", node.Info)
-		api.GET("/node/list", node.List)
-		api.POST("/node/upsert", node.CreateOrUpdateNode)
-		api.GET("/node/del", node.Del)
+		admin.GET("/node", node.Info)
+		admin.GET("/node/list", node.List)
+		admin.POST("/node/upsert", node.CreateOrUpdateNode)
+		admin.GET("/node/del", node.Del)
 
 		// 站点管理
-		api.GET("/site", site.Info)
-		api.GET("/site/list", site.List)
-		api.POST("/site/update", site.UpdateSite)
+		admin.GET("/site", site.Info)
+		admin.GET("/site/list", site.List)
+		admin.POST("/site/update", site.UpdateSite)
 	}
 }

@@ -45,6 +45,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 				Title: item.Title,
 				Rank:  float32(item.Rank),
 				Url:   item.OriginUrl,
+				Key:   item.Key,
 			})
 		}
 		hotList.Item = items

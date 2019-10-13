@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const client = axios.create({
-    baseURL: process.env.VUE_APP_API,
-    timeout: 1000
+    baseURL: process.env.VUE_APP_URL,
+    timeout: 1000,
+    withCredentials: true
 });
 
 export function Get(url, params, headers) {

@@ -1,8 +1,10 @@
 package req
 
 import (
+	"crawler/internal/util/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -17,4 +19,18 @@ func JSON(c *gin.Context, code int, msg string, data interface{}) {
 		"msg":  msg,
 		"data": data,
 	})
+}
+
+func SetCookie(c *gin.Context, data map[string]string) {
+	cnf := config.NewConfig()
+	for key, val := range data {
+		c.SetCookie(key, val, 86400*30, "", strings.Split(cnf.Server.Host, ":")[0], false, false)
+	}
+}
+
+func ClearCookie(c *gin.Context, keys []string) {
+	cnf := config.NewConfig()
+	for _, val := range keys {
+		c.SetCookie(val, " ", -1, "", strings.Split(cnf.Server.Host, ":")[0], false, false)
+	}
 }

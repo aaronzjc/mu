@@ -2,6 +2,7 @@ package lib
 
 import (
 	"crawler/internal/util/logger"
+	"crawler/internal/util/tool"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -23,7 +24,7 @@ var ChoutiTabs = []map[string]string{
 	{
 		"url":  "/top/72hr",
 		"tag":  "72hr",
-		"name": "3天最热最热",
+		"name": "3天最热",
 	},
 }
 
@@ -68,16 +69,28 @@ func (c *Chouti) CrawPage(link Link) (Page, error) {
 
 	var data []Hot
 	for _, v := range page.Json {
-		data = append(data, Hot{
+		h := Hot{
 			Id:        int(v["id"].(float64)),
 			Title:     v["title"].(string),
 			OriginUrl: v["originalUrl"].(string),
 			Rank:      v["score"].(float64),
-		})
+		}
+		h.Key = c.FetchKey(h.OriginUrl)
+		if h.Key == "" {
+			continue
+		}
+		data = append(data, h)
 	}
 
 	page.T = time.Now()
 	page.List = data
 
 	return page, nil
+}
+
+func (c *Chouti) FetchKey(link string) string {
+	if link == "" {
+		return ""
+	}
+	return tool.MD55(link)
 }

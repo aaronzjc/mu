@@ -189,6 +189,7 @@ func (j *CrawlerJob) Run() {
 				Title:     hot.Title,
 				Rank:      float64(hot.Rank),
 				OriginUrl: hot.Url,
+				Key: 	   hot.Key,
 			})
 		}
 		hotJson.List = list

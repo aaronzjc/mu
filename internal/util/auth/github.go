@@ -31,7 +31,7 @@ type GithubAuth struct {
 
 func (auth *GithubAuth) RedirectAuth() string {
 	cnf := config.NewConfig()
-	callback := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/admin/callback")
+	callback := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/oauth/callback")
 	url := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s", auth.ClientId, callback)
 	return url
 }

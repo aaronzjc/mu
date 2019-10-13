@@ -1,23 +1,19 @@
 <template>
-  <section id="app" class="section">
-      <Main></Main>
-  </section>
+    <section class="section" id="app">
+        <router-view></router-view>
+    </section>
 </template>
 
 <script>
-import Main from './components/Main'
-
 export default {
   name: 'app',
-  components: {
-    Main
-  }
+  components: {}
 }
 </script>
 
 <style>
-.section {
-    padding-top: 1rem;
+section.section {
+    padding:5px 0px 0px 0px;
 }
 * {
     -webkit-tap-highlight-color: transparent;

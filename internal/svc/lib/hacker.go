@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/internal/util/tool"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"time"
@@ -49,14 +50,26 @@ func (h *Hacker) CrawPage(link Link) (Page, error) {
 		if text == "" || url == "" {
 			return
 		}
-		data = append(data, Hot{
+		hot := Hot{
 			Title:     text,
 			OriginUrl: fmt.Sprintf("%s", url),
-		})
+		}
+		hot.Key = h.FetchKey(hot.OriginUrl)
+		if h.Key == "" {
+			return
+		}
+		data = append(data, hot)
 	})
 
 	page.T = time.Now()
 	page.List = data
 
 	return page, nil
+}
+
+func (h *Hacker) FetchKey(link string) string {
+	if link == "" {
+		return ""
+	}
+	return tool.MD55(link)
 }

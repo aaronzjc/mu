@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"crawler/internal/util/tool"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"regexp"
@@ -54,19 +55,30 @@ func (w *Weibo) CrawPage(link Link) (Page, error) {
 		if text == "" {
 			return
 		}
-
-		data = append(data, Hot{
+		hot := Hot{
 			Title:     text,
 			OriginUrl: fmt.Sprintf("%s%s", w.Root, url),
 			Rank: (func() float64 {
 				f, _ := strconv.ParseFloat(rank, 64)
 				return f
 			})(),
-		})
+		}
+		hot.Key = w.FetchKey(hot.OriginUrl)
+		if hot.Key == "" {
+			return
+		}
+		data = append(data, hot)
 	})
 
 	page.T = time.Now()
 	page.List = data
 
 	return page, nil
+}
+
+func (w *Weibo) FetchKey(link string) string {
+	if link == "" {
+		return ""
+	}
+	return tool.MD55(link)
 }

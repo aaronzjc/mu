@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"regexp"
 	"time"
 )
 
@@ -52,15 +53,25 @@ func (z *Zhihu) CrawPage(link Link) (Page, error) {
 		if text == "" {
 			return
 		}
-
-		data = append(data, Hot{
+		hot := Hot{
 			Title:     text,
 			OriginUrl: fmt.Sprintf("%s", url),
-		})
+		}
+		hot.Key = z.FetchKey(hot.OriginUrl)
+		if hot.Key == "" {
+			return
+		}
+		data = append(data, hot)
 	})
 
 	page.T = time.Now()
 	page.List = data
 
 	return page, nil
+}
+
+func (z *Zhihu) FetchKey(link string) string {
+	reg := regexp.MustCompile(".*/question/(\\d+)")
+	id := reg.ReplaceAllString(link, "$1")
+	return id
 }

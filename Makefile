@@ -21,6 +21,7 @@ vue-staging:
 .PHONY: dev
 dev: mu-dev crawler-dev vue-dev
 mu-dev:
+	-rm ./bin/mu
 	go build -o ./bin/mu ./cmd/master/main.go
 	./bin/mu
 

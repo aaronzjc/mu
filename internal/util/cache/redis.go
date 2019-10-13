@@ -20,6 +20,8 @@ func RedisConn() *redis.Client {
 
 func SaveToRedis(key string, hkey string, data string) {
 	client := RedisConn()
+	defer client.Close()
+
 	_, err := client.HSet(key, hkey, data).Result()
 	if err != nil {
 		logger.Error("SaveToRedis error , err = %s .", err.Error())

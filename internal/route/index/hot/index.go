@@ -1,7 +1,8 @@
-package index
+package hot
 
 import (
 	"crawler/internal/model"
+	"crawler/internal/route/middleware"
 	"crawler/internal/svc/lib"
 	"crawler/internal/util/cache"
 	"crawler/internal/util/logger"
@@ -16,7 +17,7 @@ type Tab struct {
 	Tags []model.Tag `json:"tags"`
 }
 
-func Aj(c *gin.Context) {
+func List(c *gin.Context) {
 	client := cache.RedisConn()
 	defer client.Close()
 
@@ -34,16 +35,43 @@ func Aj(c *gin.Context) {
 	var hotJson lib.HotJson
 	err = json.Unmarshal([]byte(data), &hotJson)
 	if err != nil {
-		logger.Error("aj req error " + err.Error())
-		req.JSON(c, req.CodeError, "请求失败", nil)
+		req.JSON(c, req.CodeError, "请求列表失败", nil)
 		return
 	}
 
-	req.JSON(c, req.CodeSuccess, "没数据", hotJson)
+	// 遍历用户的收藏列表
+	ckMap := make(map[string]bool)
+	login, exist := c.Get(middleware.LoginUser)
+	if exist {
+		favors, err := (&model.Favor{}).FetchRows("`user_id` = ? AND `site` = ?", login.(int), key)
+		if err != nil {
+			req.JSON(c, req.CodeError, "请求收藏夹失败", nil)
+			return
+		}
+		for _, v := range favors {
+			ckMap[v.Key] = true
+		}
+	}
+
+	result := make(map[string]interface{})
+	var list []interface{}
+	for _, val := range hotJson.List {
+		exist := ckMap[val.Key]
+		list = append(list, map[string]interface{}{
+			"key": val.Key,
+			"title": val.Title,
+			"origin_url": val.OriginUrl,
+			"mark": exist,
+		})
+	}
+	result["t"] = hotJson.T
+	result["list"] = list
+
+	req.JSON(c, req.CodeSuccess, "成功", result)
 	return
 }
 
-func Config(c *gin.Context) {
+func Tabs(c *gin.Context) {
 	var tabs []Tab
 	sites, _ := (&model.Site{}).FetchRows("`enable` = ?", model.Enable)
 	for _, site := range sites {
