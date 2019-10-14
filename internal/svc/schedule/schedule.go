@@ -7,6 +7,7 @@ import (
 	"crawler/internal/svc/rpc"
 	"crawler/internal/util/cache"
 	"crawler/internal/util/logger"
+	"crawler/internal/util/tool"
 	"encoding/json"
 	"errors"
 	"github.com/robfig/cron/v3"
@@ -117,7 +118,10 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 	var nodes []model.Node
 	rand.Seed(time.Now().UnixNano())
 	if j.Site.NodeOption == model.ByType {
-		nodes, err = (&model.Node{}).FetchRows("`type` = ? AND `ping` = ?", j.Site.NodeType, model.PingOk)
+		nodes, err = (&model.Node{}).FetchRows(model.Query{
+			Query: "`type` = ? AND `ping` = ?",
+			Args: []interface{}{j.Site.NodeType, model.PingOk},
+		})
 		if err != nil {
 			logger.Error("pick agent error, err " + err.Error())
 			return model.Node{}, errors.New("fetch nodes failed")
@@ -132,7 +136,10 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 		if len(hosts) == 0 {
 			return model.Node{}, errors.New("no available nodes")
 		}
-		nodes, err = (&model.Node{}).FetchRows("`id` IN (?) AND `enable` = ? AND `ping` = ?", hosts, model.Enable, model.PingOk)
+		nodes, err = (&model.Node{}).FetchRows(model.Query{
+			Query: "`id` IN (?) AND `enable` = ? AND `ping` = ?",
+			Args: []interface{}{hosts, model.Enable, model.PingOk},
+		})
 		if err != nil {
 			logger.Error("pick agent error, err " + err.Error())
 			return model.Node{}, errors.New("fetch nodes failed")
@@ -210,7 +217,7 @@ func (j *CrawlerJob) ExecJobDirect() {
 	for _, link := range links {
 		page, _ := link.Sp.CrawPage(link)
 		hotJson := new(lib.HotJson)
-		hotJson.T = time.Now().Format("2006-01-02 15:04:05")
+		hotJson.T = tool.CurrentTime()
 		for _, hot := range page.List {
 			hotJson.List = append(hotJson.List, hot)
 		}
@@ -228,7 +235,10 @@ type CheckJob struct {
 }
 
 func (j *CheckJob) Run() {
-	nodes, err := (&model.Node{}).FetchRows("`enable` = ?", model.Enable)
+	nodes, err := (&model.Node{}).FetchRows(model.Query{
+		Query: "`enable` = ?",
+		Args: []interface{}{model.Enable},
+	})
 	if err != nil {
 		panic("init pool failed " + err.Error())
 	}
@@ -279,7 +289,10 @@ type Schedule struct {
 
 func (s *Schedule) InitJobs() {
 	m := model.Site{}
-	sites, err := m.FetchRows("`enable` = ?", model.Enable)
+	sites, err := m.FetchRows(model.Query{
+		Query: "`enable` = ?",
+		Args: []interface{}{model.Enable},
+	})
 	if err != nil {
 		panic("schedule init sites failed " + err.Error())
 	}

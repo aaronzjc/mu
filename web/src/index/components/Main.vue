@@ -16,7 +16,7 @@ export default {
     },
     methods: {
         fetchUserInfo() {
-            Get("/api/info").then(resp => {
+            Get("/info").then(resp => {
                 if (resp.data.code == 10000) {
                     var info = resp.data.data;
                     this.$store.dispatch("account/initUser", {

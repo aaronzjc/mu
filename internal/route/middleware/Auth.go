@@ -4,7 +4,6 @@ import (
 	"crawler/internal/model"
 	"crawler/internal/util/logger"
 	"crawler/internal/util/req"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,9 +24,6 @@ func AdminAuth() gin.HandlerFunc {
 		admin := &model.Admin{
 			Username: username,
 		}
-
-		fmt.Println("username = " + username)
-		fmt.Println("token = " + token)
 
 		if pass := admin.CheckToken(token); !pass {
 			logger.Info("admin token check failed .")
@@ -56,7 +52,10 @@ func ApiAuth(forceLogin bool) gin.HandlerFunc {
 				c.Abort()
 			}
 		} else {
-			u, _ := user.FetchRow("`username` = ?", user.Username)
+			u, _ := user.FetchRow(model.Query{
+				Query: "`username` = ?",
+				Args: []interface{}{user.Username},
+			})
 			c.Set(LoginUser, u.ID)
 		}
 

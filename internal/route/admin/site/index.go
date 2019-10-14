@@ -56,9 +56,12 @@ func List(c *gin.Context) {
 	m := &model.Site{}
 	var sites []model.Site
 	if r.Keyword != "" {
-		sites, err = m.FetchRows("name like ?", "%"+r.Keyword+"%")
+		sites, err = m.FetchRows(model.Query{
+			Query: "name like ?",
+			Args: []interface{}{"%"+r.Keyword+"%"},
+		})
 	} else {
-		sites, err = m.FetchRows("1=1")
+		sites, err = m.FetchRows(model.Query{})
 	}
 	if err != nil {
 		req.JSON(c, req.CodeError, err.Error(), nil)
@@ -76,8 +79,11 @@ func List(c *gin.Context) {
 		result = append(result, item)
 	}
 
-	nodes, _ := (&model.Node{}).FetchRows("`enable` = ?", model.Enable)
-	nodeJson := make(map[int]model.NodeJson)
+	nodes, _ := (&model.Node{}).FetchRows(model.Query{
+		Query: "`enable` = ?",
+		Args: []interface{}{model.Enable},
+	})
+	nodeJson := make(map[int]model.Node)
 	for _, node := range nodes {
 		n, _ := node.FormatJson()
 		nodeJson[node.ID] = n
@@ -129,7 +135,10 @@ func UpdateSite(c *gin.Context) {
 	data["node_type"] = m.NodeType
 	data["node_hosts"] = m.NodeHosts
 
-	om, _ := (&model.Site{}).FetchRow("`id` = ?", m.ID)
+	om, _ := (&model.Site{}).FetchRow(model.Query{
+		Query: "`id` = ?",
+		Args: []interface{}{m.ID},
+	})
 
 	err = m.Update(data)
 	if err != nil {

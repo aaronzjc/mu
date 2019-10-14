@@ -2,7 +2,6 @@ package model
 
 import (
 	"crawler/internal/svc/lib"
-	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -75,20 +74,20 @@ func (s *Site) CheckArgs() error {
 }
 
 func (s *Site) Create() error {
-	tmp, err := s.FetchRows("`key` = ? or `root` = ?", s.Key, s.Root)
+	var tmp []Site
+	err := FetchRows(Query{
+		Query: "`key` = ? or `root` = ?",
+		Args: []interface{}{s.Key, s.Root},
+	}, &tmp)
 	if err != nil {
-		return errors.New("create site error " + err.Error())
+		return errors.New("create site error")
 	}
 	if len(tmp) > 0 {
 		return errors.New("同key或者同root的站点已经存在")
 	}
 
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Create(&s)
-	if err = db.Error; err != nil {
-		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
+	err = Create(&s)
+	if err != nil {
 		return errors.New("create site err")
 	}
 
@@ -96,12 +95,8 @@ func (s *Site) Create() error {
 }
 
 func (s *Site) Update(data map[string]interface{}) error {
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Model(&s).Update(data)
-	if err := db.Error; err != nil {
-		logger.Error("update err %v, exp %s .", err, db.QueryExpr())
+	err := Update(&s, data)
+	if err != nil {
 		return errors.New("update site failed")
 	}
 
@@ -110,39 +105,31 @@ func (s *Site) Update(data map[string]interface{}) error {
 
 func (s *Site) FetchInfo() (Site, error) {
 	var tmp Site
-	db := DPool().Conn
-	defer db.Close()
 
-	db = db.Where("id = ?", s.ID).First(&tmp)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
+	err := First(Query{
+		Query: "`id` = ?",
+		Args: []interface{}{s.ID},
+	}, &tmp)
+	if err != nil {
 		return Site{}, errors.New("fetch site info failed")
 	}
 
 	return tmp, nil
 }
 
-func (s *Site) FetchRow(query string, args ...interface{}) (Site, error) {
-	db := DPool().Conn
-	defer db.Close()
-
+func (s *Site) FetchRow(query Query) (Site, error) {
 	var site Site
-	db = db.Where(query, args...).First(&site)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
+	err := First(query, &site)
+	if err != nil {
 		return Site{}, errors.New("fetchRow site failed")
 	}
 	return site, nil
 }
 
-func (s *Site) FetchRows(query string, args ...interface{}) ([]Site, error) {
-	db := DPool().Conn
-	defer db.Close()
-
+func (s *Site) FetchRows(query Query) ([]Site, error) {
 	var list []Site
-	db = db.Where(query, args...).Find(&list)
-	if err := db.Error; err != nil {
-		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
+	err := FetchRows(query, &list)
+	if err != nil {
 		return nil, errors.New("fetchRows site failed")
 	}
 	return list, nil
@@ -191,7 +178,10 @@ func (s *Site) InitSites() {
 	avaSites := lib.AvailableSites()
 	for _, siteKey := range avaSites {
 		site := lib.NewSite(siteKey)
-		row, err := s.FetchRow(" `key` = ? ", site.Key)
+		row, err := s.FetchRow(Query{
+			Query: " `key` = ? ",
+			Args: []interface{}{site.Key},
+		})
 		if err != nil {
 			panic("init sites fetch failed " + err.Error())
 		}
@@ -239,10 +229,10 @@ func (s *Site) InitSites() {
 }
 
 func (s *Site) FixNodeId(delId int) {
-	sites, _ := (&Site{}).FetchRows("1 = 1 ")
+	sites, _ := (&Site{}).FetchRows(Query{})
 	for _, site := range sites {
 		sj, _ := site.FormatJson()
-		newHosts := []int{}
+		var newHosts []int
 		for _, v := range sj.NodeHosts {
 			if v == delId {
 				continue

@@ -43,7 +43,11 @@ func List(c *gin.Context) {
 	ckMap := make(map[string]bool)
 	login, exist := c.Get(middleware.LoginUser)
 	if exist {
-		favors, err := (&model.Favor{}).FetchRows("`user_id` = ? AND `site` = ?", login.(int), key)
+		query := model.Query{
+			Query: "`user_id` = ? AND `site` = ?",
+			Args: []interface{}{login.(int), key},
+		}
+		favors, err := (&model.Favor{}).FetchRows(query)
 		if err != nil {
 			req.JSON(c, req.CodeError, "请求收藏夹失败", nil)
 			return
@@ -73,7 +77,10 @@ func List(c *gin.Context) {
 
 func Tabs(c *gin.Context) {
 	var tabs []Tab
-	sites, _ := (&model.Site{}).FetchRows("`enable` = ?", model.Enable)
+	sites, _ := (&model.Site{}).FetchRows(model.Query{
+		Query: "`enable` = ?",
+		Args: []interface{}{model.Enable},
+	})
 	for _, site := range sites {
 		js, _ := site.FormatJson()
 		tabs = append(tabs, Tab{

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crawler/internal/util/logger"
 	"errors"
 	"fmt"
 	"regexp"
@@ -20,23 +19,13 @@ const (
 )
 
 type Node struct {
-	ID       int
-	Name     string    `gorm:"name"`
-	Addr     string    `gorm:"addr"`
-	Type     int8      `gorm:"type"`
-	Enable   int8      `gorm:"enable"`
-	Ping     Ping      `gorm:"ping"`
-	CreateAt time.Time `gorm:"create_at"`
-}
-
-type NodeJson struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Addr     string `json:"addr"`
-	Type     int8   `json:"type"`
-	Enable   int8   `json:"enable"`
-	Ping     Ping   `json:"ping"`
-	CreateAt string `json:"create_at"`
+	ID       int	   `gorm:"id" json:"id"`
+	Name     string    `gorm:"name" json:"name"`
+	Addr     string    `gorm:"addr" json:"addr"`
+	Type     int8      `gorm:"type" json:"type"`
+	Enable   int8      `gorm:"enable" json:"enable"`
+	Ping     Ping      `gorm:"ping" json:"ping"`
+	CreateAt time.Time `gorm:"create_at" json:"create_at"`
 }
 
 func (node *Node) TableName() string {
@@ -64,12 +53,8 @@ func (node *Node) Create() error {
 		return errors.New(fmt.Sprintf("node with %s exists", node.Addr))
 	}
 
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Create(&node)
-	if err = db.Error; err != nil {
-		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
+	err = Create(&node)
+	if err != nil {
 		return errors.New("create node err")
 	}
 
@@ -77,25 +62,12 @@ func (node *Node) Create() error {
 }
 
 func (node *Node) Del() bool {
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Delete(node)
-	if err := db.Error; err != nil {
-		logger.Error("delete err %v, exp %s .", err, db.QueryExpr())
-		return false
-	}
-
-	return true
+	return Del(&node) == nil
 }
 
 func (node *Node) Update(data map[string]interface{}) error {
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Model(&node).Update(data)
-	if err := db.Error; err != nil {
-		logger.Error("update err %v, exp %s .", err, db.QueryExpr())
+	err := Update(&node, data)
+	if err != nil {
 		return errors.New("update node failed")
 	}
 
@@ -105,41 +77,37 @@ func (node *Node) Update(data map[string]interface{}) error {
 func (node *Node) FetchInfo() (Node, error) {
 	var n Node
 
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Where("id = ?", node.ID).First(&n)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("FetchInfo err %v, exp %s .", err, db.QueryExpr())
+	err := First(Query{
+		Query: "`id` = ?",
+		Args: []interface{}{node.ID},
+	}, &n)
+	if err != nil {
 		return Node{}, errors.New("fetch node info failed")
 	}
 
 	return n, nil
 }
 
-func (node *Node) FetchRows(query string, args ...interface{}) ([]Node, error) {
-	db := DPool().Conn
-	defer db.Close()
-
+func (node *Node) FetchRows(query Query) ([]Node, error) {
 	var list []Node
-	db = db.Where(query, args...).Find(&list)
-	if err := db.Error; err != nil {
-		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
+
+	err := FetchRows(query, &list)
+	if err != nil {
 		return nil, errors.New("fetchrows node failed")
 	}
 
 	return list, nil
 }
 
-func (node *Node) FormatJson() (NodeJson, error) {
-	json := NodeJson{
+func (node *Node) FormatJson() (Node, error) {
+	json := Node{
 		ID:       node.ID,
 		Name:     node.Name,
 		Addr:     node.Addr,
 		Type:     node.Type,
 		Enable:   node.Enable,
 		Ping:     node.Ping,
-		CreateAt: node.CreateAt.Format("2006-01-02 15:04:05"),
+		CreateAt: time.Now(),
 	}
 
 	return json, nil

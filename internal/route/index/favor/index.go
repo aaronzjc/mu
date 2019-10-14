@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+type ListForm struct {
+	Site 	string 		`form:"s"`
+	Keyword string 		`form:"keyword"`
+}
+
 type AddForm struct {
 	Key		string 		`json:"key"`
 	Site 	string 		`json:"site"`
@@ -44,8 +49,13 @@ func Add(c *gin.Context) {
 		CreateAt: time.Now(),
 	}
 
-	if exist := m.Exist(); exist {
-		req.JSON(c, req.CodeError, "already exist", nil)
+	exist, err = m.Exist()
+	if err != nil {
+		req.JSON(c, req.CodeError, "系统异常", nil)
+		return
+	}
+	if exist {
+		req.JSON(c, req.CodeError, "已经存在", nil)
 		return
 	}
 
@@ -59,8 +69,9 @@ func Add(c *gin.Context) {
 }
 
 func Remove(c *gin.Context) {
+	var err  error
 	var r RemoveForm
-	if err := c.ShouldBindJSON(&r); err != nil {
+	if err = c.ShouldBindJSON(&r); err != nil {
 		req.JSON(c, req.CodeError, "参数错误", nil)
 		return
 	}
@@ -77,8 +88,13 @@ func Remove(c *gin.Context) {
 		Site: r.Site,
 	}
 
-	if exist := m.Exist(); !exist {
-		req.JSON(c, req.CodeError, "not exist", nil)
+	exist, err = m.Exist()
+	if err != nil {
+		req.JSON(c, req.CodeError, "系统异常", nil)
+		return
+	}
+	if !exist {
+		req.JSON(c, req.CodeError, "不存在该记录", nil)
 		return
 	}
 
@@ -92,8 +108,8 @@ func Remove(c *gin.Context) {
 }
 
 func List(c *gin.Context) {
-	site := c.Request.URL.Query()["s"][0]
-	if site == "" {
+	var r ListForm
+	if err := c.ShouldBindQuery(&r); err != nil {
 		req.JSON(c, req.CodeError, "参数错误", nil)
 		return
 	}
@@ -104,28 +120,68 @@ func List(c *gin.Context) {
 		return
 	}
 
-	favors, err := (&model.Favor{}).FetchRows("`site` = ? AND `user_id` = ?", site, login.(int))
-	if err != nil {
-		req.JSON(c, req.CodeError, "获取失败", nil)
+	m := model.Favor{}
+
+	site := r.Site
+	keyword := r.Keyword
+
+	var siteNames []string
+	if keyword != "" {
+		siteNames = m.Config(model.Query{
+			Query: "`user_id` = ? AND `title` like ?",
+			Args: []interface{}{login.(int), "%" + keyword + "%"},
+		})
+	} else {
+		siteNames = m.Config(model.Query{})
+	}
+	if len(siteNames) == 0 {
+		req.JSON(c, req.CodeSuccess, "成功", map[string]interface{}{
+			"tabs": []string{},
+			"list": []model.Favor{},
+		})
 		return
 	}
 
-	req.JSON(c, req.CodeSuccess, "成功", favors)
-	return
-}
+	if site == "" {
+		site = siteNames[0]
+	}
 
-func Config(c *gin.Context) {
-	sitesNames := (&model.Favor{}).Config()
-
-	var result []map[string]interface{}
-	for _, name := range sitesNames {
+	var tabs []map[string]interface{}
+	for _, name := range siteNames {
 		site := lib.NewSite(name)
-		result = append(result, map[string]interface{}{
+		tabs = append(tabs, map[string]interface{}{
 			"name": site.Name,
 			"key": site.Key,
 			"tags": []string{},
 		})
 	}
-	req.JSON(c, req.CodeSuccess, "成功", result)
+
+	var err error
+	var favors []model.Favor
+	if keyword == "" {
+		favors, err = (&model.Favor{}).FetchRows(model.Query{
+			Query: "`site` = ? AND `user_id` = ?",
+			Args: []interface{}{site, login.(int)},
+		})
+	} else {
+		favors, err = (&model.Favor{}).FetchRows(model.Query{
+			Query: "`site` = ? AND `user_id` = ? AND `title` LIKE ?",
+			Args: []interface{}{site, login.(int), "%" + keyword + "%"},
+		})
+	}
+	if err != nil {
+		req.JSON(c, req.CodeError, "获取失败", nil)
+		return
+	}
+
+	var list []model.FavorJson
+	for _, val := range favors {
+		list = append(list, val.FormatJson())
+	}
+
+	req.JSON(c, req.CodeSuccess, "成功", map[string]interface{}{
+		"tabs": tabs,
+		"list": list,
+	})
 	return
 }

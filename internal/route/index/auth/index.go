@@ -14,7 +14,10 @@ func Info(c *gin.Context) {
 		return
 	}
 
-	login, err := (&model.User{}).FetchRow("`username` = ?", username)
+	login, err := (&model.User{}).FetchRow(model.Query{
+		Query: "`username` = ?",
+		Args: []interface{}{username},
+	})
 	if err != nil {
 		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
 		return

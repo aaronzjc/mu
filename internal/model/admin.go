@@ -39,7 +39,7 @@ func (u *Admin) Auth() {
 	defer conn.Close()
 
 	u.Token = tool.GenerateToken(u.Username)
-	u.AuthTime = time.Now().Format("2006-01-02 15:04:05")
+	u.AuthTime = tool.CurrentTime()
 
 	info, _ := json.Marshal(u)
 	conn.Set(u.AuthKey(), string(info), time.Hour * 24)

@@ -57,16 +57,19 @@ func List(c *gin.Context) {
 	m := &model.Node{}
 	var nodes []model.Node
 	if r.Keyword != "" {
-		nodes, err = m.FetchRows("name like ?", "%"+r.Keyword+"%")
+		nodes, err = m.FetchRows(model.Query{
+			Query: "name like ?",
+			Args: []interface{}{"%"+r.Keyword+"%"},
+		})
 	} else {
-		nodes, err = m.FetchRows("1=1")
+		nodes, err = m.FetchRows(model.Query{})
 	}
 	if err != nil {
 		req.JSON(c, req.CodeError, err.Error(), nil)
 		return
 	}
 
-	var result []model.NodeJson
+	var result []model.Node
 	for _, node := range nodes {
 		item, _ := node.FormatJson()
 		result = append(result, item)

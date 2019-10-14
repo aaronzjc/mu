@@ -50,16 +50,14 @@ func RegisterRoutes() {
 	idx := r.Group("")
 	idx.Use(middleware.ApiAuth(false))
 	{
+		// 本组路由获取用户信息，但是不强制登录
+		idx.GET("/info", idxAuth.Info)
 		idx.GET("/list", hot.List)
 	}
-
 	api := r.Group("/api")
 	api.Use(middleware.ApiAuth(true))
 	{
-		api.GET("/info", idxAuth.Info)
-
 		// 收藏管理
-		api.GET("/favor/config", favor.Config)
 		api.GET("/favor/list", favor.List)
 		api.POST("/favor/add", favor.Add)
 		api.POST("/favor/remove", favor.Remove)

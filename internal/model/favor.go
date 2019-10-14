@@ -1,89 +1,84 @@
 package model
 
 import (
-	"crawler/internal/util/logger"
 	"errors"
 	"time"
 )
 
 type Favor struct {
-	ID			int			`gorm:"id" json:"id"`
-	UserId 		int 		`gorm:"user_id" json:"user_id"`
-	Site	 	string 		`gorm:"site" json:"site"`
-	Key 	   	string 		`gorm:"key" json:"key"`
-	OriginUrl 	string 		`gorm:"origin_url" json:"origin_url"`
-	Title 		string 		`gorm:"title" json:"title"`
-	CreateAt 	time.Time 	`gorm:"create_at" json:"create_at"`
+	ID			int			`gorm:"id"`
+	UserId 		int 		`gorm:"user_id"`
+	Site	 	string 		`gorm:"site"`
+	Key 	   	string 		`gorm:"key"`
+	OriginUrl 	string 		`gorm:"origin_url"`
+	Title 		string 		`gorm:"title"`
+	CreateAt 	time.Time 	`gorm:"create_at"`
+}
+
+type FavorJson struct {
+	ID			int			`json:"id"`
+	OriginUrl 	string 		`json:"origin_url"`
+	Title 		string 		`json:"title"`
+	CreateAt 	string 		`json:"create_at"`
 }
 
 func (f *Favor) TableName() string {
 	return "favor"
 }
 
-func (f *Favor) Exist() bool {
-	db := DPool().Conn
-	defer db.Close()
+func (f *Favor) Exist() (bool, error) {
+	query := Query{}
 
 	if f.ID > 0 {
-		db = db.Where("`id` = ?", f.ID).First(f)
+		query.Query = "`id` = ?"
+		query.Args = []interface{}{f.ID}
 	} else if f.Key != "" {
-		db = db.Where(" `user_id` = ? AND `site` = ? AND `key` = ?", f.UserId, f.Site, f.Key).First(f)
+		query.Query = "`user_id` = ? AND `site` = ? AND `key` = ?"
+		query.Args = []interface{}{f.UserId, f.Site, f.Key}
 	}
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("Exist err %v, exp %s .", err, db.QueryExpr())
-		return true
+
+	err := First(query, &f)
+	if err != nil {
+		return false, errors.New("fetch error")
 	}
-	return f.ID > 0
+
+	return f.ID > 0, nil
 }
 
 func (f *Favor) Create() error {
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Create(&f)
-	var err error
-	if err = db.Error; err != nil {
-		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
-		return errors.New("create favor err")
+	err := Create(&f)
+	if err != nil {
+		return errors.New("create failed")
 	}
 
 	return nil
 }
 
 func (f *Favor) Del() bool {
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Delete(f)
-	if err := db.Error; err != nil {
-		logger.Error("delete err %v, exp %s .", err, db.QueryExpr())
+	err := Del(&f)
+	if err != nil {
 		return false
 	}
 
 	return true
 }
 
-func (f *Favor) FetchRows(query string, args ...interface{}) ([]Favor, error) {
-	db := DPool().Conn
-	defer db.Close()
-
+func (f *Favor) FetchRows(query Query) ([]Favor, error) {
 	var list []Favor
-	db = db.Where(query, args...).Find(&list)
-	if err := db.Error; err != nil {
-		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
+
+	err := FetchRows(query, &list)
+	if err != nil {
 		return nil, errors.New("fetchRows favor failed")
 	}
+
 	return list, nil
 }
 
-func (f *Favor) Config() []string {
-	db := DPool().Conn
-	defer db.Close()
-
+func (f *Favor) Config(query Query) []string {
 	var list []Favor
-	db = db.Select("DISTINCT(`site`)").Find(&list)
-	if err := db.Error; err != nil {
-		logger.Error("FetchConfig err %v, exp %s .", err, db.QueryExpr())
+
+	err := Select("DISTINCT(`site`)", query, &list)
+	if err != nil {
 		return []string{}
 	}
 
@@ -93,4 +88,15 @@ func (f *Favor) Config() []string {
 	}
 
 	return result
+}
+
+func (f *Favor) FormatJson() FavorJson {
+	json := FavorJson{
+		ID: f.ID,
+		OriginUrl: f.OriginUrl,
+		Title: f.Title,
+		CreateAt: f.CreateAt.Format("2006-01-02 15:04:05"),
+	}
+
+	return json
 }

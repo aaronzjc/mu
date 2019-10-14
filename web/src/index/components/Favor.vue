@@ -5,10 +5,10 @@
                 <h4 class="title is-4 has-text-centered">俺的收藏夹</h4>
                 <div class="field is-grouped search-form">
                     <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="搜一搜">
+                        <input class="input" type="text" placeholder="搜一搜" v-model="keyword">
                     </p>
                     <p class="control">
-                        <a class="button is-info">
+                        <a class="button is-info" @click="search">
                             搜一搜
                         </a>
                     </p>
@@ -22,7 +22,7 @@
             <div class="column hot-list">
                 <div class="hot" v-for="(hot, idx) in list" :key="idx">
                     <div class="hot-item">
-                        <p class="hot-ts has-text-grey">2019.12.01</p>
+                        <p class="hot-ts has-text-grey">{{ hot.create_at }}</p>
                         <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
                     </div>
                     <div class="divider"></div>
@@ -45,7 +45,6 @@ import Footer from "./Footer"
 import {Get, Post} from "../tools/http";
 
 const API = {
-    config: "/api/favor/config",
     list: "/api/favor/list",
     remove: "/api/favor/remove"
 };
@@ -54,6 +53,7 @@ export default {
     name: "Favor",
     data() {
         return {
+            keyword: "",
             selected: {
                 tab: 0,
                 tag: 0
@@ -63,39 +63,34 @@ export default {
         }
     },
     created() {
-        this.fetchConfig(this.fetchFavor);
+        this.fetchFavor()
     },
     methods: {
         tabChange(playload) {
             this.selected = playload;
             this.fetchFavor();
         },
-        fetchConfig(callback) {
-            Get(API.config).then(function (resp) {
-                if (resp.data.code === 10000) {
-                    this.tabs = resp.data.data;
-                } else {
-                    alert(resp.data.msg);
-                }
-                if (typeof callback == "function") {
-                    callback();
-                }
-            }.bind(this))
+        search() {
+            this.fetchFavor()
         },
         fetchFavor() {
-            if (this.tabs.length === 0) {
-                return false;
-            }
-            var key = this.tabs[this.selected.tab]["key"];
-            if (key === undefined) {
-                return false;
+            var args = {};
+            if (this.keyword !== "") {
+                args["keyword"] = this.keyword;
+            } else {
+                if (this.tabs.length !== 0) {
+                    var key = this.tabs[this.selected.tab]["key"];
+                    if (key === undefined) {
+                        return false;
+                    }
+                    args["s"] = key
+                }
             }
             NProgress.start();
-            Get(API.list, {
-                s: this.tabs[this.selected.tab]["key"],
-            }).then(function (resp) {
+            Get(API.list, args).then(function (resp) {
                 if (resp.data.code === 10000) {
-                    this.list = resp.data.data;
+                    this.tabs = resp.data.data.tabs;
+                    this.list = resp.data.data.list;
                 } else {
                     this.list = [];
                 }

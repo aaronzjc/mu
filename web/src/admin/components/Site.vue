@@ -351,7 +351,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align tags">
-                                    <span :key="nodeId" v-for="nodeId in viewForm.node_hosts" class="tag is-info">{{ nodes[nodeId].name }}-{{ nodes[nodeId].ip }}</span>
+                                    <span :key="nodeId" v-for="nodeId in viewForm.node_hosts" class="tag is-info">{{ nodes[nodeId].name }}</span>
                                 </div>
                             </div>
                         </div>
