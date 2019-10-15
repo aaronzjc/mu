@@ -13,6 +13,9 @@
 + Drone CI, Portainer, Grafana + Loki 
 + Docker, Docker Swarm
 
+### 预览
+[看这里](https://github.com/aaronzjc/mu/tree/master/doc)
+
 ### 本地开发
 
 ```shell
@@ -23,7 +26,7 @@
 # 启动各个服务
 $ make crawler-dev # 抓取节点
 $ make mu-dev # 前端页面和任务调度
-$ make vue-dev
+$ make vue-dev # 本地开发H5
 ```
 
 ### 项目目录和一些开发约定
