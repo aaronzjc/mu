@@ -1,17 +1,17 @@
 package middleware
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/util/logger"
-	"crawler/internal/util/req"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/util/logger"
+	"mu/internal/util/req"
 )
 
 const (
-	CooAdmin = "_admin"
+	CooAdmin      = "_admin"
 	CooAdminToken = "_admin_token"
-	CooUser = "_user"
-	CooToken = "_token"
+	CooUser       = "_user"
+	CooToken      = "_token"
 
 	LoginUser = "login_user"
 )
@@ -54,7 +54,7 @@ func ApiAuth(forceLogin bool) gin.HandlerFunc {
 		} else {
 			u, _ := user.FetchRow(model.Query{
 				Query: "`username` = ?",
-				Args: []interface{}{user.Username},
+				Args:  []interface{}{user.Username},
 			})
 			c.Set(LoginUser, u.ID)
 		}

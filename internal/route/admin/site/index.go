@@ -1,12 +1,12 @@
 package site
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/svc/schedule"
-	"crawler/internal/util/logger"
-	"crawler/internal/util/req"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/svc/schedule"
+	"mu/internal/util/logger"
+	"mu/internal/util/req"
 )
 
 type InfoForm struct {
@@ -58,7 +58,7 @@ func List(c *gin.Context) {
 	if r.Keyword != "" {
 		sites, err = m.FetchRows(model.Query{
 			Query: "name like ?",
-			Args: []interface{}{"%"+r.Keyword+"%"},
+			Args:  []interface{}{"%" + r.Keyword + "%"},
 		})
 	} else {
 		sites, err = m.FetchRows(model.Query{})
@@ -81,7 +81,7 @@ func List(c *gin.Context) {
 
 	nodes, _ := (&model.Node{}).FetchRows(model.Query{
 		Query: "`enable` = ?",
-		Args: []interface{}{model.Enable},
+		Args:  []interface{}{model.Enable},
 	})
 	nodeJson := make(map[int]model.Node)
 	for _, node := range nodes {
@@ -137,7 +137,7 @@ func UpdateSite(c *gin.Context) {
 
 	om, _ := (&model.Site{}).FetchRow(model.Query{
 		Query: "`id` = ?",
-		Args: []interface{}{m.ID},
+		Args:  []interface{}{m.ID},
 	})
 
 	err = m.Update(data)

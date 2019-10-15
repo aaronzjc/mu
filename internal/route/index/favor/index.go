@@ -1,29 +1,29 @@
 package favor
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/route/middleware"
-	"crawler/internal/svc/lib"
-	"crawler/internal/util/req"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/route/middleware"
+	"mu/internal/svc/lib"
+	"mu/internal/util/req"
 	"time"
 )
 
 type ListForm struct {
-	Site 	string 		`form:"s"`
-	Keyword string 		`form:"keyword"`
+	Site    string `form:"s"`
+	Keyword string `form:"keyword"`
 }
 
 type AddForm struct {
-	Key		string 		`json:"key"`
-	Site 	string 		`json:"site"`
-	Url 	string 		`json:"url"`
-	Title 	string 		`json:"title"`
+	Key   string `json:"key"`
+	Site  string `json:"site"`
+	Url   string `json:"url"`
+	Title string `json:"title"`
 }
 
 type RemoveForm struct {
-	Site 	string 		`json:"site"`
-	Key  	string 		`json:"key"`
+	Site string `json:"site"`
+	Key  string `json:"key"`
 }
 
 func Add(c *gin.Context) {
@@ -41,12 +41,12 @@ func Add(c *gin.Context) {
 	}
 
 	m := &model.Favor{
-		UserId: login.(int),
-		Key: r.Key,
-		Site: r.Site,
+		UserId:    login.(int),
+		Key:       r.Key,
+		Site:      r.Site,
 		OriginUrl: r.Url,
-		Title: r.Title,
-		CreateAt: time.Now(),
+		Title:     r.Title,
+		CreateAt:  time.Now(),
 	}
 
 	exist, err = m.Exist()
@@ -60,16 +60,16 @@ func Add(c *gin.Context) {
 	}
 
 	if err = m.Create(); err != nil {
-		req.JSON(c, req.CodeError, "add failed " + err.Error(), nil)
+		req.JSON(c, req.CodeError, "添加失败", nil)
 		return
 	}
 
-	req.JSON(c, req.CodeSuccess, "add success ", nil)
+	req.JSON(c, req.CodeSuccess, "添加成功", nil)
 	return
 }
 
 func Remove(c *gin.Context) {
-	var err  error
+	var err error
 	var r RemoveForm
 	if err = c.ShouldBindJSON(&r); err != nil {
 		req.JSON(c, req.CodeError, "参数错误", nil)
@@ -84,8 +84,8 @@ func Remove(c *gin.Context) {
 
 	m := &model.Favor{
 		UserId: login.(int),
-		Key: r.Key,
-		Site: r.Site,
+		Key:    r.Key,
+		Site:   r.Site,
 	}
 
 	exist, err = m.Exist()
@@ -108,8 +108,9 @@ func Remove(c *gin.Context) {
 }
 
 func List(c *gin.Context) {
+	var err error
 	var r ListForm
-	if err := c.ShouldBindQuery(&r); err != nil {
+	if err = c.ShouldBindQuery(&r); err != nil {
 		req.JSON(c, req.CodeError, "参数错误", nil)
 		return
 	}
@@ -125,15 +126,16 @@ func List(c *gin.Context) {
 	site := r.Site
 	keyword := r.Keyword
 
+	q := model.Query{}
+
 	var siteNames []string
 	if keyword != "" {
-		siteNames = m.Config(model.Query{
+		q = model.Query{
 			Query: "`user_id` = ? AND `title` like ?",
-			Args: []interface{}{login.(int), "%" + keyword + "%"},
-		})
-	} else {
-		siteNames = m.Config(model.Query{})
+			Args:  []interface{}{login.(int), "%" + keyword + "%"},
+		}
 	}
+	siteNames = m.Config(q)
 	if len(siteNames) == 0 {
 		req.JSON(c, req.CodeSuccess, "成功", map[string]interface{}{
 			"tabs": []string{},
@@ -151,24 +153,26 @@ func List(c *gin.Context) {
 		site := lib.NewSite(name)
 		tabs = append(tabs, map[string]interface{}{
 			"name": site.Name,
-			"key": site.Key,
+			"key":  site.Key,
 			"tags": []string{},
 		})
 	}
 
-	var err error
 	var favors []model.Favor
 	if keyword == "" {
-		favors, err = (&model.Favor{}).FetchRows(model.Query{
+		q = model.Query{
 			Query: "`site` = ? AND `user_id` = ?",
-			Args: []interface{}{site, login.(int)},
-		})
+			Args:  []interface{}{site, login.(int)},
+			Order: "`id` DESC",
+		}
 	} else {
-		favors, err = (&model.Favor{}).FetchRows(model.Query{
+		q = model.Query{
 			Query: "`site` = ? AND `user_id` = ? AND `title` LIKE ?",
-			Args: []interface{}{site, login.(int), "%" + keyword + "%"},
-		})
+			Args:  []interface{}{site, login.(int), "%" + keyword + "%"},
+			Order: "`id` DESC",
+		}
 	}
+	favors, err = m.FetchRows(q)
 	if err != nil {
 		req.JSON(c, req.CodeError, "获取失败", nil)
 		return

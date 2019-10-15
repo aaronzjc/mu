@@ -1,14 +1,14 @@
 package hot
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/route/middleware"
-	"crawler/internal/svc/lib"
-	"crawler/internal/util/cache"
-	"crawler/internal/util/logger"
-	"crawler/internal/util/req"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/route/middleware"
+	"mu/internal/svc/lib"
+	"mu/internal/util/cache"
+	"mu/internal/util/logger"
+	"mu/internal/util/req"
 )
 
 type Tab struct {
@@ -45,7 +45,7 @@ func List(c *gin.Context) {
 	if exist {
 		query := model.Query{
 			Query: "`user_id` = ? AND `site` = ?",
-			Args: []interface{}{login.(int), key},
+			Args:  []interface{}{login.(int), key},
 		}
 		favors, err := (&model.Favor{}).FetchRows(query)
 		if err != nil {
@@ -62,10 +62,10 @@ func List(c *gin.Context) {
 	for _, val := range hotJson.List {
 		exist := ckMap[val.Key]
 		list = append(list, map[string]interface{}{
-			"key": val.Key,
-			"title": val.Title,
+			"key":        val.Key,
+			"title":      val.Title,
 			"origin_url": val.OriginUrl,
-			"mark": exist,
+			"mark":       exist,
 		})
 	}
 	result["t"] = hotJson.T
@@ -79,7 +79,7 @@ func Tabs(c *gin.Context) {
 	var tabs []Tab
 	sites, _ := (&model.Site{}).FetchRows(model.Query{
 		Query: "`enable` = ?",
-		Args: []interface{}{model.Enable},
+		Args:  []interface{}{model.Enable},
 	})
 	for _, site := range sites {
 		js, _ := site.FormatJson()

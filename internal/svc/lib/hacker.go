@@ -1,9 +1,9 @@
 package lib
 
 import (
-	"crawler/internal/util/tool"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"mu/internal/util/tool"
 	"time"
 )
 

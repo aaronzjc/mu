@@ -24,7 +24,6 @@ const actions = {
 
 const mutations = {
     initUser(state, info) {
-        console.log(info);
         state.id = info.id;
         state.username = info.username;
         state.avatar = info.avatar;

@@ -1,11 +1,11 @@
 package model
 
 import (
-	"crawler/internal/util/cache"
-	"crawler/internal/util/tool"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"mu/internal/util/cache"
+	"mu/internal/util/tool"
 	"time"
 )
 
@@ -42,7 +42,7 @@ func (u *Admin) Auth() {
 	u.AuthTime = tool.CurrentTime()
 
 	info, _ := json.Marshal(u)
-	conn.Set(u.AuthKey(), string(info), time.Hour * 24)
+	conn.Set(u.AuthKey(), string(info), time.Hour*24)
 }
 
 func (u *Admin) CheckToken(token string) bool {

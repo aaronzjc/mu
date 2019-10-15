@@ -1,4 +1,4 @@
-module crawler
+module mu
 
 go 1.13
 

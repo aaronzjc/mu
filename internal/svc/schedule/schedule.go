@@ -2,17 +2,17 @@ package schedule
 
 import (
 	"context"
-	"crawler/internal/model"
-	"crawler/internal/svc/lib"
-	"crawler/internal/svc/rpc"
-	"crawler/internal/util/cache"
-	"crawler/internal/util/logger"
-	"crawler/internal/util/tool"
 	"encoding/json"
 	"errors"
 	"github.com/robfig/cron/v3"
 	"google.golang.org/grpc"
 	"math/rand"
+	"mu/internal/model"
+	"mu/internal/svc/lib"
+	"mu/internal/svc/rpc"
+	"mu/internal/util/cache"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"sync"
 	"time"
 )
@@ -120,7 +120,7 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 	if j.Site.NodeOption == model.ByType {
 		nodes, err = (&model.Node{}).FetchRows(model.Query{
 			Query: "`type` = ? AND `ping` = ?",
-			Args: []interface{}{j.Site.NodeType, model.PingOk},
+			Args:  []interface{}{j.Site.NodeType, model.PingOk},
 		})
 		if err != nil {
 			logger.Error("pick agent error, err " + err.Error())
@@ -138,7 +138,7 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 		}
 		nodes, err = (&model.Node{}).FetchRows(model.Query{
 			Query: "`id` IN (?) AND `enable` = ? AND `ping` = ?",
-			Args: []interface{}{hosts, model.Enable, model.PingOk},
+			Args:  []interface{}{hosts, model.Enable, model.PingOk},
 		})
 		if err != nil {
 			logger.Error("pick agent error, err " + err.Error())
@@ -196,7 +196,7 @@ func (j *CrawlerJob) Run() {
 				Title:     hot.Title,
 				Rank:      float64(hot.Rank),
 				OriginUrl: hot.Url,
-				Key: 	   hot.Key,
+				Key:       hot.Key,
 			})
 		}
 		hotJson.List = list
@@ -231,13 +231,13 @@ func (j *CrawlerJob) ExecJobDirect() {
  */
 type CheckJob struct {
 	Name string
-	Spec 	string
+	Spec string
 }
 
 func (j *CheckJob) Run() {
 	nodes, err := (&model.Node{}).FetchRows(model.Query{
 		Query: "`enable` = ?",
-		Args: []interface{}{model.Enable},
+		Args:  []interface{}{model.Enable},
 	})
 	if err != nil {
 		panic("init pool failed " + err.Error())
@@ -291,7 +291,7 @@ func (s *Schedule) InitJobs() {
 	m := model.Site{}
 	sites, err := m.FetchRows(model.Query{
 		Query: "`enable` = ?",
-		Args: []interface{}{model.Enable},
+		Args:  []interface{}{model.Enable},
 	})
 	if err != nil {
 		panic("schedule init sites failed " + err.Error())
@@ -379,23 +379,23 @@ func Debug() map[string]interface{} {
 		if job, ok := entry.Job.(*CrawlerJob); ok {
 			cm[job.Site.Key] = map[string]interface{}{
 				"entry_id": entry.ID,
-				"cron": job.Site.Cron,
-				"next": next,
+				"cron":     job.Site.Cron,
+				"next":     next,
 			}
 			continue
 		}
 		if job, ok := entry.Job.(*CheckJob); ok {
 			cm[job.Name] = map[string]interface{}{
 				"entry_id": entry.ID,
-				"cron": job.Spec,
-				"next": next,
+				"cron":     job.Spec,
+				"next":     next,
 			}
 			continue
 		}
 	}
 
 	return map[string]interface{}{
-		"JobMap": jm,
+		"JobMap":  jm,
 		"CronMap": cm,
 	}
 }

@@ -22,6 +22,7 @@ vue-staging:
 dev: mu-dev crawler-dev vue-dev
 mu-dev:
 	-rm ./bin/mu
+	go fmt ./...
 	go build -o ./bin/mu ./cmd/master/main.go
 	./bin/mu
 

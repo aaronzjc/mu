@@ -1,9 +1,9 @@
 package model
 
 import (
-	"crawler/internal/svc/lib"
 	"encoding/json"
 	"errors"
+	"mu/internal/svc/lib"
 	"strings"
 )
 
@@ -77,7 +77,7 @@ func (s *Site) Create() error {
 	var tmp []Site
 	err := FetchRows(Query{
 		Query: "`key` = ? or `root` = ?",
-		Args: []interface{}{s.Key, s.Root},
+		Args:  []interface{}{s.Key, s.Root},
 	}, &tmp)
 	if err != nil {
 		return errors.New("create site error")
@@ -108,7 +108,7 @@ func (s *Site) FetchInfo() (Site, error) {
 
 	err := First(Query{
 		Query: "`id` = ?",
-		Args: []interface{}{s.ID},
+		Args:  []interface{}{s.ID},
 	}, &tmp)
 	if err != nil {
 		return Site{}, errors.New("fetch site info failed")
@@ -180,7 +180,7 @@ func (s *Site) InitSites() {
 		site := lib.NewSite(siteKey)
 		row, err := s.FetchRow(Query{
 			Query: " `key` = ? ",
-			Args: []interface{}{site.Key},
+			Args:  []interface{}{site.Key},
 		})
 		if err != nil {
 			panic("init sites fetch failed " + err.Error())

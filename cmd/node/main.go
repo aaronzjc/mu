@@ -1,7 +1,7 @@
 package main
 
 import (
-	"crawler/internal/app/crawler"
+	"mu/internal/app/crawler"
 )
 
 func main() {

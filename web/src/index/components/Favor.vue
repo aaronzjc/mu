@@ -27,7 +27,7 @@
                     </div>
                     <div class="divider"></div>
                     <div class="hot-opt" @click="remove(idx)">
-                        <i class="far fa-trash-alt has-text-danger"></i>
+                        <i class="far fa-trash-alt has-text-grey"></i>
                     </div>
                 </div>
             </div>

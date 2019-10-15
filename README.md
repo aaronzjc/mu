@@ -1,6 +1,6 @@
 ## 项目
 
-[![Build Status](http://drone.memosa.cn/api/badges/aaronzjc/crawler/status.svg)](http://drone.memosa.cn/aaronzjc/crawler)
+[![Build Status](http://drone.memosa.cn/api/badges/aaronzjc/mu/status.svg)](http://drone.memosa.cn/aaronzjc/crawler)
 
 ### 介绍
 

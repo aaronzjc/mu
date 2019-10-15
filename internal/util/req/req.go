@@ -1,8 +1,8 @@
 package req
 
 import (
-	"crawler/internal/util/config"
 	"github.com/gin-gonic/gin"
+	"mu/internal/util/config"
 	"net/http"
 	"strings"
 )

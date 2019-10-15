@@ -19,7 +19,7 @@ const (
 )
 
 type Node struct {
-	ID       int	   `gorm:"id" json:"id"`
+	ID       int       `gorm:"id" json:"id"`
 	Name     string    `gorm:"name" json:"name"`
 	Addr     string    `gorm:"addr" json:"addr"`
 	Type     int8      `gorm:"type" json:"type"`
@@ -79,7 +79,7 @@ func (node *Node) FetchInfo() (Node, error) {
 
 	err := First(Query{
 		Query: "`id` = ?",
-		Args: []interface{}{node.ID},
+		Args:  []interface{}{node.ID},
 	}, &n)
 	if err != nil {
 		return Node{}, errors.New("fetch node info failed")

@@ -1,10 +1,10 @@
 package model
 
 import (
-	"crawler/internal/util/config"
-	"crawler/internal/util/db"
-	"crawler/internal/util/logger"
 	"github.com/jinzhu/gorm"
+	"mu/internal/util/config"
+	"mu/internal/util/db"
+	"mu/internal/util/logger"
 )
 
 var (
@@ -13,7 +13,7 @@ var (
 
 type Query struct {
 	Query string
-	Args []interface{}
+	Args  []interface{}
 	Order string
 	Limit int
 }

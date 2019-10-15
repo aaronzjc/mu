@@ -1,10 +1,10 @@
 package model
 
 import (
-	"crawler/internal/util/logger"
-	"crawler/internal/util/tool"
 	"errors"
 	"fmt"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"time"
 )
 
@@ -41,7 +41,7 @@ func (u *User) FetchRow(query Query) (User, error) {
 func (u *User) Create() error {
 	tmp, err := u.FetchRow(Query{
 		Query: "`username` = ?",
-		Args: []interface{}{u.Username},
+		Args:  []interface{}{u.Username},
 	})
 	if err != nil {
 		return errors.New("create user err")
@@ -92,7 +92,7 @@ func (u *User) RefreshToken() error {
 func (u *User) Auth() error {
 	tmp, _ := u.FetchRow(Query{
 		Query: "`username` = ? AND `auth_type` = ?",
-		Args: []interface{}{u.Username, u.AuthType},
+		Args:  []interface{}{u.Username, u.AuthType},
 	})
 	if tmp.ID > 0 {
 		err := tmp.RefreshToken()
@@ -120,7 +120,7 @@ func (u *User) Auth() error {
 func (u *User) CheckToken() (bool, error) {
 	login, _ := u.FetchRow(Query{
 		Query: "`username` = ? AND `token` = ?",
-		Args: []interface{}{u.Username, u.Token},
+		Args:  []interface{}{u.Username, u.Token},
 	})
 	if login.ID <= 0 {
 		return false, errors.New("user not exists")

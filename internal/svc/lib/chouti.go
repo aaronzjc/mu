@@ -1,10 +1,10 @@
 package lib
 
 import (
-	"crawler/internal/util/logger"
-	"crawler/internal/util/tool"
 	"encoding/json"
 	"fmt"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"time"
 )
 

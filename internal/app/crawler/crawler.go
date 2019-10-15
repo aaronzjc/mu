@@ -2,11 +2,11 @@ package crawler
 
 import (
 	"context"
-	"crawler/internal/svc/lib"
-	"crawler/internal/svc/rpc"
-	"crawler/internal/util/logger"
-	"crawler/internal/util/tool"
 	"google.golang.org/grpc"
+	"mu/internal/svc/lib"
+	"mu/internal/svc/rpc"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"net"
 	"sync"
 )

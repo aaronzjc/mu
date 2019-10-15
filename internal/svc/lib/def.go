@@ -1,11 +1,11 @@
 package lib
 
 import (
-	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
+	"mu/internal/util/logger"
 	"net/http"
 	"strings"
 	"time"
@@ -19,7 +19,7 @@ const (
 // 热榜新闻
 type Hot struct {
 	Id        int     `json:"id"`
-	Key 	  string  `json:"key"`
+	Key       string  `json:"key"`
 	Title     string  `json:"title"`
 	Rank      float64 `json:"rank"`
 	OriginUrl string  `json:"origin_url"`

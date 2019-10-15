@@ -6,20 +6,20 @@ import (
 )
 
 type Favor struct {
-	ID			int			`gorm:"id"`
-	UserId 		int 		`gorm:"user_id"`
-	Site	 	string 		`gorm:"site"`
-	Key 	   	string 		`gorm:"key"`
-	OriginUrl 	string 		`gorm:"origin_url"`
-	Title 		string 		`gorm:"title"`
-	CreateAt 	time.Time 	`gorm:"create_at"`
+	ID        int       `gorm:"id"`
+	UserId    int       `gorm:"user_id"`
+	Site      string    `gorm:"site"`
+	Key       string    `gorm:"key"`
+	OriginUrl string    `gorm:"origin_url"`
+	Title     string    `gorm:"title"`
+	CreateAt  time.Time `gorm:"create_at"`
 }
 
 type FavorJson struct {
-	ID			int			`json:"id"`
-	OriginUrl 	string 		`json:"origin_url"`
-	Title 		string 		`json:"title"`
-	CreateAt 	string 		`json:"create_at"`
+	ID        int    `json:"id"`
+	OriginUrl string `json:"origin_url"`
+	Title     string `json:"title"`
+	CreateAt  string `json:"create_at"`
 }
 
 func (f *Favor) TableName() string {
@@ -92,10 +92,10 @@ func (f *Favor) Config(query Query) []string {
 
 func (f *Favor) FormatJson() FavorJson {
 	json := FavorJson{
-		ID: f.ID,
+		ID:        f.ID,
 		OriginUrl: f.OriginUrl,
-		Title: f.Title,
-		CreateAt: f.CreateAt.Format("2006-01-02 15:04:05"),
+		Title:     f.Title,
+		CreateAt:  f.CreateAt.Format("2006-01-02 15:04:05"),
 	}
 
 	return json

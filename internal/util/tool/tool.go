@@ -1,9 +1,9 @@
 package tool
 
 import (
-	"crawler/internal/util/config"
 	"crypto/md5"
 	"fmt"
+	"mu/internal/util/config"
 	"reflect"
 	"time"
 )

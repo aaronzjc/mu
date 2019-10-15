@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/route/middleware"
-	"crawler/internal/util/req"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/route/middleware"
+	"mu/internal/util/req"
 )
 
 func Info(c *gin.Context) {

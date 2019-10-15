@@ -1,16 +1,16 @@
 package route
 
 import (
-	"crawler/internal/app/mu"
-	adminAuth "crawler/internal/route/admin/auth"
-	"crawler/internal/route/admin/node"
-	"crawler/internal/route/admin/site"
-	idxAuth "crawler/internal/route/index/auth"
-	"crawler/internal/route/index/favor"
-	"crawler/internal/route/index/hot"
-	"crawler/internal/route/middleware"
-	"crawler/internal/route/oauth"
 	"github.com/gin-contrib/cors"
+	"mu/internal/app/mu"
+	adminAuth "mu/internal/route/admin/auth"
+	"mu/internal/route/admin/node"
+	"mu/internal/route/admin/site"
+	idxAuth "mu/internal/route/index/auth"
+	"mu/internal/route/index/favor"
+	"mu/internal/route/index/hot"
+	"mu/internal/route/middleware"
+	"mu/internal/route/oauth"
 	"os"
 	"path/filepath"
 )

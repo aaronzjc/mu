@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/route/middleware"
-	"crawler/internal/util/req"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/route/middleware"
+	"mu/internal/util/req"
 )
 
 func Info(c *gin.Context) {
@@ -16,7 +16,7 @@ func Info(c *gin.Context) {
 
 	login, err := (&model.User{}).FetchRow(model.Query{
 		Query: "`username` = ?",
-		Args: []interface{}{username},
+		Args:  []interface{}{username},
 	})
 	if err != nil {
 		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)

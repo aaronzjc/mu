@@ -1,9 +1,9 @@
 package node
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/util/req"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/util/req"
 	"time"
 )
 
@@ -59,7 +59,7 @@ func List(c *gin.Context) {
 	if r.Keyword != "" {
 		nodes, err = m.FetchRows(model.Query{
 			Query: "name like ?",
-			Args: []interface{}{"%"+r.Keyword+"%"},
+			Args:  []interface{}{"%" + r.Keyword + "%"},
 		})
 	} else {
 		nodes, err = m.FetchRows(model.Query{})

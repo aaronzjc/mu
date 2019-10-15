@@ -1,10 +1,10 @@
 package cache
 
 import (
-	config2 "crawler/internal/util/config"
-	"crawler/internal/util/logger"
 	"fmt"
 	"github.com/go-redis/redis"
+	config2 "mu/internal/util/config"
+	"mu/internal/util/logger"
 )
 
 func RedisConn() *redis.Client {

@@ -1,12 +1,12 @@
 package auth
 
 import (
-	"crawler/internal/util/config"
-	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"mu/internal/util/config"
+	"mu/internal/util/logger"
 	"net/http"
 )
 

@@ -1,14 +1,14 @@
 package oauth
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/route/middleware"
-	"crawler/internal/util/auth"
-	"crawler/internal/util/config"
-	"crawler/internal/util/req"
-	"crawler/internal/util/tool"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/route/middleware"
+	"mu/internal/util/auth"
+	"mu/internal/util/config"
+	"mu/internal/util/req"
+	"mu/internal/util/tool"
 	"net/http"
 )
 
@@ -84,7 +84,7 @@ func Callback(c *gin.Context) {
 		}
 		admin.Auth()
 		req.SetCookie(c, map[string]string{
-			middleware.CooAdmin: admin.Username,
+			middleware.CooAdmin:      admin.Username,
 			middleware.CooAdminToken: admin.Token,
 		})
 		c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s%s", cnf.WebUrl(), "/admin"))
@@ -101,7 +101,7 @@ func Callback(c *gin.Context) {
 
 		req.SetCookie(c, map[string]string{
 			middleware.CooToken: user.Token,
-			middleware.CooUser: user.Username,
+			middleware.CooUser:  user.Username,
 		})
 
 		c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s%s", cnf.WebUrl(), "/"))
