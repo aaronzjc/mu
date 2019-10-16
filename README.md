@@ -14,7 +14,7 @@
 + Docker, Docker Swarm
 
 ### 预览
-[看这里](https://github.com/aaronzjc/mu/tree/master/doc)
+[这里](https://github.com/aaronzjc/mu/tree/master/doc)
 
 ### 本地开发
 
