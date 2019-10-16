@@ -95,7 +95,7 @@ export default {
                     this.list = [];
                 }
                 NProgress.done();
-            }.bind(this))
+            }.bind(this)).catch(() => {NProgress.done();});
         },
         remove(idx) {
             if (!confirm("确定移除该条吗？")) {

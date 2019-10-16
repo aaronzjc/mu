@@ -11,10 +11,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 section.section {
     padding:5px 0px 0px 0px;
 }
+
 * {
     -webkit-tap-highlight-color: transparent;
 }

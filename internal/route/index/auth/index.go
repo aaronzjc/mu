@@ -8,15 +8,15 @@ import (
 )
 
 func Info(c *gin.Context) {
-	username, err := c.Cookie(middleware.CooUser)
-	if err != nil {
-		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
+	userId, exist := c.Get(middleware.LoginUser)
+	if !exist {
+		req.JSON(c, req.CodeError, "获取信息失败", nil)
 		return
 	}
 
 	login, err := (&model.User{}).FetchRow(model.Query{
-		Query: "`username` = ?",
-		Args:  []interface{}{username},
+		Query: "`id` = ?",
+		Args:  []interface{}{userId},
 	})
 	if err != nil {
 		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
