@@ -156,6 +156,8 @@ func FSite(t string) Spider {
 		return &Hacker{NewSite(t)}
 	case SITE_TIEBA:
 		return &Tieba{NewSite(t)}
+	case SITE_REDDIT:
+		return &Reddit{NewSite(t)}
 	default:
 		logger.Fatal("Unknown site name " + t)
 		return nil
@@ -218,6 +220,15 @@ func NewSite(t string) Site {
 			CrawType: CrawHtml,
 			Tabs:     TiebaTabs,
 		}
+	case SITE_REDDIT:
+		return Site{
+			Name:     "Reddit",
+			Key:      t,
+			Root:     "https://www.reddit.com/",
+			Desc:     "老外的贴吧",
+			CrawType: CrawApi,
+			Tabs:     RedditTabs,
+		}
 
 	default:
 		logger.Fatal("Unknown site name " + t)
@@ -233,5 +244,6 @@ func AvailableSites() []string {
 		SITE_WEIBO,
 		SITE_HACKER,
 		SITE_TIEBA,
+		SITE_REDDIT,
 	}
 }

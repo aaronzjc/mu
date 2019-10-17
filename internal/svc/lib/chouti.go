@@ -56,13 +56,13 @@ func (c *Chouti) BuildUrl() ([]Link, error) {
 
 func (c *Chouti) CrawPage(link Link) (Page, error) {
 	page, err := c.Craw(link, nil)
+	if err != nil {
+		return Page{}, err
+	}
 
 	var list HotList
 	if err := json.Unmarshal([]byte(page.Content), &list); err != nil {
 		logger.Error("%v", err.Error())
-		return Page{}, err
-	}
-	if err != nil {
 		return Page{}, err
 	}
 	page.Json = list.Data

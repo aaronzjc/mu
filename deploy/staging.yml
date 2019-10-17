@@ -1,36 +1,30 @@
 version: '3.7'
 
 services:
-  staging_master:
+  prod_master:
     image: uhub.service.ucloud.cn/memosa/mu:dev
     deploy:
       replicas: 1
     ports:
       - 7990:7980
     configs:
-      - source: app_mu_staging_config
+      - source: app_mu_staging_upgrade
         target: /app/app.json
 
-  staging_node_1:
+  prod_node_1:
     image: uhub.service.ucloud.cn/memosa/crawler:dev
     deploy:
       replicas: 1
     ports:
       - 7991:7990
-    configs:
-      - source: app_mu_staging_config
-        target: /app/app.json
 
-  staging_node_2:
-    image: uhub.service.ucloud.cn/memosa/crawler:dev
+  prod_node_2:
+    image: uhub.service.ucloud.cn/memosa/crawler:latest
     deploy:
       replicas: 1
     ports:
       - 7992:7990
-    configs:
-      - source: app_mu_staging_config
-        target: /app/app.json
 
 configs:
-  app_mu_staging_config:
+  app_mu_staging_upgrade:
     external: true
