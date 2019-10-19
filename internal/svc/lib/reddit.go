@@ -93,7 +93,6 @@ func (r *Reddit) CrawPage(link Link) (Page, error) {
 		if h.Key == "" {
 			continue
 		}
-		fmt.Println(h.Title + h.OriginUrl)
 		data = append(data, h)
 	}
 
