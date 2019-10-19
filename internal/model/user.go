@@ -1,10 +1,10 @@
 package model
 
 import (
-	"crawler/internal/util/logger"
-	"crawler/internal/util/tool"
 	"errors"
 	"fmt"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"time"
 )
 
@@ -14,39 +14,24 @@ const (
 )
 
 type User struct {
-	ID       int    `gorm:"id"`
-	Username string `gorm:"username"`
-	Nickname string `gorm:"nickname"`
-	Avatar   string `gorm:"avatar"`
-	AuthType int8   `gorm:"auth_type"`
-	AuthTime string `gorm:"auth_time"`
-	Token    string `gorm:"token"`
-	ExpireAt int64  `gorm:"expire_at"`
-}
-
-type UserJson struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Nickname string `json:"nickname"`
-	Avatar   string `json:"avatar"`
-	AuthType int8   `json:"auth_type"`
-	AuthTime string `json:"auth_time"`
-	Token    string `json:"token"`
-	ExpireAt int64  `json:"expire_at"`
+	ID       int    `gorm:"id" json:"id"`
+	Username string `gorm:"username" json:"username"`
+	Nickname string `gorm:"nickname" json:"nickname"`
+	Avatar   string `gorm:"avatar" json:"avatar"`
+	AuthType int8   `gorm:"auth_type" json:"auth_type"`
+	AuthTime string `gorm:"auth_time" json:"auth_time"`
+	Token    string `gorm:"token" json:"token"`
+	ExpireAt int64  `gorm:"expire_at" json:"expire_at"`
 }
 
 func (u *User) TableName() string {
 	return "user"
 }
 
-func (u *User) FetchRow(query string, args ...interface{}) (User, error) {
+func (u *User) FetchRow(query Query) (User, error) {
 	var tmp User
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Where(query, args...).First(&tmp)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("FetchRow err %v, exp %s .", err, db.QueryExpr())
+	err := First(query, &tmp)
+	if err != nil {
 		return User{}, errors.New("fetch user info failed")
 	}
 
@@ -54,7 +39,10 @@ func (u *User) FetchRow(query string, args ...interface{}) (User, error) {
 }
 
 func (u *User) Create() error {
-	tmp, err := u.FetchRow("`username` = ?", u.Username)
+	tmp, err := u.FetchRow(Query{
+		Query: "`username` = ?",
+		Args:  []interface{}{u.Username},
+	})
 	if err != nil {
 		return errors.New("create user err")
 	}
@@ -63,12 +51,8 @@ func (u *User) Create() error {
 		return errors.New(fmt.Sprintf("user with %s exists", u.Username))
 	}
 
-	db := DPool().Conn
-	defer db.Close()
-
-	db = db.Create(&u)
-	if err = db.Error; err != nil {
-		logger.Error("create err %v, exp %s .", err, db.QueryExpr())
+	err = Create(&u)
+	if err != nil {
 		return errors.New("create user err")
 	}
 
@@ -106,7 +90,10 @@ func (u *User) RefreshToken() error {
 }
 
 func (u *User) Auth() error {
-	tmp, _ := u.FetchRow("`username` = ? AND `auth_type` = ?", u.Username, u.AuthType)
+	tmp, _ := u.FetchRow(Query{
+		Query: "`username` = ? AND `auth_type` = ?",
+		Args:  []interface{}{u.Username, u.AuthType},
+	})
 	if tmp.ID > 0 {
 		err := tmp.RefreshToken()
 		if err != nil {
@@ -117,7 +104,7 @@ func (u *User) Auth() error {
 		u.Token = tmp.Token
 		u.ExpireAt = tmp.ExpireAt
 	} else {
-		u.AuthTime = time.Now().Format("2006-01-02 15:04:05")
+		u.AuthTime = tool.CurrentTime()
 		u.Token = tool.GenerateToken(u.Username)
 		u.ExpireAt = time.Now().Add(time.Hour * 24 * 30).Unix()
 
@@ -131,7 +118,10 @@ func (u *User) Auth() error {
 }
 
 func (u *User) CheckToken() (bool, error) {
-	login, _ := u.FetchRow("`username` = ? AND `token` = ?", u.Username, u.Token)
+	login, _ := u.FetchRow(Query{
+		Query: "`username` = ? AND `token` = ?",
+		Args:  []interface{}{u.Username, u.Token},
+	})
 	if login.ID <= 0 {
 		return false, errors.New("user not exists")
 	}
@@ -141,8 +131,8 @@ func (u *User) CheckToken() (bool, error) {
 	return true, nil
 }
 
-func (u *User) FormatJson() (UserJson, error) {
-	json := UserJson{
+func (u *User) FormatJson() (User, error) {
+	json := User{
 		ID:       u.ID,
 		Username: u.Username,
 		Nickname: u.Nickname,

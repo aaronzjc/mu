@@ -1,11 +1,11 @@
 package lib
 
 import (
-	"crawler/internal/util/logger"
 	"encoding/json"
 	"errors"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
+	"mu/internal/util/logger"
 	"net/http"
 	"strings"
 	"time"
@@ -19,6 +19,7 @@ const (
 // 热榜新闻
 type Hot struct {
 	Id        int     `json:"id"`
+	Key       string  `json:"key"`
 	Title     string  `json:"title"`
 	Rank      float64 `json:"rank"`
 	OriginUrl string  `json:"origin_url"`
@@ -33,6 +34,7 @@ type HotJson struct {
 type Spider interface {
 	BuildUrl() ([]Link, error)
 	CrawPage(link Link) (Page, error)
+	FetchKey(link string) string
 }
 
 // 链接信息
@@ -152,6 +154,10 @@ func FSite(t string) Spider {
 		return &Zhihu{NewSite(t)}
 	case SITE_HACKER:
 		return &Hacker{NewSite(t)}
+	case SITE_TIEBA:
+		return &Tieba{NewSite(t)}
+	case SITE_REDDIT:
+		return &Reddit{NewSite(t)}
 	default:
 		logger.Fatal("Unknown site name " + t)
 		return nil
@@ -205,6 +211,25 @@ func NewSite(t string) Site {
 			CrawType: CrawHtml,
 			Tabs:     HackerTabs,
 		}
+	case SITE_TIEBA:
+		return Site{
+			Name:     "贴吧",
+			Key:      t,
+			Root:     "https://tieba.baidu.com",
+			Desc:     "鱼龙混杂的社区",
+			CrawType: CrawHtml,
+			Tabs:     TiebaTabs,
+		}
+	case SITE_REDDIT:
+		return Site{
+			Name:     "Reddit",
+			Key:      t,
+			Root:     "https://www.reddit.com/",
+			Desc:     "老外的贴吧",
+			CrawType: CrawApi,
+			Tabs:     RedditTabs,
+		}
+
 	default:
 		logger.Fatal("Unknown site name " + t)
 		return Site{}
@@ -218,5 +243,7 @@ func AvailableSites() []string {
 		SITE_ZHIHU,
 		SITE_WEIBO,
 		SITE_HACKER,
+		SITE_TIEBA,
+		SITE_REDDIT,
 	}
 }

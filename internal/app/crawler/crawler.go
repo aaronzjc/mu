@@ -2,13 +2,13 @@ package crawler
 
 import (
 	"context"
-	"crawler/internal/svc/lib"
-	"crawler/internal/svc/rpc"
-	"crawler/internal/util/logger"
 	"google.golang.org/grpc"
+	"mu/internal/svc/lib"
+	"mu/internal/svc/rpc"
+	"mu/internal/util/logger"
+	"mu/internal/util/tool"
 	"net"
 	"sync"
-	"time"
 )
 
 type AgentServer struct{}
@@ -35,7 +35,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 	wg.Wait()
 
 	result := new(rpc.Result)
-	result.T = time.Now().Format("2006-01-02 15:04:05")
+	result.T = tool.CurrentTime()
 	m := make(map[string]*rpc.Result_HotList)
 	for tag, p := range pageMap {
 		hotList := new(rpc.Result_HotList)
@@ -45,6 +45,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 				Title: item.Title,
 				Rank:  float32(item.Rank),
 				Url:   item.OriginUrl,
+				Key:   item.Key,
 			})
 		}
 		hotList.Item = items

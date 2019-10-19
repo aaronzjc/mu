@@ -29,7 +29,7 @@ import {Get} from "../tools/http";
 
 export default {
     name: "Dashboard",
-    mounted() {
+    beforeMount() {
         this.fetchLogin()
     },
     data: () => {
@@ -43,7 +43,7 @@ export default {
     },
     methods: {
         fetchLogin() {
-            Get("/api/info").then(resp => {
+            Get("/admin/info").then(resp => {
                 if (resp.data.code === 10000) {
                     this.login = resp.data.data
                 } else {

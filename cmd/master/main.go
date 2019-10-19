@@ -1,9 +1,9 @@
 package main
 
 import (
-	"crawler/internal/app/mu"
-	"crawler/internal/route"
-	"crawler/internal/util/logger"
+	"mu/internal/app/mu"
+	"mu/internal/route"
+	"mu/internal/util/logger"
 )
 
 func main() {

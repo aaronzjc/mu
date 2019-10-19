@@ -26,6 +26,7 @@ message Result {
             string Title = 1;
             float Rank = 2;
             string Url = 3;
+            string Key = 4;
         }
         repeated Item item = 1;
     }

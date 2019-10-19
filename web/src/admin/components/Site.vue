@@ -351,7 +351,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align tags">
-                                    <span :key="nodeId" v-for="nodeId in viewForm.node_hosts" class="tag is-info">{{ nodes[nodeId].name }}-{{ nodes[nodeId].ip }}</span>
+                                    <span :key="nodeId" v-for="nodeId in viewForm.node_hosts" class="tag is-info">{{ nodes[nodeId].name }}</span>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +440,7 @@ export default {
     methods: {
         fetchList() {
             NProgress.start();
-            Get("/api/site/list").then(resp => {
+            Get("/admin/site/list").then(resp => {
                 if (resp.data.code === 10000) {
                     this.nodes = resp.data.data.nodeList;
                     this.list = resp.data.data.siteList;
@@ -453,7 +453,7 @@ export default {
             })
         },
         save() {
-            Post("/api/site/update", this.editForm).then(resp => {
+            Post("/admin/site/update", this.editForm).then(resp => {
                 if (resp.data.code === 10000) {
                     alert("保存成功");
                     this.closeEdit();

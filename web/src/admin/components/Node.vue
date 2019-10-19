@@ -63,7 +63,7 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">{{ editForm.title }}</p>
+                    <p class="modal-card-title">{{ editForm.id > 0 ? "编辑节点" : "添加节点" }}</p>
                     <button class="delete" aria-label="close" @click="cancel"></button>
                 </header>
                 <section class="modal-card-body">
@@ -223,7 +223,7 @@ export default {
     methods: {
         fetchList() {
             NProgress.start();
-            Get("/api/node/list").then(resp => {
+            Get("/admin/node/list").then(resp => {
                 if (resp.data.code === 10001) {
                     alert(resp.data.msg);
                 } else {
@@ -239,7 +239,7 @@ export default {
                 return false;
             }
 
-            Get("/api/node/del", {
+            Get("/admin/node/del", {
                 "id": this.list[idx].id
             }).then(resp => {
                 if (resp.data.code !== 10000) {
@@ -249,7 +249,7 @@ export default {
             })
         },
         save() {
-            Post("/api/node/upsert", this.editForm).then(resp => {
+            Post("/admin/node/upsert", this.editForm).then(resp => {
                 if (resp.data.code === 10001) {
                     alert(resp.data.msg);
                 } else {
@@ -273,7 +273,6 @@ export default {
                 "ping": 0,
                 "enable": 0
             };
-            this.editForm["title"] = "添加节点";
             this.editModal = true;
         },
         edit(idx) {

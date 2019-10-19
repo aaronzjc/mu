@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -61,18 +62,29 @@ func (v *V2ex) CrawPage(link Link) (Page, error) {
 		if comment == "" {
 			comment = "0"
 		}
-		data = append(data, Hot{
+		h := Hot{
 			Title:     text,
 			OriginUrl: fmt.Sprintf("%s%s", v.Root, url),
 			Rank: (func() float64 {
 				val, _ := strconv.ParseFloat(comment, 32)
 				return float64(val)
 			})(),
-		})
+		}
+		h.Key = v.FetchKey(h.OriginUrl)
+		if h.Key == "" {
+			return
+		}
+		data = append(data, h)
 	})
 
 	page.T = time.Now()
 	page.List = data
 
 	return page, nil
+}
+
+func (v *V2ex) FetchKey(link string) string {
+	reg := regexp.MustCompile(".*/t/(\\d+).*")
+	id := reg.ReplaceAllString(link, "$1")
+	return id
 }

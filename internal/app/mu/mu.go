@@ -1,11 +1,11 @@
 package mu
 
 import (
-	"crawler/internal/model"
-	"crawler/internal/svc/schedule"
-	"crawler/internal/util/config"
-	"crawler/internal/util/logger"
 	"github.com/gin-gonic/gin"
+	"mu/internal/model"
+	"mu/internal/svc/schedule"
+	"mu/internal/util/config"
+	"mu/internal/util/logger"
 	"os"
 	"strings"
 )
