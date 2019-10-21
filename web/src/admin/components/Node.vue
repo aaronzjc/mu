@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="columns">
-            <div class="column is-half">
+            <div class="column is-one-third">
                 <div class="field is-grouped">
                     <p class="control is-expanded">
                         <input class="input" type="text" placeholder="关键词">
