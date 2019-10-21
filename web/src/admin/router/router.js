@@ -4,6 +4,7 @@ import Site from "../components/Site"
 import Node from "../components/Node"
 import Dashboard from "../components/Dashboard";
 import Login from "../components/Login";
+import User from "../components/User";
 
 Vue.use(Router);
 
@@ -19,13 +20,19 @@ const routes = [
                 path: '/site',
                 name: 'site',
                 component: Site,
-                title: "网站管理"
+                title: "站点管理"
             },
             {
                 path: '/node',
                 name: 'node',
                 component: Node,
                 title: "节点管理"
+            },
+            {
+                path: '/user',
+                name: 'user',
+                component: User,
+                title: "用户列表"
             }
         ]
     },

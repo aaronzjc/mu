@@ -14,14 +14,23 @@ const (
 )
 
 type User struct {
-	ID       int    `gorm:"id" json:"id"`
-	Username string `gorm:"username" json:"username"`
-	Nickname string `gorm:"nickname" json:"nickname"`
-	Avatar   string `gorm:"avatar" json:"avatar"`
-	AuthType int8   `gorm:"auth_type" json:"auth_type"`
-	AuthTime string `gorm:"auth_time" json:"auth_time"`
-	Token    string `gorm:"token" json:"token"`
-	ExpireAt int64  `gorm:"expire_at" json:"expire_at"`
+	ID       int       `gorm:"id"`
+	Username string    `gorm:"username"`
+	Nickname string    `gorm:"nickname"`
+	Avatar   string    `gorm:"avatar"`
+	AuthType int8      `gorm:"auth_type"`
+	AuthTime time.Time `gorm:"auth_time"`
+	Token    string    `gorm:"token"`
+	ExpireAt int64     `gorm:"expire_at"`
+}
+
+type UserJson struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
+	AuthType int8   `json:"auth_type"`
+	AuthTime string `json:"auth_time"`
 }
 
 func (u *User) TableName() string {
@@ -104,7 +113,7 @@ func (u *User) Auth() error {
 		u.Token = tmp.Token
 		u.ExpireAt = tmp.ExpireAt
 	} else {
-		u.AuthTime = tool.CurrentTime()
+		u.AuthTime = time.Now()
 		u.Token = tool.GenerateToken(u.Username)
 		u.ExpireAt = time.Now().Add(time.Hour * 24 * 30).Unix()
 
@@ -131,15 +140,24 @@ func (u *User) CheckToken() (bool, error) {
 	return true, nil
 }
 
-func (u *User) FormatJson() (User, error) {
-	json := User{
+func (user *User) FetchRows(query Query) ([]User, error) {
+	var list []User
+
+	err := FetchRows(query, &list)
+	if err != nil {
+		return nil, errors.New("fetchrows user failed")
+	}
+
+	return list, nil
+}
+
+func (u *User) FormatJson() (UserJson, error) {
+	json := UserJson{
 		ID:       u.ID,
 		Username: u.Username,
 		Nickname: u.Nickname,
 		Avatar:   u.Avatar,
-		AuthTime: u.AuthTime,
-		Token:    u.Token,
-		ExpireAt: u.ExpireAt,
+		AuthTime: u.AuthTime.Format("2006-01-02 15:04:05"),
 	}
 
 	return json, nil

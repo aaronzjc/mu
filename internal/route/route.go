@@ -6,6 +6,7 @@ import (
 	adminAuth "mu/internal/route/admin/auth"
 	"mu/internal/route/admin/node"
 	"mu/internal/route/admin/site"
+	"mu/internal/route/admin/user"
 	idxAuth "mu/internal/route/index/auth"
 	"mu/internal/route/index/favor"
 	"mu/internal/route/index/hot"
@@ -79,5 +80,8 @@ func RegisterRoutes() {
 		admin.GET("/site", site.Info)
 		admin.GET("/site/list", site.List)
 		admin.POST("/site/update", site.UpdateSite)
+
+		// 用户管理
+		admin.GET("/user/list", user.List)
 	}
 }
