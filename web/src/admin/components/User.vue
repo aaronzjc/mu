@@ -20,22 +20,20 @@
                     <thead>
                     <tr>
                         <th width="10%">ID</th>
-                        <th width="15%">用户名</th>
-                        <th width="10%">昵称</th>
                         <th width="5%">头像</th>
+                        <th width="15%">用户名</th>
                         <th width="10%">认证时间</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(item, idx) in list" :key="idx">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.username }}</td>
-                        <td>{{ item.nickname }}</td>
                         <td>
                             <figure>
                                 <img class="avatar" :src="item.avatar">
                             </figure>
                         </td>
+                        <td>{{ item.username }}</td>
                         <td><span class="tag is-light">{{ item.auth_time }}</span></td>
                     </tr>
                     </tbody>

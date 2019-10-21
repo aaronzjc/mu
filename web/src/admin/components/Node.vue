@@ -11,12 +11,12 @@
                             搜索
                         </a>
                     </p>
-                    <p class="control">
-                        <a class="button is-info" @click="add">
-                            添加节点
-                        </a>
-                    </p>
                 </div>
+            </div>
+            <div class="column add-btn">
+                <a class="button is-info" @click="add">
+                    添加节点
+                </a>
             </div>
         </div>
         <div class="columns">
@@ -297,37 +297,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    table {
-        td, th {
-            text-align: center!important;
-            vertical-align: middle;
-        }
+table {
+    td, th {
+        text-align: center!important;
+        vertical-align: middle;
     }
-    .modal {
-        justify-content: unset;
-    }
-    .modal-card {
-        margin-top: 100px;
-        width: 600px;
-    }
-    .modal-card-head {
-        padding: 1rem;
+}
+.modal {
+    justify-content: unset;
+}
+.modal-card {
+    margin-top: 100px;
+    width: 600px;
+}
+.modal-card-head {
+    padding: 1rem;
 
-        .modal-card-title {
-            font-size: 1.2rem;
-        }
+    .modal-card-title {
+        font-size: 1.2rem;
     }
-    .modal-card-foot {
-        padding: 1rem;
-        justify-content: center;
-    }
-    .fix-align {
-        padding-top: 0.375em;
-    }
-    .ping {
-        display: inline-block;
-        width: 15px;
-        height:15px;
-        border-radius: 15px 15px;
-    }
+}
+.modal-card-foot {
+    padding: 1rem;
+    justify-content: center;
+}
+.fix-align {
+    padding-top: 0.375em;
+}
+.ping {
+    display: inline-block;
+    width: 15px;
+    height:15px;
+    border-radius: 15px 15px;
+}
+.add-btn {
+    padding-left: 0;
+}
 </style>
