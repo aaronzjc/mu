@@ -15,6 +15,7 @@
         <template v-if="!$store.getters['account/isLogin']">
             <div class="mini-navbar-opt" v-show="open">
                 <a class="navbar-item" @click="toLogin">登录</a>
+                <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
             </div>
             <div class="navbar-item navbar-opt">
                 <a @click="toLogin">登录</a>
@@ -84,7 +85,7 @@ export default {
             })
         },
         initTheme(type) {
-            if (type === "") {
+            if (type == "") {
                 type = LIGHT;
             }
             var ht = document.getElementsByTagName("html")[0];
