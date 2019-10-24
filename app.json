@@ -3,9 +3,9 @@
 
     "server": {
         "https": false,
-        "host": "192.168.0.103:7980",
+        "host": "mu.memosa.local:7980",
         "addr": ":7980",
-        "web": "http://192.168.0.103:8080"
+        "web": "http://mu.memosa.local:8080"
     },
 
     "redis": {

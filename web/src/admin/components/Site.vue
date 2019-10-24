@@ -7,16 +7,14 @@
                         <input class="input" type="text" placeholder="关键词">
                     </p>
                     <p class="control">
-                        <a class="button is-primary">
-                            搜索
-                        </a>
+                        <a class="button is-primary">搜索</a>
                     </p>
                 </div>
             </div>
         </div>
         <div class="columns">
-            <div class="column">
-                <table class="table is-fullwidth is-bordered">
+            <div class="table-container column">
+                <table class="table is-bordered">
                     <thead>
                     <tr>
                         <th width="10%">网站</th>

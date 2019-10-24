@@ -1,0 +1,124 @@
+html.dark {
+    background-color: #181a1b !important;
+
+    & , body, input, textarea, select, button {
+        border-color: #575757 !important;
+        color: #e8e6e3 !important;
+    }
+
+    .title {
+        color: rgb(213, 209, 203);
+    }
+
+    a {
+        color: rgb(93, 162, 227);
+        text-decoration-color: currentcolor;
+
+        &:hover {
+            color: rgb(213, 209, 203);
+        }
+    }
+
+    .navbar {
+        background-color: rgb(24, 26, 27);
+    }
+
+    .tabs ul {
+        border-bottom-color: rgb(58, 58, 58);
+    }
+
+    .tabs li.is-active a {
+        border-bottom-color: rgb(27, 78, 159);
+        color: rgb(93, 162, 227);
+    }
+
+    .tabs a {
+        border-bottom-color: rgb(58, 58, 58);
+        color: rgb(205, 202, 194);
+
+        &:hover {
+            border-bottom-color: rgb(91, 91, 91);
+            color: rgb(213, 209, 203);
+        }
+    }
+
+    .hot .divider {
+        background-color: rgb(45, 48, 50) !important;
+    }
+
+    .hot:hover .divider {
+        background-color: rgb(61, 64, 67) !important;
+    }
+
+    .tag:not(body) {
+        background-color: rgb(27, 29, 30);
+        color: rgb(205, 202, 194);
+    }
+    .tag:not(body).is-primary {
+        background-color: rgb(0, 204, 174);
+        color: rgb(255, 255, 255);
+    }
+
+    .mini-navbar-opt {
+        background-color: rgb(28, 30, 31) !important;;
+    }
+
+    .navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+        background-color: rgb(26, 27, 28);
+        color: rgb(93, 162, 227);
+    }
+
+    .navbar-dropdown a.navbar-item:focus, .navbar-dropdown a.navbar-item:hover {
+        background-color: rgb(27, 29, 30);
+    }
+
+    .navbar-item.has-dropdown.is-active .navbar-link, .navbar-item.has-dropdown:focus .navbar-link, .navbar-item.has-dropdown:hover .navbar-link {
+        background-color: rgb(26, 27, 28);
+    }
+
+    .navbar-item, .navbar-link {
+        color: rgb(205, 202, 194);
+    }
+
+    .navbar-dropdown {
+        background-color: rgb(24, 26, 27);
+        border-top-color: rgb(58, 58, 58);
+        box-shadow: rgba(10, 10, 11, 0.1) 0px 8px 8px;
+    }
+
+    .navbar-divider {
+        background-color: rgb(27, 29, 30);
+        border-color: currentcolor;
+    }
+
+    .input, .textarea {
+        box-shadow: rgba(10, 10, 11, 0.1) 0px 1px 2px inset;
+    }
+
+    .input, .select select, .textarea {
+        background-color: rgb(24, 26, 27);
+        border-color: rgb(58, 58, 58);
+        color: rgb(213, 209, 203);
+    }
+
+    .input:active, .input:focus, .is-active.input, .is-active.textarea, .is-focused.input, .is-focused.textarea, .select select.is-active, .select select.is-focused, .select select:active, .select select:focus, .textarea:active, .textarea:focus {
+        border-color: rgb(27, 78, 159);
+        box-shadow: rgba(25, 73, 149, 0.25) 0px 0px 0px 0.125em;
+    }
+
+    .input:hover, .is-hovered.input, .is-hovered.textarea, .select select.is-hovered, .select select:hover, .textarea:hover {
+        border-color: rgb(66, 66, 66);
+    }
+
+    .button.is-white,.button.is-white:hover {
+        background-color: rgb(24, 26, 27);
+        border-color: transparent;
+        color: rgb(228, 226, 223);
+    }
+
+    .button.is-info {
+        background-color: rgb(13, 109, 172);
+        border-color: transparent;
+        color: rgb(255, 255, 255);
+    }
+}

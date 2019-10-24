@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/mixins';
+@import '~bulma/sass/utilities/mixins';
 
 .container {
     max-width: 960px;

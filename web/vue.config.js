@@ -21,5 +21,8 @@ module.exports = {
         performance: {
             hints: false
         }
+    },
+    devServer: {
+        disableHostCheck: true
     }
 };

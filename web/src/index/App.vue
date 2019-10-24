@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import "./assets/dark.scss"
+
 export default {
   name: 'app',
   components: {}

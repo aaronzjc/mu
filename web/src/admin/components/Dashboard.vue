@@ -66,7 +66,7 @@ export default {
         margin: 0 0 1rem 0;
         img {
             display: inline-block;
-            width: 50%;
+            width: 5rem;
             border-radius: 10rem 10rem;
             height: auto;
         }

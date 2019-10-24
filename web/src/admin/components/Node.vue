@@ -7,21 +7,17 @@
                         <input class="input" type="text" placeholder="关键词">
                     </p>
                     <p class="control">
-                        <a class="button is-primary">
-                            搜索
-                        </a>
+                        <a class="button is-primary">搜索</a>
                     </p>
                 </div>
             </div>
             <div class="column add-btn">
-                <a class="button is-info" @click="add">
-                    添加节点
-                </a>
+                <a class="button is-info" @click="add">添加节点</a>
             </div>
         </div>
         <div class="columns">
-            <div class="column">
-                <table class="table is-fullwidth is-bordered">
+            <div class="column table-container">
+                <table class="table is-bordered">
                     <thead>
                     <tr>
                         <th width="5%">ID</th>

@@ -7,22 +7,20 @@
                         <input class="input" type="text" placeholder="关键词">
                     </p>
                     <p class="control">
-                        <a class="button is-primary">
-                            搜索
-                        </a>
+                        <a class="button is-primary">搜索</a>
                     </p>
                 </div>
             </div>
         </div>
         <div class="columns">
-            <div class="column">
-                <table class="table is-fullwidth is-bordered">
+            <div class="column table-container">
+                <table class="table is-bordered">
                     <thead>
                     <tr>
                         <th width="10%">ID</th>
-                        <th width="5%">头像</th>
-                        <th width="15%">用户名</th>
-                        <th width="10%">认证时间</th>
+                        <th width="20%">头像</th>
+                        <th width="20%">用户名</th>
+                        <th width="40%">认证时间</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,9 +80,12 @@ table td, table th {
     vertical-align: middle;
 }
 td figure {
+    text-align: center;
+    padding:0 0;
+    margin: 0 0;
     display: flex;
     flex-direction: row;
-    align-content: center;
+    justify-content: center;
 }
 td img.avatar {
     width: 32px;
