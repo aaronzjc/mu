@@ -85,7 +85,7 @@ export default {
             })
         },
         initTheme(type) {
-            if (type == "") {
+            if (type != LIGHT && type != DARK) {
                 type = LIGHT;
             }
             var ht = document.getElementsByTagName("html")[0];
