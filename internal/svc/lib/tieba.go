@@ -11,14 +11,14 @@ const SITE_TIEBA = "tieba"
 
 var TiebaTabs = []map[string]string{
 	{
-		"tag":  "lol",
-		"name": "英雄联盟吧",
-		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=英雄联盟&fr=search",
-	},
-	{
 		"tag":  "beiguo",
 		"name": "背锅吧",
 		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=背锅&fr=search",
+	},
+	{
+		"tag":  "ruozhi",
+		"name": "弱智吧",
+		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=弱智&fr=search",
 	},
 }
 
