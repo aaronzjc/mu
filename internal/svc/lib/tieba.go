@@ -16,9 +16,9 @@ var TiebaTabs = []map[string]string{
 		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=英雄联盟&fr=search",
 	},
 	{
-		"tag":  "kangya",
-		"name": "抗压吧",
-		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=抗压&fr=search",
+		"tag":  "beiguo",
+		"name": "背锅吧",
+		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=背锅&fr=search",
 	},
 }
 
