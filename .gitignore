@@ -1,6 +1,7 @@
 bin/
 .DS_Store
 dist
+cmd/dev
 
 # Editor directories and files
 .idea
