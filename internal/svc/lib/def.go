@@ -264,6 +264,7 @@ func AvailableSites() []string {
 		SITE_ZHIHU,
 		SITE_WEIBO,
 		SITE_HACKER,
+		SITE_GITHUB,
 		SITE_TIEBA,
 		SITE_REDDIT,
 		SITE_ZAOBAO,
