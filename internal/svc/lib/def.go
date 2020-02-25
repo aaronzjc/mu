@@ -154,6 +154,8 @@ func FSite(t string) Spider {
 		return &Zhihu{NewSite(t)}
 	case SITE_HACKER:
 		return &Hacker{NewSite(t)}
+	case SITE_GITHUB:
+		return &Github{NewSite(t)}
 	case SITE_TIEBA:
 		return &Tieba{NewSite(t)}
 	case SITE_REDDIT:
@@ -212,6 +214,15 @@ func NewSite(t string) Site {
 			Desc:     "Hacker News",
 			CrawType: CrawHtml,
 			Tabs:     HackerTabs,
+		}
+	case SITE_GITHUB:
+		return Site{
+			Name:     "Github",
+			Key:      t,
+			Root:     "https://github.com",
+			Desc:     "Github.com",
+			CrawType: CrawHtml,
+			Tabs:     GithubTabs,
 		}
 	case SITE_TIEBA:
 		return Site{
