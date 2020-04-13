@@ -152,6 +152,8 @@ func FSite(t string) Spider {
 		return &Weibo{NewSite(t)}
 	case SITE_ZHIHU:
 		return &Zhihu{NewSite(t)}
+	case SITE_GUANGGU:
+		return &Guanggu{NewSite(t)}
 	case SITE_HACKER:
 		return &Hacker{NewSite(t)}
 	case SITE_GITHUB:
@@ -205,6 +207,15 @@ func NewSite(t string) Site {
 			Desc:     "知乎热榜",
 			CrawType: CrawHtml,
 			Tabs:     ZhihuTabs,
+		}
+	case SITE_GUANGGU:
+		return Site{
+			Name:     "光谷",
+			Key:      t,
+			Root:     "http://www.guanggoo.com/",
+			Desc:     "武汉光谷社区",
+			CrawType: CrawHtml,
+			Tabs:     GuangGuTabs,
 		}
 	case SITE_HACKER:
 		return Site{
@@ -263,6 +274,7 @@ func AvailableSites() []string {
 		SITE_CT,
 		SITE_ZHIHU,
 		SITE_WEIBO,
+		SITE_GUANGGU,
 		SITE_HACKER,
 		SITE_GITHUB,
 		SITE_TIEBA,
