@@ -212,7 +212,7 @@ func NewSite(t string) Site {
 		return Site{
 			Name:     "光谷",
 			Key:      t,
-			Root:     "http://www.guanggoo.com/",
+			Root:     "http://www.guanggoo.com",
 			Desc:     "武汉光谷社区",
 			CrawType: CrawHtml,
 			Tabs:     GuangGuTabs,
