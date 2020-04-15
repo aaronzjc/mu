@@ -35,30 +35,6 @@ steps:
       password:
         from_secret: docker_hub_password
 
-  - name: release ucloud crawler
-    image: plugins/docker
-    settings:
-      repo: uhub.service.ucloud.cn/memosa/crawler
-      target: crawler
-      tags: latest
-      username:
-        from_secret: docker_user
-      password:
-        from_secret: docker_password
-      registry: uhub.service.ucloud.cn
-
-  - name: release ucloud mu
-    image: plugins/docker
-    settings:
-      repo: uhub.service.ucloud.cn/memosa/mu
-      target: mu
-      tags: latest
-      username:
-        from_secret: docker_user
-      password:
-        from_secret: docker_password
-      registry: uhub.service.ucloud.cn
-
 trigger:
   branch:
     - master
