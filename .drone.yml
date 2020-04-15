@@ -48,7 +48,7 @@ steps:
   - name: build vue-dev
     image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.1
     commands:
-      - make vue-dev
+      - make vue-dev-build
 
   - name: build dev
     image: golang:1.13-stretch
