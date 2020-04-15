@@ -13,6 +13,7 @@ ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir -p /app/public /app/bin
 COPY ./bin/mu /app/bin
+
 COPY ./public /app/public
 WORKDIR /app/bin
 EXPOSE 7980

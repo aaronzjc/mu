@@ -72,8 +72,10 @@ func Callback(c *gin.Context) {
 
 	if from == "admin" {
 		if ok, _ := tool.ArrSearch(gUser.Username, cnf.Auth.Github.Admins); !ok {
-			c.String(http.StatusForbidden, "不好意思，您没有权限。请联系管理员。")
-			return
+			if ok, _ = tool.ArrSearch("everyone", cnf.Auth.Github.Admins); !ok {
+				c.String(http.StatusForbidden, "不好意思，您没有权限。请联系管理员。")
+				return
+			}
 		}
 
 		admin := model.Admin{
