@@ -10,11 +10,11 @@ CMD ["./crawler"]
 FROM alpine:3.7 as mu
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir -p /app/public /app/bin
-COPY ./app.json /app/app.json
+RUN mkdir -p /app/bin /app/conf app/public
 COPY ./bin/mu /app/bin
-
+COPY ./conf /app/conf
 COPY ./public /app/public
-WORKDIR /app/bin
 EXPOSE 7980
+VOLUME /app/conf
+WORKDIR /app/bin
 CMD ["./mu"]

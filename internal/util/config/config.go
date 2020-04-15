@@ -61,7 +61,7 @@ func FindConfigFile() (string, error) {
 		filepath.Dir(pwd),
 	}
 	for _, v := range scanPath {
-		file := path.Join(v, "app.json")
+		file := path.Join(v, "/conf/app.json")
 		if _, err := os.Stat(file); !os.IsNotExist(err) {
 			return file, nil
 		}

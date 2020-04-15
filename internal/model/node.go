@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"fmt"
-	"regexp"
 	"time"
 )
 
@@ -35,9 +34,6 @@ func (node *Node) TableName() string {
 func (node *Node) CheckArgs() error {
 	if node.Name == "" {
 		return errors.New("参数为空")
-	}
-	if match, _ := regexp.MatchString("^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+):\\d+$", node.Addr); !match {
-		return errors.New("Addr不规范")
 	}
 
 	return nil
