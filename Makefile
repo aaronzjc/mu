@@ -19,7 +19,7 @@ vue-staging:
 	cd web && npm install && npm run build-staging
 
 .PHONY: dev
-dev: mu-dev crawler-dev vue-dev
+dev: mu-dev crawler-dev vue-dev vue-dev-build
 mu-dev:
 	-rm ./bin/mu
 	go fmt ./...
@@ -31,7 +31,10 @@ crawler-dev:
 	./bin/crawler
 
 vue-dev:
-	cd web && npm run build-dev
+	cd web && npm run serve
+
+vue-dev-build:
+	cd web && npm install && npm run build-dev
 
 .PHONY: clean
 clean:
