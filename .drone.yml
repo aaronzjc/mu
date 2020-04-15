@@ -42,43 +42,41 @@ trigger:
 ---
 
 kind: pipeline
-name: staging
+name: dev
 
 steps:
-  - name: build vue-staging
+  - name: build vue-dev
     image: docker.pkg.github.com/aaronzjc/ci/drone-frontend:1.1
     commands:
-      - make vue-staging
+      - make vue-dev
 
-  - name: build staging
+  - name: build dev
     image: golang:1.13-stretch
     commands:
       - make mu
       - make crawler
 
-  - name: release mu-node
+  - name: release crawler
     image: plugins/docker
     settings:
-      repo: uhub.service.ucloud.cn/memosa/crawler
+      repo: aaronzjc/crawler
       tags: dev
       target: crawler
       username:
-        from_secret: docker_user
+        from_secret: docker_hub_user
       password:
         from_secret: docker_password
-      registry: uhub.service.ucloud.cn
 
   - name: release mu-master
     image: plugins/docker
     settings:
-      repo: uhub.service.ucloud.cn/memosa/mu
+      repo: aaronzjc/mu
       tags: dev
       target: mu
       username:
         from_secret: docker_user
       password:
         from_secret: docker_password
-      registry: uhub.service.ucloud.cn
 
 trigger:
   branch:
