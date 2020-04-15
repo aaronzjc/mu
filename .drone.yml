@@ -65,7 +65,7 @@ steps:
       username:
         from_secret: docker_hub_user
       password:
-        from_secret: docker_password
+        from_secret: docker_hub_password
 
   - name: release mu-master
     image: plugins/docker
@@ -74,9 +74,9 @@ steps:
       tags: dev
       target: mu
       username:
-        from_secret: docker_user
+        from_secret: docker_hub_user
       password:
-        from_secret: docker_password
+        from_secret: docker_hub_password
 
 trigger:
   branch:
