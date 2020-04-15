@@ -13,7 +13,7 @@ steps:
       - make crawler
       - make mu
 
-  - name: release crawler
+  - name: release ucloud crawler
     image: plugins/docker
     settings:
       repo: uhub.service.ucloud.cn/memosa/crawler
@@ -24,6 +24,18 @@ steps:
       password:
         from_secret: docker_password
       registry: uhub.service.ucloud.cn
+
+  - name: release dockerhub crawler
+    image: plugins/docker
+    settings:
+      repo: hub.docker.com/aaronzjc/crawler
+      target: crawler
+      tags: latest
+      username:
+        from_secret: docker_hub_user
+      password:
+        from_secret: docker_hub_password
+      registry: hub.docker.com
 
   - name: release mu
     image: plugins/docker
@@ -36,6 +48,18 @@ steps:
       password:
         from_secret: docker_password
       registry: uhub.service.ucloud.cn
+
+  - name: release dockerhub mu
+    image: plugins/docker
+    settings:
+      repo: hub.docker.com/aaronzjc/mu
+      target: mu
+      tags: latest
+      username:
+        from_secret: docker_hub_user
+      password:
+        from_secret: docker_hub_password
+      registry: hub.docker.com
 
 trigger:
   branch:

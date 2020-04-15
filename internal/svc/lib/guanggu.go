@@ -14,12 +14,12 @@ var GuangGuTabs = []map[string]string{
 	{
 		"tag":  "default",
 		"name": "默认",
-		"url": "http://www.guanggoo.com/",
+		"url":  "http://www.guanggoo.com/",
 	},
 	{
 		"tag":  "latest",
 		"name": "最新",
-		"url": "http://www.guanggoo.com/?tab=latest",
+		"url":  "http://www.guanggoo.com/?tab=latest",
 	},
 }
 

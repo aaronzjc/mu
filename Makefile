@@ -31,7 +31,7 @@ crawler-dev:
 	./bin/crawler
 
 vue-dev:
-	cd web && npm run serve
+	cd web && npm run build-dev
 
 .PHONY: clean
 clean:

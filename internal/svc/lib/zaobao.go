@@ -12,7 +12,7 @@ const SITE_ZAOBAO = "zaobao"
 var ZaobaoTabs = []map[string]string{
 	{
 		"tag":  "focus",
-		"url": "http://www.zaobao.com/",
+		"url":  "http://www.zaobao.com/",
 		"name": "今日焦点",
 	},
 }

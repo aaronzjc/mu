@@ -13,17 +13,17 @@ const SITE_GITHUB = "github"
 var GithubTabs = []map[string]string{
 	{
 		"tag":  "trending",
-		"url": "https://github.com/trending",
+		"url":  "https://github.com/trending",
 		"name": "Trending",
 	},
 	{
 		"tag":  "trending-php",
-		"url": "https://github.com/trending/php?since=daily",
+		"url":  "https://github.com/trending/php?since=daily",
 		"name": "Trending-PHP",
 	},
 	{
 		"tag":  "trending-go",
-		"url": "https://github.com/trending/go?since=daily",
+		"url":  "https://github.com/trending/go?since=daily",
 		"name": "Trending-Go",
 	},
 }
