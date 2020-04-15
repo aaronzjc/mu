@@ -10,23 +10,26 @@
 
 + Go, Vue.js
 + Goland
-+ Drone CI, Portainer, Grafana + Loki 
++ Drone CI, Portainer 
 + Docker, Docker Swarm
 
 ### 预览
 [这里](https://github.com/aaronzjc/mu/tree/master/doc)
 
-### 开发
+### 本地运行
 
 ```shell
-# 1. 本地安装MySQL和Redis
-# 2. 修改配置`app.json`和`.env.development`
-# 3. 启动各个服务
+# 1. 安装MySQL和Redis
+# 2. 执行deploy/db.sql导入数据库结构
+# 3. 修改配置`conf/app.json`里面的各项配置
+# 4. 修改`deploy/compose.yml`配置文件目录为你的`app.json`目录
 
-$ make crawler-dev # 抓取节点
-$ make mu-dev # 前端页面和任务调度
-$ make vue-dev # 本地开发H5
+$docker-compose -f deploy/compose.yml up
 ```
+
+### 本地开发
+
+参考`Makefile`。
 
 [开发说明](doc/DEV.md)
 
