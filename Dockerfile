@@ -1,7 +1,8 @@
 FROM alpine:3.7 as crawler
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir -p /app/bin && touch /app/app.json
+RUN mkdir -p /app/bin
+COPY ./app.json /app/app.json
 COPY ./bin/crawler /app/bin/
 WORKDIR /app/bin
 EXPOSE 7990
