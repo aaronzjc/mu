@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  mu:
+    image: aaronzjc/mu:dev
+    ports:
+      - 7980:7980
+    volumes:
+      - your_conf_path/:/app/conf/
+
+  crawler_1:
+    image: aaronzjc/crawler:dev
+    ports:
+      - 7981:7990
