@@ -87,7 +87,9 @@ func CrawJSON(link Link) (Page, error) {
 func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", link.Url, nil)
-	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
+	if _, ok := headers["User-Agent"]; !ok {
+		req.Header.Add("User-Agent", `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36`)
+	}
 	if len(headers) > 0 {
 		for k, v := range headers {
 			req.Header.Add(k, v)
