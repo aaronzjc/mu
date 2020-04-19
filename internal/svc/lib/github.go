@@ -48,7 +48,7 @@ func (g *Github) BuildUrl() ([]Link, error) {
 	return list, nil
 }
 
-func (g *Github) CrawPage(link Link) (Page, error) {
+func (g *Github) CrawPage(link Link, headers map[string]string) (Page, error) {
 	page, err := g.Craw(link, nil)
 	if err != nil {
 		return Page{}, err

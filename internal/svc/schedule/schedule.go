@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/robfig/cron/v3"
 	"google.golang.org/grpc"
 	"math/rand"
@@ -12,7 +13,6 @@ import (
 	"mu/internal/svc/rpc"
 	"mu/internal/util/cache"
 	"mu/internal/util/logger"
-	"mu/internal/util/tool"
 	"sync"
 	"time"
 )
@@ -155,6 +155,78 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 	return nodes[idx], nil
 }
 
+func (j *CrawlerJob) RunDirect(node model.Node) {
+	var err error
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+		//grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		//	Time:                20 * time.Second,
+		//	Timeout:             3 * time.Second,
+		//	PermitWithoutStream: true,
+		//}),
+	}
+
+	conn, err := grpc.Dial(node.Addr, opts...)
+	if err != nil {
+		logger.Error("connect error " + err.Error())
+	}
+	rpcClient := rpc.NewAgentClient(conn)
+
+	if err != nil {
+		logger.Error("get rpc client failed %v .", err)
+		return
+	}
+
+	// 从数据库获取请求header配置
+	var headers []*rpc.Job_Header
+	siteJson, _ := (j.Site).FormatJson()
+	for _, v := range siteJson.ReqHeaders {
+		if v.Key == "" || v.Val == "" {
+			continue
+		}
+		headers = append(headers, &rpc.Job_Header{
+			Key: v.Key,
+			Val: v.Val,
+		})
+	}
+
+	var result *rpc.Result
+	result, err = rpcClient.Craw(ctx, &rpc.Job{
+		Name:    j.Site.Key,
+		Headers: headers,
+	})
+	if err != nil {
+		logger.Error("remote craw err %v", err)
+		return
+	}
+
+	logger.Info("remote craw [%s] done", j.Site.Key)
+
+	hotJson := new(lib.HotJson)
+	hotJson.T = result.T
+	for _, hots := range result.Map {
+		var list []lib.Hot
+		for _, hot := range hots.Item {
+			list = append(list, lib.Hot{
+				Title:     hot.Title,
+				Rank:      float64(hot.Rank),
+				OriginUrl: hot.Url,
+				Key:       hot.Key,
+			})
+			fmt.Printf("%s %s %s %f\n", hot.Title, hot.Url, hot.Key, hot.Rank)
+		}
+		hotJson.List = list
+		if err != nil {
+			logger.Error("Json_encode weibo error , err = %s .", err.Error())
+			return
+		}
+	}
+}
+
 /**
  * 必须是Run方法。实现Cron的Job接口。
  */
@@ -178,8 +250,24 @@ func (j *CrawlerJob) Run() {
 
 	rpcClient := client.Client
 
+	// 从数据库获取请求header配置
+	var headers []*rpc.Job_Header
+	siteJson, _ := (j.Site).FormatJson()
+	for _, v := range siteJson.ReqHeaders {
+		if v.Key == "" || v.Val == "" {
+			continue
+		}
+		headers = append(headers, &rpc.Job_Header{
+			Key: v.Key,
+			Val: v.Val,
+		})
+	}
+
 	var result *rpc.Result
-	result, err = (*rpcClient).Craw(ctx, &rpc.Job{Name: j.Site.Key})
+	result, err = (*rpcClient).Craw(ctx, &rpc.Job{
+		Name:    j.Site.Key,
+		Headers: headers,
+	})
 	if err != nil {
 		logger.Error("remote craw err %v", err)
 		return
@@ -209,21 +297,6 @@ func (j *CrawlerJob) Run() {
 	}
 
 	return
-}
-
-func (j *CrawlerJob) ExecJobDirect() {
-	site := lib.FSite(j.Site.Key)
-	links, _ := site.BuildUrl()
-	for _, link := range links {
-		page, _ := link.Sp.CrawPage(link)
-		hotJson := new(lib.HotJson)
-		hotJson.T = tool.CurrentTime()
-		for _, hot := range page.List {
-			hotJson.List = append(hotJson.List, hot)
-		}
-		hotJsonStr, _ := json.Marshal(hotJson)
-		cache.SaveToRedis(j.Site.Key, link.Tag, string(hotJsonStr))
-	}
 }
 
 /**

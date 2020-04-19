@@ -106,6 +106,8 @@ func UpdateSite(c *gin.Context) {
 
 	tagBytes, _ := json.Marshal(r.Tags)
 	hostsBytes, _ := json.Marshal(r.NodeHosts)
+	reqHeaders, _ := json.Marshal(r.ReqHeaders)
+
 	m := model.Site{
 		ID:         r.ID,
 		Name:       r.Name,
@@ -117,6 +119,7 @@ func UpdateSite(c *gin.Context) {
 		NodeOption: r.NodeOption,
 		NodeType:   r.NodeType,
 		NodeHosts:  string(hostsBytes),
+		ReqHeaders: string(reqHeaders),
 	}
 	err = m.CheckArgs()
 	if err != nil {
@@ -134,6 +137,7 @@ func UpdateSite(c *gin.Context) {
 	data["node_option"] = m.NodeOption
 	data["node_type"] = m.NodeType
 	data["node_hosts"] = m.NodeHosts
+	data["req_headers"] = m.ReqHeaders
 
 	om, _ := (&model.Site{}).FetchRow(model.Query{
 		Query: "`id` = ?",

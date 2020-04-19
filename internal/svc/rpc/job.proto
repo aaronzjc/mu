@@ -18,6 +18,11 @@ message Pong {
 
 message Job {
     string name = 1;
+    message Header {
+        string Key = 1;
+        string Val = 2;
+    }
+    repeated Header headers = 2;
 }
 
 message Result {

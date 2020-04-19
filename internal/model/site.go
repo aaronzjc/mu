@@ -35,12 +35,18 @@ type Site struct {
 	NodeOption NodeOption `gorm:"node_option"`
 	NodeType   int8       `gorm:"node_type"`
 	NodeHosts  string     `gorm:"node_hosts"`
+	ReqHeaders string     `gorm:"req_headers"`
 }
 
 type Tag struct {
 	Key    string `json:"key"`
 	Name   string `json:"name"`
 	Enable int8   `json:"enable"`
+}
+
+type Header struct {
+	Key string `json:"key"`
+	Val string `json:"val"`
 }
 
 type SiteJson struct {
@@ -56,6 +62,7 @@ type SiteJson struct {
 	NodeType   int8       `json:"node_type"`
 	NodeHosts  []int      `json:"node_hosts"`
 	Enable     Status     `json:"enable"`
+	ReqHeaders []Header   `json:"req_headers"`
 }
 
 func (s *Site) TableName() string {
@@ -136,8 +143,9 @@ func (s *Site) FetchRows(query Query) ([]Site, error) {
 }
 
 func (s *Site) FormatJson() (SiteJson, error) {
-	var tags []Tag
-	var hosts []int
+	tags := []Tag{}
+	headers := []Header{}
+	hosts := []int{}
 
 	var err error
 	if s.Tags != "" {
@@ -147,13 +155,18 @@ func (s *Site) FormatJson() (SiteJson, error) {
 		}
 	}
 
+	if s.ReqHeaders != "" {
+		err = json.Unmarshal([]byte(s.ReqHeaders), &headers)
+		if err != nil {
+			return SiteJson{}, errors.New("头解析失败")
+		}
+	}
+
 	if s.NodeHosts != "" {
 		err = json.Unmarshal([]byte(s.NodeHosts), &hosts)
 		if err != nil {
 			return SiteJson{}, errors.New("节点解析失败")
 		}
-	} else {
-		hosts = []int{}
 	}
 
 	return SiteJson{
@@ -169,6 +182,7 @@ func (s *Site) FormatJson() (SiteJson, error) {
 		NodeType:   s.NodeType,
 		NodeHosts:  hosts,
 		Enable:     s.Enable,
+		ReqHeaders: headers,
 	}, nil
 }
 
@@ -220,6 +234,7 @@ func (s *Site) InitSites() {
 			Desc:       site.Desc,
 			Tags:       string(tagStr),
 			Type:       site.CrawType,
+			ReqHeaders: "",
 		}
 		err = row.Create()
 		if err != nil {
