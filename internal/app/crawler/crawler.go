@@ -15,13 +15,21 @@ type AgentServer struct{}
 
 func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, error) {
 	var wg sync.WaitGroup
+
 	pageMap := make(map[string]lib.Page)
+	headers := make(map[string]string)
+
+	h := msg.Headers
+	for _, v := range h {
+		headers[v.Key] = v.Val
+	}
 	s := lib.FSite(msg.Name)
+
 	links, _ := s.BuildUrl()
 	for _, link := range links {
 		wg.Add(1)
 		go func(link lib.Link) {
-			page, err := s.CrawPage(link)
+			page, err := s.CrawPage(link, headers)
 			if err != nil {
 				logger.Error("craw page error, err %v .", err)
 				return

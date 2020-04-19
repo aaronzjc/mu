@@ -54,7 +54,7 @@ func (c *Chouti) BuildUrl() ([]Link, error) {
 	return list, nil
 }
 
-func (c *Chouti) CrawPage(link Link) (Page, error) {
+func (c *Chouti) CrawPage(link Link, headers map[string]string) (Page, error) {
 	page, err := c.Craw(link, nil)
 	if err != nil {
 		return Page{}, err

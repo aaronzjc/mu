@@ -45,7 +45,7 @@ func (v *V2ex) BuildUrl() ([]Link, error) {
 	return list, nil
 }
 
-func (v *V2ex) CrawPage(link Link) (Page, error) {
+func (v *V2ex) CrawPage(link Link, headers map[string]string) (Page, error) {
 	page, err := v.Craw(link, nil)
 	if err != nil {
 		return Page{}, err

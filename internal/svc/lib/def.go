@@ -33,7 +33,7 @@ type HotJson struct {
 
 type Spider interface {
 	BuildUrl() ([]Link, error)
-	CrawPage(link Link) (Page, error)
+	CrawPage(link Link, headers map[string]string) (Page, error)
 	FetchKey(link string) string
 }
 
@@ -92,6 +92,9 @@ func CrawHTML(link Link, headers map[string]string) (Page, error) {
 	}
 	if len(headers) > 0 {
 		for k, v := range headers {
+			if k == "" || v == "" {
+				continue
+			}
 			req.Header.Add(k, v)
 		}
 	}

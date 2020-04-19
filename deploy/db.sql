@@ -52,6 +52,7 @@ CREATE TABLE `site` IF NOT EXISTS  (
   `node_option` tinyint(4) NOT NULL COMMENT '1:节点类型;2:节点IP',
   `node_type` tinyint(4) NOT NULL COMMENT '爬取的服务器类型',
   `node_hosts` text NOT NULL COMMENT '爬取的服务器IP列表',
+  `req_headers` text COMMENT '请求头信息',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key_idx` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

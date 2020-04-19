@@ -22,8 +22,8 @@
                     <tr>
                         <th width="5%">ID</th>
                         <th width="10%">名称</th>
-                        <th width="15%">Addr</th>
-                        <th width="10%">类型</th>
+                        <th width="20%">Addr</th>
+                        <th width="5%">类型</th>
                         <th width="5%">Ping</th>
                         <th width="5%">状态</th>
                         <th width="15%">操作</th>

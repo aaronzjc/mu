@@ -33,7 +33,7 @@ func RegisterRoutes() {
 	r := mu.App.Gin
 
 	c := cors.New(cors.Config{
-		AllowOrigins: 	  []string{"https://mu.memosa.cn"},
+		AllowOriginFunc:  func(origin string) bool { return true },
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
 		AllowCredentials: true,

@@ -37,7 +37,7 @@ func (h *Hacker) BuildUrl() ([]Link, error) {
 	return list, nil
 }
 
-func (h *Hacker) CrawPage(link Link) (Page, error) {
+func (h *Hacker) CrawPage(link Link, headers map[string]string) (Page, error) {
 	page, err := h.Craw(link, nil)
 	if err != nil {
 		return Page{}, err

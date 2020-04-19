@@ -126,6 +126,33 @@
 
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
+                            <label class="label">请求头</label>
+                        </div>
+                        <div class="field-body tag-field">
+                            <template v-if="editForm.req_headers.length == 0">
+                                <div class="tag-control">
+                                    <button class="button is-small is-primary" @click="addHeader">新建</button>
+                                </div>
+                            </template>
+                            <template v-if="editForm.req_headers.length > 0">
+                                <div class="tag-item" v-for="(item, idx) in editForm.req_headers" :key="idx">
+                                    <div class="tag-control">
+                                        <input class="input is-small" type="text" placeholder="名称" v-model="editForm.req_headers[idx].key">
+                                    </div>
+                                    <div class="tag-control">
+                                        <input class="input is-small" type="text" placeholder="值" v-model="editForm.req_headers[idx].val">
+                                    </div>
+                                    <div class="tag-control">
+                                        <button class="button is-small is-primary" @click="addHeader">新建</button>
+                                        <button class="button is-small is-danger" @click="delHeader(idx)">删除</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
                             <label class="label">标签</label>
                         </div>
                         <div class="field-body tag-field">
@@ -396,6 +423,7 @@ const initEdit = {
     node_option: 1,
     node_type: 1,
     node_hosts: [],
+    req_headers: [],
 };
 export default {
     name: "Site",
@@ -428,6 +456,7 @@ export default {
                 node_option: 1,
                 node_type: 1,
                 node_hosts: [],
+                req_headers: [],
             },
 
             viewForm: {
@@ -475,6 +504,15 @@ export default {
         closeEdit() {
             this.editModal = false;
             this.editForm = JSON.parse(JSON.stringify(initEdit));
+        },
+        addHeader: function () {
+            this.editForm.req_headers.push({
+                key: "",
+                val: ""
+            });
+        },
+        delHeader: function (idx) {
+            this.editForm.req_headers.splice(idx, 1)
         },
         toggle(idx) {
             var c = this.editForm.tags[idx]["enable"];

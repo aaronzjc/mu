@@ -54,7 +54,7 @@ func (r *Reddit) BuildUrl() ([]Link, error) {
 	return list, nil
 }
 
-func (r *Reddit) CrawPage(link Link) (Page, error) {
+func (r *Reddit) CrawPage(link Link, headers map[string]string) (Page, error) {
 	page, err := r.Craw(link, nil)
 	if err != nil {
 		return Page{}, err
