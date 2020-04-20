@@ -1,6 +1,7 @@
 package hot
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"mu/internal/model"
@@ -77,16 +78,23 @@ func List(c *gin.Context) {
 
 func Tabs(c *gin.Context) {
 	var tabs []Tab
+	var tags []model.Tag
 	sites, _ := (&model.Site{}).FetchRows(model.Query{
 		Query: "`enable` = ?",
 		Args:  []interface{}{model.Enable},
 	})
 	for _, site := range sites {
 		js, _ := site.FormatJson()
+		for k, tag :=range js.Tags {
+			if tag.Enable == 0 {
+				continue
+			}
+			tags = append(tags, tag)
+		}
 		tabs = append(tabs, Tab{
 			Name: site.Name,
 			Key:  site.Key,
-			Tags: js.Tags,
+			Tags: tags,
 		})
 	}
 

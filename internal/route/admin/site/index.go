@@ -70,7 +70,6 @@ func List(c *gin.Context) {
 
 	var result []model.SiteJson
 	for _, site := range sites {
-
 		item, err := site.FormatJson()
 		if err != nil {
 			req.JSON(c, req.CodeError, err.Error(), nil)

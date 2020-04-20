@@ -3,7 +3,7 @@ import Router from "../router/router";
 
 const client = axios.create({
     baseURL: process.env.VUE_APP_URL,
-    timeout: 1000,
+    timeout: 3000,
     withCredentials: true
 });
 
