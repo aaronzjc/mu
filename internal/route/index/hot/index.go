@@ -1,7 +1,6 @@
 package hot
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"mu/internal/model"
@@ -85,7 +84,7 @@ func Tabs(c *gin.Context) {
 	})
 	for _, site := range sites {
 		js, _ := site.FormatJson()
-		for k, tag :=range js.Tags {
+		for _, tag :=range js.Tags {
 			if tag.Enable == 0 {
 				continue
 			}
