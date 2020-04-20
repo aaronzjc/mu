@@ -84,7 +84,8 @@ func Tabs(c *gin.Context) {
 	})
 	for _, site := range sites {
 		js, _ := site.FormatJson()
-		for _, tag :=range js.Tags {
+		tags = []model.Tag{}
+		for _, tag := range js.Tags {
 			if tag.Enable == 0 {
 				continue
 			}

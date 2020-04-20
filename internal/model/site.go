@@ -200,12 +200,24 @@ func (s *Site) InitSites() {
 			panic("init sites fetch failed " + err.Error())
 		}
 
+		tagMap := make(map[string]int)
+		rowJson, _ := row.FormatJson()
+		for _, v := range rowJson.Tags {
+			if v.Enable == 0 {
+				tagMap[v.Key] = 1
+			}
+		}
 		var tags []Tag
+		var e int8
 		for _, tag := range site.Tabs {
+			e = 1
+			if _, ok := tagMap[tag["tag"]]; ok {
+				e = 0
+			}
 			tags = append(tags, Tag{
 				Key:    tag["tag"],
 				Name:   tag["name"],
-				Enable: 1,
+				Enable: e,
 			})
 		}
 		tagStr, _ = json.Marshal(tags)
