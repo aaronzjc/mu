@@ -17,6 +17,11 @@ type Tab struct {
 	Tags []model.Tag `json:"tags"`
 }
 
+type Item struct {
+	lib.Hot
+	Mark bool `json:"mark"`
+}
+
 func List(c *gin.Context) {
 	client := cache.RedisConn()
 	defer client.Close()
@@ -58,14 +63,12 @@ func List(c *gin.Context) {
 	}
 
 	result := make(map[string]interface{})
-	var list []interface{}
+	var list []Item
 	for _, val := range hotJson.List {
 		exist := ckMap[val.Key]
-		list = append(list, map[string]interface{}{
-			"key":        val.Key,
-			"title":      val.Title,
-			"origin_url": val.OriginUrl,
-			"mark":       exist,
+		list = append(list, Item{
+			val,
+			exist,
 		})
 	}
 	result["t"] = hotJson.T

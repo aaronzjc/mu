@@ -14,6 +14,10 @@ func Info(c *gin.Context) {
 		return
 	}
 
+	if username == "" {
+		req.JSON(c, req.CodeError, "empty user", nil)
+	}
+
 	admin := model.Admin{
 		Username: username,
 	}

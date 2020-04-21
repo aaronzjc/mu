@@ -84,7 +84,6 @@ func (r *Reddit) CrawPage(link Link, headers map[string]string) (Page, error) {
 	var data []Hot
 	for _, v := range page.Json {
 		h := Hot{
-			Id:        0,
 			Title:     v["title"].(string),
 			OriginUrl: v["url"].(string),
 			Rank:      v["score"].(float64),

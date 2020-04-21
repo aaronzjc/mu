@@ -16,13 +16,19 @@ const (
 	CrawHtml
 )
 
+const (
+	CardText = iota
+	CardRichText
+)
+
 // 热榜新闻
 type Hot struct {
-	Id        int     `json:"id"`
 	Key       string  `json:"key"`
 	Title     string  `json:"title"`
+	Desc      string  `json:"desc"`
 	Rank      float64 `json:"rank"`
 	OriginUrl string  `json:"origin_url"`
+	Card      uint8   `json:"card_type"`
 }
 
 // 热榜新闻列表

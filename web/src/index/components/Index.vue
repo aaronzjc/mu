@@ -6,9 +6,7 @@
     <div class="columns hot-container">
         <div class="column hot-list">
             <div class="hot" v-for="(hot, idx) in list" :key="idx">
-                <div class="hot-item">
-                    <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
-                </div>
+                <component :is="cardMap[hot['card_type']]" :item="hot" ></component>
                 <div class="divider"></div>
                 <div class="hot-opt"  @click="toggleFavor(idx)">
                     <template v-if="!hot.mark">
@@ -37,10 +35,17 @@ import 'bulma/css/bulma.css'
 import Get, {Post} from "../tools/http"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
+import MText from "./cards/MText"
+import MRichText from "./cards/MRichText"
 
 const API = {
     config: "/config",
     list: "/list",
+};
+
+const CARD_MAP = {
+    0: MText.name,
+    1: MRichText.name,
 };
 
 export default {
@@ -56,7 +61,9 @@ export default {
                 tag: 0,
             },
             list: [],
-            t: ""
+            t: "",
+
+            cardMap: CARD_MAP
         }
     },
     methods: {
@@ -144,7 +151,11 @@ export default {
     },
     components: {
         HoTab,
-        Footer
+        Footer,
+
+        /* eslint-disable vue/no-unused-components */
+        MText,
+        MRichText,
     }
 }
 </script>
@@ -183,13 +194,6 @@ export default {
         .tag {
             cursor: pointer;
         }
-    }
-    .hot-item {
-        width: 98%;
-        margin-right: 2px;
-        display: flex;
-        align-items: center;
-        word-break: break-word;
     }
     .divider {
         width: 2px;
