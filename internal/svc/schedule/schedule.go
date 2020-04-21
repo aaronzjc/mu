@@ -158,7 +158,7 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 func (j *CrawlerJob) RunDirect(node model.Node) {
 	var err error
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
 	opts := []grpc.DialOption{
@@ -208,22 +208,15 @@ func (j *CrawlerJob) RunDirect(node model.Node) {
 
 	hotJson := new(lib.HotJson)
 	hotJson.T = result.T
-	for _, hots := range result.Map {
-		var list []lib.Hot
-		for _, hot := range hots.Item {
-			list = append(list, lib.Hot{
-				Title:     hot.Title,
-				Rank:      float64(hot.Rank),
-				OriginUrl: hot.Url,
-				Key:       hot.Key,
-			})
-			fmt.Printf("%s %s %s %f\n", hot.Title, hot.Url, hot.Key, hot.Rank)
-		}
-		hotJson.List = list
+	for tag, hotStr := range result.HotMap {
+		err := json.Unmarshal([]byte(hotStr), &hotJson.List)
+		data, err := json.Marshal(hotJson)
 		if err != nil {
 			logger.Error("Json_encode weibo error , err = %s .", err.Error())
 			return
 		}
+		fmt.Println(hotStr)
+		cache.SaveToRedis(j.Site.Key, tag, string(data))
 	}
 }
 
@@ -277,20 +270,12 @@ func (j *CrawlerJob) Run() {
 
 	hotJson := new(lib.HotJson)
 	hotJson.T = result.T
-	for tag, hots := range result.Map {
-		var list []lib.Hot
-		for _, hot := range hots.Item {
-			list = append(list, lib.Hot{
-				Title:     hot.Title,
-				Rank:      float64(hot.Rank),
-				OriginUrl: hot.Url,
-				Key:       hot.Key,
-			})
-		}
-		hotJson.List = list
+	for tag, hotStr := range result.HotMap {
+		err := json.Unmarshal([]byte(hotStr), &hotJson.List)
+		fmt.Println(hotStr)
 		data, err := json.Marshal(hotJson)
 		if err != nil {
-			logger.Error("Json_encode weibo error , err = %s .", err.Error())
+			logger.Error("Json_encode hotJson error , err = %s .", err.Error())
 			return
 		}
 		cache.SaveToRedis(j.Site.Key, tag, string(data))
