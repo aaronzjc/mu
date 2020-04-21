@@ -109,9 +109,16 @@ func (u *User) Auth() error {
 			return errors.New("auth failed " + err.Error())
 		}
 		u.ID = tmp.ID
-		u.AuthTime = tmp.AuthTime
+		u.AuthTime = time.Now()
 		u.Token = tmp.Token
 		u.ExpireAt = tmp.ExpireAt
+
+		err = u.Update(map[string]interface{}{
+			"auth_time": u.AuthTime,
+		})
+		if err != nil {
+			logger.Error("user auth err e = ", u.ID, err.Error())
+		}
 	} else {
 		u.AuthTime = time.Now()
 		u.Token = tool.GenerateToken(u.Username)
