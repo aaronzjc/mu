@@ -5,7 +5,11 @@
     <p class="hot-ts" v-if="t != '' ">更新时间: {{ t }}</p>
     <div class="columns hot-container">
         <div class="column hot-list">
-            <component v-for="(hot, idx) in list" :is="cardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
+            <div class="hot card1" v-for="(hot, idx) in list" :key="idx">
+                <component :is="CardMap[hot['card_type']]" :item="hot"></component>
+                <div class="divider"></div>
+                <Opt :mark="hot.mark" @toggle="toggleFavor(idx)"></Opt>
+            </div>
         </div>
     </div>
 
@@ -14,23 +18,19 @@
 </template>
 
 <script>
+import {CardMap, Cards} from "../tools/card";
+
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import 'bulma/css/bulma.css'
+
 import Get, {Post} from "../tools/http"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
-import MText from "./cards/MText"
-import MRichText from "./cards/MRichText"
+import Opt from "./Opt"
 
 const API = {
     config: "/config",
     list: "/list",
-};
-
-const CARD_MAP = {
-    0: MText.name,
-    1: MRichText.name,
 };
 
 export default {
@@ -48,7 +48,7 @@ export default {
             list: [],
             t: "",
 
-            cardMap: CARD_MAP
+            CardMap: CardMap
         }
     },
     methods: {
@@ -137,10 +137,10 @@ export default {
     components: {
         HoTab,
         Footer,
+        Opt,
 
         /* eslint-disable vue/no-unused-components */
-        MText,
-        MRichText,
+        ...Cards
     }
 }
 </script>

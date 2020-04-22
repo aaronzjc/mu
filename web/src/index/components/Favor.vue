@@ -21,10 +21,7 @@
         <div class="columns">
             <div class="column hot-list">
                 <div class="hot" v-for="(hot, idx) in list" :key="idx">
-                    <div class="hot-item">
-                        <p class="hot-ts has-text-grey">{{ hot.create_at }}</p>
-                        <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
-                    </div>
+                    <MText :item="hot"></MText>
                     <div class="divider"></div>
                     <div class="hot-opt" @click="remove(idx)">
                         <svg style="width:20px;height:20px" viewBox="0 0 24 24">
@@ -42,9 +39,12 @@
 <script>
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+
 import HoTab from "./HoTab"
 import Footer from "./Footer"
 import {Get, Post} from "../tools/http";
+
+import MText from "./cards/MText";
 
 const API = {
     list: "/api/favor/list",
@@ -120,8 +120,9 @@ export default {
         }
     },
     components: {
+        MText,
         HoTab,
-        Footer
+        Footer,
     }
 }
 </script>

@@ -33,16 +33,14 @@
   word-break: break-word;
 }
 
-.card1 {
-  .hot-item {
-    align-items: flex-start;
-    flex-direction: column;
+.card1.hot-item {
+  align-items: flex-start;
+  flex-direction: column;
 
-    .hot-desc {
-      padding: 2px 0;
-      p {
-        font-size: 0.8rem;
-      }
+  .hot-desc {
+    padding: 2px 0;
+    p {
+      font-size: 0.8rem;
     }
   }
 }
