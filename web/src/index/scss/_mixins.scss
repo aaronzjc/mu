@@ -1,0 +1,22 @@
+@import '~bulma/sass/utilities/mixins';
+
+@include desktop {
+  .container {
+    max-width: 960px !important;
+  }
+  .search-form {
+    width: 50%;
+  }
+}
+
+@include until($desktop) {
+  .content-box {
+    padding: 0 0.75rem;
+  }
+  .navbar-item.navbar-opt {
+    display: none;
+  }
+  .mini-navbar-opt {
+    display: block;
+  }
+}

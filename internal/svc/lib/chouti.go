@@ -70,7 +70,6 @@ func (c *Chouti) CrawPage(link Link, headers map[string]string) (Page, error) {
 	var data []Hot
 	for _, v := range page.Json {
 		h := Hot{
-			Id:        int(v["id"].(float64)),
 			Title:     v["title"].(string),
 			OriginUrl: v["originalUrl"].(string),
 			Rank:      v["score"].(float64),

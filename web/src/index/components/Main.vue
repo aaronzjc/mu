@@ -33,17 +33,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '~bulma/sass/utilities/mixins';
-
-.container {
-    max-width: 960px;
-}
-
-@include until($desktop) {
-    .content-box {
-        padding: 0 0.75rem;
-    }
-}
-</style>

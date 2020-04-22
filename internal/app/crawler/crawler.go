@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"context"
+	"encoding/json"
 	"google.golang.org/grpc"
 	"mu/internal/svc/lib"
 	"mu/internal/svc/rpc"
@@ -44,22 +45,11 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 
 	result := new(rpc.Result)
 	result.T = tool.CurrentTime()
-	m := make(map[string]*rpc.Result_HotList)
-	for tag, p := range pageMap {
-		hotList := new(rpc.Result_HotList)
-		var items []*rpc.Result_HotList_Item
-		for _, item := range p.List {
-			items = append(items, &rpc.Result_HotList_Item{
-				Title: item.Title,
-				Rank:  float32(item.Rank),
-				Url:   item.OriginUrl,
-				Key:   item.Key,
-			})
-		}
-		hotList.Item = items
-		m[tag] = hotList
+	result.HotMap = make(map[string]string)
+	for tag, page := range pageMap {
+		res, _ := json.Marshal(page.List)
+		result.HotMap[tag] = string(res)
 	}
-	result.Map = m
 
 	return result, nil
 }

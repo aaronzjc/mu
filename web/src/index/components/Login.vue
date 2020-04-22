@@ -43,11 +43,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.login {
-    margin: 4rem auto;
-    width: 60%;
-    height: 40%;
-}
-</style>

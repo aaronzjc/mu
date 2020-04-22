@@ -1,0 +1,89 @@
+/**
+ * 全局样式
+ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+section.section {
+  padding:5px 0 0 0;
+}
+
+/**
+ * 导航菜单
+ */
+.navbar {
+  margin-bottom: 1rem;
+
+  .navbar-burger:hover {
+    background: none;
+  }
+
+  .mini-navbar-opt {
+    background: $white-ter;
+  }
+}
+
+/**
+ * 内容区
+ */
+.content-box {
+  .columns {
+    margin-bottom: 0 !important;
+  }
+  .switch {
+    .tabs {
+      margin-bottom: 0.8rem;
+    }
+    .tag {
+      cursor: pointer;
+    }
+  }
+  .hot-container {
+    margin-top:0;
+
+    .hot-list {
+      padding-top: 0;
+    }
+  }
+}
+
+/**
+ * 其他杂项
+ */
+.login {
+  margin: 4rem auto !important;
+  width: 60%;
+  height: 40%;
+}
+
+.hot-ts {
+  color: #939393;
+  font-size: 0.8rem;
+}
+
+.hot-list {
+  padding-top:0;
+  flex-basis: unset;
+  width: 100%;
+}
+
+.search-form {
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.copyright {
+  font-size: 0.85rem;
+}
+
+.user-declare {
+  padding: .5rem;
+}
+
+.backtop {
+  padding-top:1rem;
+  a {
+    cursor: pointer;
+  }
+}
