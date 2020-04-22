@@ -1,36 +1,31 @@
 <template>
-<div class="hot-item">
-    <div class="hot-title">
-        <a :href="item.origin_url" :title="item.title" target="_blank">{{ item.title }}</a>
+<div class="hot card1">
+    <div class="hot-item">
+        <div class="hot-title">
+            <a :href="item.origin_url" :title="item.title" target="_blank">{{ item.title }}</a>
+        </div>
+        <div class="hot-desc">
+            <p class="has-text-grey">{{ item.desc }}</p>
+        </div>
     </div>
-    <div class="hot-desc">
-        <p>{{ item.desc }}</p>
-    </div>
+    <div class="divider"></div>
+    <Opt :mark="item.mark" @toggle="toggleFavor(idx)"></Opt>
 </div>
 </template>
 
 <script>
+import Opt from "./Opt"
+
 export default {
     name: "MRichText",
-    props: ["item"]
-}
-</script>
-
-<style lang="scss" scoped>
-.hot-item {
-    width: 98%;
-    margin-right: 2px;
-    display: flex;
-    align-items: flex-start;
-    word-break: break-word;
-    flex-direction: column;
-
-    .hot-desc {
-        padding: 2px 0;
-        p {
-            color: #586069;
-            font-size: 0.8rem;
+    props: ["idx", "item"],
+    methods: {
+        toggleFavor(idx) {
+            this.$emit("toggle-favor", idx);
         }
+    },
+    components: {
+        Opt
     }
 }
-</style>
+</script>

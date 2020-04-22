@@ -1,0 +1,48 @@
+.hot {
+  width: 100%;
+  min-height: 2rem;
+  height: auto;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: row;
+
+  .hot-opt {
+    padding-left: 3px;
+    display: flex;
+    align-items: center;
+  }
+
+  .divider {
+    width: 2px;
+    margin: 10px 4px;
+    background: $grey-light;
+  }
+
+  &:hover {
+    .divider {
+      background: $grey-dark;
+    }
+  }
+}
+
+.hot-item {
+  width: 98%;
+  margin-right: 2px;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+}
+
+.card1 {
+  .hot-item {
+    align-items: flex-start;
+    flex-direction: column;
+
+    .hot-desc {
+      padding: 2px 0;
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

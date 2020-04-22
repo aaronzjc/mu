@@ -65,7 +65,7 @@ func (g *Github) CrawPage(link Link, headers map[string]string) (Page, error) {
 			return
 		}
 		h := Hot{
-			Title:     strings.Replace(text, "/", " / ", 1),
+			Title:     strings.Replace(text, "/", " • ", 1),
 			Desc:      desc,
 			OriginUrl: fmt.Sprintf("%s%s", g.Root, url),
 			Card:      CardRichText,

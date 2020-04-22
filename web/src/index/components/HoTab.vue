@@ -1,19 +1,13 @@
 <template>
 <div class="columns">
-    <div class="column" v-if="tabs.length > 0">
-        <div class="columns">
-            <div class="column">
-                <div class="tabs">
-                    <ul>
-                        <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
-                    </ul>
-                </div>
-            </div>
+    <div class="column switch" v-if="tabs.length > 0">
+        <div class="tabs">
+            <ul>
+                <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
+            </ul>
         </div>
-        <div class="columns" v-if="tabs[selected.tab].tags.length > 0">
-            <div class="column tab-tag tags">
-                <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
-            </div>
+        <div class="tags" v-if="tabs[selected.tab].tags.length > 0">
+            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
         </div>
     </div>
 </div>
@@ -51,11 +45,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.tab-tag {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    cursor: pointer;
-}
-</style>

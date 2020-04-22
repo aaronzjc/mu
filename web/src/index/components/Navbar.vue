@@ -109,28 +109,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '~bulma/sass/utilities/mixins';
-
-.navbar {
-    margin-bottom: 1rem;
-}
-
-.navbar-burger:hover {
-    background: none;
-}
-
-.mini-navbar-opt {
-    background: #f1f1f1;
-}
-
-@include until($desktop) {
-    .navbar-item.navbar-opt {
-        display: none;
-    }
-    .mini-navbar-opt {
-        display: block;
-    }
-}
-</style>
