@@ -337,7 +337,9 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align tags">
-                                    <span :key="tagIdx" v-for="(tag, tagIdx) in viewForm.tags" class="tag is-link">{{ tag.key }}-{{ tag.name }}</span>
+                                    <template v-for="tag in viewForm.tags">
+                                        <span :key="tag.key" v-if="tag.enable === 1" class="tag is-link">{{ tag.key }}-{{ tag.name }}</span>
+                                    </template>
                                 </div>
                             </div>
                         </div>

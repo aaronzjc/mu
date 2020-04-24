@@ -121,7 +121,7 @@ export default {
     },
     components: {
         HoTab,
-        Footer
+        Footer,
     }
 }
 </script>

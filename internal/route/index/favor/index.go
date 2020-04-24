@@ -129,7 +129,12 @@ func List(c *gin.Context) {
 	q := model.Query{}
 
 	var siteNames []string
-	if keyword != "" {
+	if keyword == "" {
+		q = model.Query{
+			Query: "`user_id` = ?",
+			Args:  []interface{}{login.(int)},
+		}
+	} else {
 		q = model.Query{
 			Query: "`user_id` = ? AND `title` like ?",
 			Args:  []interface{}{login.(int), "%" + keyword + "%"},
