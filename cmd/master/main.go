@@ -11,5 +11,5 @@ func main() {
 	route.RegisterRoutes()
 	route.RegisterStatic()
 
-	logger.Fatal(mu.App.Gin.Run(mu.App.Config.Server.Addr))
+	logger.Fatal(mu.App.Gin.Run(mu.App.Config.Server.Port))
 }

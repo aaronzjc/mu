@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Mu: 热榜聚合，快乐每一天，聚合有意思的站点热点内容。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="/favicon.png">
+    <title>Mu-快乐每一天</title>
+    <style>
+        #app {
+            width: 100%;
+            height: 50%;
+            margin: 30% auto;
+            text-align: center;
+        }
+        #app img {
+            width: 44px;
+            height: 44px;
+            border-radius: 0 0 8px 8px;
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
+        }
+        #app p {
+            color: #666;
+            font-size: 14px;
+        }
+        .refresh {
+            color: #08f;
+            text-decoration:none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <img src="/pwa/imgs/android-chrome-192x192.png" alt="logo">
+    <p>sorry, u'r offline. <a href="javascript: void(0)" onclick="window.location.href = '/'" class="refresh">Refresh</a> or have a break.</p>
+</div>
+</body>
+</html>

@@ -28,6 +28,8 @@ func RegisterStatic() {
 	r.StaticFile("favicon.png", path+"/public/favicon.png")
 	r.StaticFile("index.manifest", path+"/public/index.manifest")
 	r.StaticFile("sw.js", path+"/public/sw.js")
+
+	r.Static("/pwa", path+"/public/pwa")
 	r.Static("/static", path+"/public/static")
 }
 

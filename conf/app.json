@@ -4,7 +4,7 @@
     "server": {
         "https": false,
         "host": "mu.memosa.local:7980",
-        "addr": ":7980",
+        "port": ":7980",
         "web": "http://mu.memosa.local:7980"
     },
 

@@ -2,6 +2,9 @@
 import Bulma from "bulma"
 import './scss/main.scss'
 
+/* register service worker */
+import "./registerSW"
+
 import Vue from 'vue'
 
 /* router & store */
@@ -19,13 +22,3 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount('#app')
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register("./sw.js")
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-}

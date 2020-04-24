@@ -17,7 +17,7 @@ type Config struct {
 	Server  struct {
 		Https bool   `json:"https"`
 		Host  string `json:"host"`
-		Addr  string `json:"addr"`
+		Port  string `json:"port"`
 		Web   string `json:"web"`
 	} `json:"server"`
 	Redis struct {

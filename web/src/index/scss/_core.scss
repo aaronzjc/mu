@@ -18,7 +18,9 @@ section.section {
   .navbar-burger:hover {
     background: none;
   }
-
+  .navbar-item:hover {
+    background-color: unset;
+  }
   .mini-navbar-opt {
     background: $white-ter;
   }
