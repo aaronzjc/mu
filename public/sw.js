@@ -5,7 +5,6 @@ const OFFLINE_PAGE = "/pwa/offline.html";
 const FILES_TO_CACHE = [
     "/index.manifest",
     "/favicon.png",
-    "index.html",
     "/pwa/imgs/android-chrome-512x512.png",
     "/pwa/imgs/android-chrome-192x192.png",
     OFFLINE_PAGE

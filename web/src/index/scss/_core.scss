@@ -36,6 +36,10 @@ section.section {
   .switch {
     .tabs {
       margin-bottom: 0.8rem;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar {
+      display: none;
     }
     .tag {
       cursor: pointer;

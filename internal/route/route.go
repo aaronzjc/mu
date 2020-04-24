@@ -25,12 +25,13 @@ func RegisterStatic() {
 	r.StaticFile("/", path+"/public/index.html")
 	r.StaticFile("/admin", path+"/public/admin.html")
 
-	r.StaticFile("favicon.png", path+"/public/favicon.png")
-	r.StaticFile("index.manifest", path+"/public/index.manifest")
-	r.StaticFile("sw.js", path+"/public/sw.js")
+	for _, v := range []string{"favicon.png", "index.manifest", "sw.js"} {
+		r.StaticFile(v, path+"/public/"+v)
+	}
 
-	r.Static("/pwa", path+"/public/pwa")
-	r.Static("/static", path+"/public/static")
+	for _, v := range []string{"pwa", "static"} {
+		r.Static("/"+v, path+"/public/"+v)
+	}
 }
 
 func RegisterRoutes() {
