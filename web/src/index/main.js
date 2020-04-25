@@ -1,5 +1,4 @@
 /* styles */
-import Bulma from "bulma"
 import './scss/main.scss'
 
 /* register service worker */
@@ -14,8 +13,6 @@ import store from "./store"
 import App from './App.vue'
 
 Vue.config.productionTip = false
-
-Vue.use(Bulma);
 
 new Vue({
   router,

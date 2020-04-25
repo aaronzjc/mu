@@ -1,3 +1,14 @@
+/**
+ * just to reduce dst css size
+ */
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/base/_all.sass";
+@import "~bulma/sass/grid/columns.sass";
+@import "~bulma/sass/elements/container.sass";
+@import "~bulma/sass/elements/tag.sass";
+@import "~bulma/sass/components/tabs.sass";
+@import "~bulma/sass/components/navbar.sass";
+
 @import "theme_dark";
 
 @import "vars";
