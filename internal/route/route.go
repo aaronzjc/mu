@@ -19,6 +19,8 @@ import (
 func RegisterStatic() {
 	r := mu.App.Gin
 
+	r.Use(middleware.AddCacheControlHeader())
+
 	pwd, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	path := filepath.Dir(pwd)
 

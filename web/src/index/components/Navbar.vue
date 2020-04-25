@@ -2,7 +2,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
-            <img src="../assets/logo.png" alt="Mu: 快乐摸鱼~">
+            <img src="../assets/logo.webp" alt="Mu: 快乐摸鱼~">
         </a>
         <a role="button" :class='[ "navbar-burger", { "is-active": open } ]' aria-label="menu" aria-expanded="false" @click="open = !open">
             <span aria-hidden="true"></span>
