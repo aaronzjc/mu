@@ -54,8 +54,8 @@ html.dark {
     background-color: rgb(27, 29, 30);
     color: rgb(205, 202, 194);
   }
-  .tag:not(body).is-primary {
-    background-color: rgb(0, 204, 174);
+  .tag:not(body).is-light-dark {
+    background-color: #4e4e4e44;
     color: rgb(255, 255, 255);
   }
 
