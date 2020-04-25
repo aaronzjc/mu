@@ -1,4 +1,4 @@
-const CACHE_NAME = "mu-pwa-1";
+const CACHE_NAME = "mu-pwa-2";
 
 const OFFLINE_PAGE = "/pwa/offline.html";
 
