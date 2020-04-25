@@ -10,6 +10,10 @@
     padding-left: 3px;
     display: flex;
     align-items: center;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .divider {
@@ -37,8 +41,6 @@
 .card0 {
   width: 98%;
   margin-right: 2px;
-  display: flex;
-  align-items: center;
   word-break: break-word;
 }
 

@@ -2,7 +2,7 @@ bin/
 .DS_Store
 dist
 cmd/dev
-./public
+public
 
 # Editor directories and files
 .idea
