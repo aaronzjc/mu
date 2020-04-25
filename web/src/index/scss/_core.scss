@@ -24,6 +24,10 @@ section.section {
   .mini-navbar-opt {
     background: $white-ter;
   }
+  // fix a bug during compile
+  .navbar-link:not(.is-arrowless):after {
+    border-color: #08f;
+  }
 }
 
 /**
