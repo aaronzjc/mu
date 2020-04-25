@@ -1,4 +1,4 @@
-const CACHE_NAME = "mu-pwa-2";
+const CACHE_NAME = "mu-pwa-4";
 
 const OFFLINE_PAGE = "/pwa/offline.html";
 
@@ -11,6 +11,8 @@ const FILES_TO_CACHE = [
 ];
 
 self.oninstall = function(evt) {
+    self.skipWaiting();
+
     evt.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('[SW] Pre-caching resources');
