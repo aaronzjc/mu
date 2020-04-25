@@ -9,7 +9,7 @@ import (
 func AddCacheControlHeader() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if strings.HasPrefix(c.Request.RequestURI, "/static/") {
-			c.Header("Cache-Control", "max-age=86400")
+			c.Header("Cache-Control", "max-age=31536000")
 		}
 	}
 }

@@ -67,6 +67,9 @@ html.dark {
     background-color: rgb(26, 27, 28);
     color: rgb(93, 162, 227);
   }
+  a.navbar-item:hover {
+    background-color: unset;
+  }
 
   .navbar-dropdown a.navbar-item:focus, .navbar-dropdown {
     background-color: rgb(27, 29, 30);

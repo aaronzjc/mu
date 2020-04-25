@@ -7,7 +7,7 @@
             </ul>
         </div>
         <div class="tags" v-if="tabs[selected.tab].tags.length > 0">
-            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-primary' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
+            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-light-dark' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
         </div>
     </div>
 </div>
