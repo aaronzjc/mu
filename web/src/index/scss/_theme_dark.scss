@@ -3,7 +3,7 @@ html.dark {
 
   & , body, input, textarea, select, button {
     border-color: #575757 !important;
-    color: #e8e6e3 !important;
+    color: $dark-white !important;
   }
 
   .title {
@@ -11,11 +11,11 @@ html.dark {
   }
 
   a {
-    color: rgb(93, 162, 227);
+    color: $dark-primary;
     text-decoration-color: currentcolor;
 
     &:hover {
-      color: rgb(213, 209, 203);
+      color: $dark-white;
     }
   }
 
@@ -52,11 +52,11 @@ html.dark {
 
   .tag:not(body) {
     background-color: rgb(27, 29, 30);
-    color: rgb(205, 202, 194);
+    color: $dark-white;
   }
   .tag:not(body).is-light-dark {
     background-color: #4e4e4e44;
-    color: rgb(255, 255, 255);
+    color: rgb(205, 202, 194);
   }
 
   .mini-navbar-opt {

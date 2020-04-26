@@ -1,0 +1,26 @@
+$columns-margin: -0.75rem;
+$column-gap: 0.75rem;
+
+.columns {
+  margin-left: $columns-margin;
+  margin-right: $columns-margin;
+  margin-top: $columns-margin;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: $column-gap;
+  -ms-flex-preferred-size: 0;
+  -ms-flex-positive: 1;
+  -ms-flex-negative: 1;
+}
+
+@include mobile() {
+  .column {
+    max-width: 100%;
+  }
+}

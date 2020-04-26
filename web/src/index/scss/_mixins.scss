@@ -1,6 +1,4 @@
-@import '~bulma/sass/utilities/mixins';
-
-@include desktop {
+@include is($desktop){
   .container {
     max-width: 960px !important;
   }

@@ -2,10 +2,12 @@
   width: 100%;
   min-height: 2rem;
   height: auto;
-  margin: 0.5rem 0;
   display: flex;
   flex-direction: row;
 
+  &:not(:first-child) {
+    margin: 0.5rem 0;
+  }
   .hot-opt {
     padding-left: 3px;
     display: flex;
@@ -30,16 +32,17 @@
 }
 
 .hot-item {
-  width: 98%;
+  width: 100%;
   margin-right: 2px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   word-break: break-word;
+  justify-content: center;
 }
 
 .card0 {
-  width: 98%;
+  width: 100%;
   margin-right: 2px;
   word-break: break-word;
 }

@@ -1,13 +1,12 @@
 /**
  * just to reduce dst css size
  */
-@import "~bulma/bulma";
+
+@import "core/_all.scss";
 
 @import "theme_dark";
-
-@import "vars";
 
 @import "mixins";
 @import "cards";
 
-@import "core";
+@import "page";
