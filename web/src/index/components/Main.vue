@@ -16,6 +16,17 @@ export default {
     },
     methods: {
         fetchUserInfo() {
+            // 如果本地没有用户cookie，不发送请求了。
+            var str = document.cookie;
+            if (str === "") return false;
+            var cookieArr = str.split("; ");
+            for (var i = 0; i < cookieArr.length; i++) {
+                var arr = cookieArr[i].split("=");
+                if (arr[0] === "_user" && arr[1] === ""){
+                    alert(arr[1]);
+                    return false;
+                }
+            }
             Get("/info").then(resp => {
                 if (resp.data.code == 10000) {
                     var info = resp.data.data;
