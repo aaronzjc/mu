@@ -30,7 +30,7 @@ const API = {
 
 export default {
     name: "Content",
-    created() {
+    mounted() {
         this.fetchConfig(this.fetchList);
     },
     data() {
@@ -50,7 +50,7 @@ export default {
         fetchConfig(callback) {
             Get(API.config).then(function (resp) {
                 if (resp.data.code === 10000) {
-                    this.tabs = resp.data.data;
+                    this.tabs = Object.freeze(resp.data.data);
                 } else {
                     alert(resp.data.msg);
                 }
@@ -79,7 +79,7 @@ export default {
                 }
             }).then(function (resp) {
                 if (resp.data.code === 10000) {
-                    this.list = resp.data.data.list;
+                    this.list = Object.freeze(resp.data.data.list);
                     this.t = resp.data.data.t;
                 } else {
                     this.list = [];
