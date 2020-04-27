@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from "../components/Login";
 import Main from "../components/Main";
 import Index from "../components/Index";
-import Favor from "../components/Favor";
+
+const Favor = () => import(/* webpackChunkName: "idx-comps" */ "../components/Favor");
+const Login = () => import(/* webpackChunkName: "idx-comps" */ "../components/Login");
 
 Vue.use(Router);
 
