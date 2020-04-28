@@ -18,6 +18,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 import Get, {Post} from "../tools/http"
+import * as ls from "../tools/ls"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
 
@@ -48,9 +49,19 @@ export default {
     },
     methods: {
         fetchConfig(callback) {
+            // 使用本地缓存，减少一个请求
+            let tabStr = ls.Get("tabs")
+            if (tabStr !== false) {
+                this.tabs = JSON.parse(tabStr)
+                if (typeof callback == "function") {
+                    callback();
+                }
+                return true
+            }
             Get(API.config).then(function (resp) {
                 if (resp.data.code === 10000) {
                     this.tabs = Object.freeze(resp.data.data);
+                    ls.Set("tabs", JSON.stringify(resp.data.data), 60)
                 } else {
                     alert(resp.data.msg);
                 }
