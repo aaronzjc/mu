@@ -94,10 +94,5 @@ func NewConfig() Config {
 		panic("invalid config")
 	}
 
-	// 如果前端Web为空，则表明使用Gin的Web服务。这里，更新Web地址
-	if appConfig.Server.Web == "" {
-		appConfig.Server.Web = appConfig.ServerUrl()
-	}
-
 	return appConfig
 }

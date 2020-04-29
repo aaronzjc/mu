@@ -13,7 +13,7 @@ steps:
       - make crawler
       - make mu
 
-  - name: release dockerhub crawler
+  - name: release crawler
     image: plugins/docker
     settings:
       repo: aaronzjc/crawler
@@ -24,11 +24,22 @@ steps:
       password:
         from_secret: docker_hub_password
 
-  - name: release dockerhub mu
+  - name: release mu
     image: plugins/docker
     settings:
       repo: aaronzjc/mu
       target: mu
+      tags: latest
+      username:
+        from_secret: docker_hub_user
+      password:
+        from_secret: docker_hub_password
+
+  - name: release mu-frontend
+    image: plugins/docker
+    settings:
+      repo: aaronzjc/mu
+      target: mu-frontend
       tags: latest
       username:
         from_secret: docker_hub_user

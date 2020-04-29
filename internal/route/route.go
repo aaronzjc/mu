@@ -12,6 +12,7 @@ import (
 	"mu/internal/route/index/hot"
 	"mu/internal/route/middleware"
 	"mu/internal/route/oauth"
+	"mu/internal/util/config"
 	"os"
 	"path/filepath"
 )
@@ -90,5 +91,11 @@ func RegisterRoutes() {
 
 		// 用户管理
 		admin.GET("/user/list", user.List)
+	}
+
+	// 如果配置里面没有配置前端URL，这里后端托管
+	cnf := config.NewConfig()
+	if cnf.WebUrl() == "" {
+		RegisterStatic()
 	}
 }

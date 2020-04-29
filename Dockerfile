@@ -18,3 +18,8 @@ EXPOSE 7980
 VOLUME /app/conf
 WORKDIR /app/bin
 CMD ["./mu"]
+
+FROM nginx:stable-alpine as mu-frontend
+COPY --from=mu /app/public /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
