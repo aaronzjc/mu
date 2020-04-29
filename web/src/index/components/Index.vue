@@ -83,6 +83,7 @@ export default {
             if (hkey === undefined || key === undefined) {
                 return false;
             }
+            NProgress.start();
             let cacheKey = "init_list";
             var needCache = parseInt(this.selected.tab + this.selected.tag) === 0;
             if ( needCache && landing) {
@@ -91,10 +92,10 @@ export default {
                     let data = JSON.parse(listStr);
                     this.list = data.list;
                     this.t = data.t;
+                    NProgress.done();
                     return true;
                 }
             }
-            NProgress.start();
             Get(API.list, {
                 params: {
                     key: this.tabs[this.selected.tab]["key"],
