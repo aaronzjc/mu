@@ -84,7 +84,8 @@ export default {
                 return false;
             }
             let cacheKey = "init_list";
-            if (parseInt(this.selected.tab + this.selected.tag) === 0 && landing) {
+            var needCache = parseInt(this.selected.tab + this.selected.tag) === 0;
+            if ( needCache && landing) {
                 let listStr = ls.Get(cacheKey)
                 if (listStr !== false) {
                     let data = JSON.parse(listStr);
@@ -104,7 +105,9 @@ export default {
                     this.list = Object.freeze(resp.data.data.list);
                     this.t = resp.data.data.t;
 
-                    ls.Set(cacheKey, JSON.stringify(resp.data.data), 60);
+                    if (needCache) {
+                        ls.Set(cacheKey, JSON.stringify(resp.data.data), 60);
+                    }
                 } else {
                     this.list = [];
                 }
