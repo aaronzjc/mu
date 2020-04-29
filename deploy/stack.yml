@@ -1,24 +1,25 @@
+# 线上Docker Stack方式部署的启动文件
 version: '3.7'
 
 services:
-  staging_master:
+  master:
     image: aaronzjc/mu:latest
     deploy:
       replicas: 1
     ports:
       - 7980:7980
     configs:
-      - source: app_mu_config
-        target: /app/app.json
+      - source: mu_config
+        target: /app/conf/app.json
 
-  staging_node_1:
+  node_1:
     image: aaronzjc/crawler:latest
     deploy:
       replicas: 1
     ports:
       - 7981:7990
 
-  staging_node_2:
+  node_2:
     image: aaronzjc/crawler:latest
     deploy:
       replicas: 1
@@ -26,5 +27,5 @@ services:
       - 7982:7990
 
 configs:
-  app_mu_config:
+  mu_config:
     external: true

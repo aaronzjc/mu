@@ -35,7 +35,7 @@ steps:
       password:
         from_secret: docker_hub_password
 
-  - name: release mu-frontend
+  - name: release frontend
     image: plugins/docker
     settings:
       repo: aaronzjc/mu-frontend
