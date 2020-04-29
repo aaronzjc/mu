@@ -38,7 +38,7 @@ steps:
   - name: release mu-frontend
     image: plugins/docker
     settings:
-      repo: aaronzjc/mu
+      repo: aaronzjc/mu-frontend
       target: mu-frontend
       tags: latest
       username:
