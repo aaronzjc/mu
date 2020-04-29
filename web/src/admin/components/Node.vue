@@ -26,7 +26,7 @@
                         <th width="5%">类型</th>
                         <th width="5%">Ping</th>
                         <th width="5%">状态</th>
-                        <th width="15%">操作</th>
+                        <th width="30%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
