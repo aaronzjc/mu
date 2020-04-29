@@ -50,27 +50,28 @@ export default {
     methods: {
         fetchConfig(callback) {
             // 使用本地缓存，减少一个请求
-            let tabStr = ls.Get("tabs")
+            let cacheKey = "tabs";
+            let tabStr = ls.Get(cacheKey)
             if (tabStr !== false) {
                 this.tabs = JSON.parse(tabStr)
                 if (typeof callback == "function") {
-                    callback();
+                    callback(true);
                 }
                 return true
             }
             Get(API.config).then(function (resp) {
                 if (resp.data.code === 10000) {
                     this.tabs = Object.freeze(resp.data.data);
-                    ls.Set("tabs", JSON.stringify(resp.data.data), 60)
+                    ls.Set(cacheKey, JSON.stringify(resp.data.data), 5*60)
                 } else {
                     alert(resp.data.msg);
                 }
                 if (typeof callback == "function") {
-                    callback();
+                    callback(true);
                 }
             }.bind(this))
         },
-        fetchList() {
+        fetchList(landing) {
             if (this.tabs.length === 0) {
                 return false;
             }
@@ -82,6 +83,16 @@ export default {
             if (hkey === undefined || key === undefined) {
                 return false;
             }
+            let cacheKey = "init_list";
+            if (parseInt(this.selected.tab + this.selected.tag) === 0 && landing) {
+                let listStr = ls.Get(cacheKey)
+                if (listStr !== false) {
+                    let data = JSON.parse(listStr);
+                    this.list = data.list;
+                    this.t = data.t;
+                    return true;
+                }
+            }
             NProgress.start();
             Get(API.list, {
                 params: {
@@ -92,6 +103,8 @@ export default {
                 if (resp.data.code === 10000) {
                     this.list = Object.freeze(resp.data.data.list);
                     this.t = resp.data.data.t;
+
+                    ls.Set(cacheKey, JSON.stringify(resp.data.data), 60);
                 } else {
                     this.list = [];
                 }
@@ -100,7 +113,7 @@ export default {
         },
         tabChange(data) {
             this.selected = data;
-            this.fetchList();
+            this.fetchList(false);
         },
         toggleFavor(idx) {
             if (this.list[idx].mark) {

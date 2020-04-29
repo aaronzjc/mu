@@ -24,10 +24,10 @@ export function Set(key, val, ttl) {
  */
 export function Get(key) {
     let expire = localStorage.getItem(ttlKey(key))
-    if (!expire) {
+    if (expire === "" || expire == null) {
         return false
     }
-    if (parseInt(expire) < (new Date()).getTime()) {
+    if (expire != -1 && parseInt(expire) < (new Date()).getTime()) {
         Del(key)
         return false
     }
