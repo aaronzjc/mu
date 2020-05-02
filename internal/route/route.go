@@ -43,38 +43,39 @@ func RegisterRoutes() {
 	c := cors.New(cors.Config{
 		AllowOriginFunc:  func(origin string) bool { return true },
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	})
 	r.Use(c)
 
-	// Auth操作
-	r.GET("/auth_config", oauth.Config)
-	r.GET("/oauth/auth", oauth.Auth)
-	r.GET("/oauth/callback", oauth.Callback)
+	// oauth相关
+	rAuth := r.Group("/oauth")
+	{
+		rAuth.GET("/config", oauth.Config)
+		rAuth.GET("/auth", oauth.Auth)
+		rAuth.GET("/callback", oauth.Callback)
+	}
 
 	// 前端路由
-	r.GET("/config", hot.Tabs)
-	r.GET("/logout", idxAuth.Logout)
-	idx := r.Group("")
-	idx.Use(middleware.ApiAuth(false))
-	{
-		// 本组路由获取用户信息，但是不强制登录
-		idx.GET("/info", idxAuth.Info)
-		idx.GET("/list", hot.List)
-	}
 	api := r.Group("/api")
-	api.Use(middleware.ApiAuth(true))
 	{
-		// 收藏管理
-		api.GET("/favor/list", favor.List)
-		api.POST("/favor/add", favor.Add)
-		api.POST("/favor/remove", favor.Remove)
+		api.GET("/config", hot.Tabs)
+		api.GET("/list", hot.List)
+
+		apiAuth := api.Group("").Use(middleware.ApiAuth(false))
+		{
+			// 获取登录用户信息
+			apiAuth.GET("/info", idxAuth.Info)
+			// 收藏管理
+			apiAuth.GET("/favor/list", favor.List)
+			apiAuth.POST("/favor/add", favor.Add)
+			apiAuth.POST("/favor/remove", favor.Remove)
+		}
 	}
 
 	// 后台路由管理
 	admin := r.Group("/admin")
-	admin.Use(middleware.AdminAuth())
+	admin.Use(middleware.ApiAuth(true))
 	{
 		admin.GET("/debug", site.Debug)
 		admin.GET("/info", adminAuth.Info)
@@ -93,9 +94,9 @@ func RegisterRoutes() {
 		admin.GET("/user/list", user.List)
 	}
 
-	// 如果配置里面没有配置前端URL，这里后端托管
+	// 如果后端托管，则注册静态资源路由
 	cnf := config.NewConfig()
-	if cnf.WebUrl() == "" {
+	if cnf.Server.Static {
 		RegisterStatic()
 	}
 }

@@ -3,9 +3,14 @@
 
     "server": {
         "https": false,
-        "host": "mu.memosa.local:7980",
+        "host": "api.memosa.local:7980",
         "port": ":7980",
-        "web": ""
+        "static": true
+    },
+
+    "frontend": {
+        "index": "http://mu.memosa.local:8081/#/",
+        "admin": "http://mu.memosa.local:8081/admin/#/"
     },
 
     "redis": {

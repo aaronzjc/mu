@@ -407,7 +407,7 @@
 </template>
 
 <script>
-import {Get, Post} from "../tools/http";
+import {Get, Post} from "@/tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {nodeType, crawType} from "../def";
@@ -474,7 +474,9 @@ export default {
                     this.nodes = resp.data.data.nodeList;
                     this.list = resp.data.data.siteList;
                 } else {
-                    alert(resp.data.msg);
+                    console.log(resp.data.msg);
+                    this.nodes = [];
+                    this.list = [];
                 }
                 NProgress.done();
             }).catch( () => {

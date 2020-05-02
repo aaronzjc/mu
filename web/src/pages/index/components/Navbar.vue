@@ -49,7 +49,7 @@
 
 <script>
 import {routes} from "../router/router";
-import {Get} from "../tools/http";
+import {Get, Del} from "@/tools/ls";
 
 const LIGHT = "light";
 const DARK = "dark";
@@ -78,11 +78,8 @@ export default {
             this.$router.push({name: "login"}).catch(() => {});
         },
         logout() {
-            Get("/logout").then(resp => {
-                if (resp.data.code == 10000) {
-                    window.location.href = "/"
-                }
-            })
+            Del("token")
+            window.location.href = "/"
         },
         initTheme(type) {
             if (type != LIGHT && type != DARK) {
@@ -95,7 +92,7 @@ export default {
                 ht.className = ht.className.replace(DARK, "");
             }
             this.theme = type;
-            localStorage.setItem(THEME_KEY, this.theme);
+            Get(THEME_KEY, this.theme);
         },
         toggleTheme() {
             if (this.theme === LIGHT) {

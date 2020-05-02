@@ -1,14 +1,13 @@
 package oauth
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"mu/internal/model"
-	"mu/internal/route/middleware"
 	"mu/internal/util/auth"
 	"mu/internal/util/config"
 	"mu/internal/util/req"
-	"mu/internal/util/tool"
 	"net/http"
 )
 
@@ -67,46 +66,31 @@ func Callback(c *gin.Context) {
 		ClientId:     cnf.Auth.Github.ClientId,
 		ClientSecret: cnf.Auth.Github.ClientSecret,
 	}
-	token, _ := github.RequestAccessToken(code)
-	gUser, _ := github.RequestUser(token)
+	accessToken, _ := github.RequestAccessToken(code)
+	gUser, _ := github.RequestUser(accessToken)
 
-	if from == "admin" {
-		if ok, _ := tool.ArrSearch(gUser.Username, cnf.Auth.Github.Admins); !ok {
-			if ok, _ = tool.ArrSearch("everyone", cnf.Auth.Github.Admins); !ok {
-				c.String(http.StatusForbidden, "不好意思，您没有权限。请联系管理员。")
-				return
-			}
-		}
-
-		admin := model.Admin{
-			Username: gUser.Username,
-			Nickname: gUser.Username,
-			Avatar:   gUser.Avatar,
-			AuthType: model.AuthGithub,
-		}
-		admin.Auth()
-		req.SetCookie(c, map[string]string{
-			middleware.CooAdmin:      admin.Username,
-			middleware.CooAdminToken: admin.Token,
-		})
-		c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s%s", cnf.WebUrl(), "/admin"))
-		c.Abort()
-	} else {
-		user := model.User{
-			Username: gUser.Username,
-			Nickname: gUser.Username,
-			Avatar:   gUser.Avatar,
-			AuthType: model.AuthGithub,
-		}
-
-		_ = user.Auth()
-
-		req.SetCookie(c, map[string]string{
-			middleware.CooToken: user.Token,
-			middleware.CooUser:  user.Username,
-		})
-
-		c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s%s", cnf.WebUrl(), "/"))
-		c.Abort()
+	if accessToken == "" || gUser.Username == "" {
+		c.String(http.StatusForbidden, "获取oauth信息失败")
+		return
 	}
+
+	user := model.User{
+		Username: gUser.Username,
+		Nickname: gUser.Username,
+		Avatar:   gUser.Avatar,
+		AuthType: model.AuthGithub,
+	}
+
+	_ = user.Auth()
+	token := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s;%s", user.Username, user.Token)))
+
+	var redirect = ""
+	if from == "admin" {
+		redirect = fmt.Sprintf("%s?token=%s", cnf.Frontend.Admin, token)
+	} else {
+		redirect = fmt.Sprintf("%s?token=%s", cnf.IndexUrl(), token)
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, redirect)
+	c.Abort()
 }

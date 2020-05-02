@@ -44,7 +44,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import HoTab from "./HoTab"
 import Footer from "./Footer"
-import {Get, Post} from "../tools/http";
+import {Get, Post} from "@/tools/http";
 
 const API = {
     list: "/api/favor/list",

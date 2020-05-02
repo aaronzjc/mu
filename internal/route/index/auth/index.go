@@ -26,8 +26,3 @@ func Info(c *gin.Context) {
 
 	req.JSON(c, req.CodeSuccess, "userinfo", js)
 }
-
-func Logout(c *gin.Context) {
-	req.ClearCookie(c, []string{middleware.CooUser, middleware.CooToken})
-	req.JSON(c, req.CodeSuccess, "logout success", nil)
-}

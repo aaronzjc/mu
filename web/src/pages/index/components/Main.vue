@@ -7,7 +7,8 @@
 
 <script>
 import Navbar from "./Navbar"
-import {Get} from "../tools/http";
+import {Get} from "@/tools/http";
+import {Get as lsGet} from "@/tools/ls"
 
 export default {
     name: "Main",
@@ -17,19 +18,11 @@ export default {
     methods: {
         fetchUserInfo() {
             // 如果本地没有用户cookie，不发送请求了。
-            var str = document.cookie;
-            if (str === "") return false;
-            var skip = true;
-            var cookieArr = str.split("; ");
-            for (var i = 0; i < cookieArr.length; i++) {
-                var arr = cookieArr[i].split("=");
-                if (arr[0] === "_token" && arr[1] !== ""){
-                    skip = false;
-                    break;
-                }
+            let token = lsGet("token")
+            if (!token) {
+                return false
             }
-            if (skip) return false;
-            Get("/info").then(resp => {
+            Get("/api/info").then(resp => {
                 if (resp.data.code == 10000) {
                     var info = resp.data.data;
                     this.$store.dispatch("account/initUser", {
@@ -37,6 +30,8 @@ export default {
                         username: info.username,
                         avatar: info.avatar
                     });
+                } else {
+                    console.log(info)
                 }
             });
         }

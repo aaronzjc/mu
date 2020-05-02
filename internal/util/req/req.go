@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	CodeSuccess   = 10000
-	CodeError     = 10001
-	CodeForbidden = 10002
+	CodeSuccess    = 10000
+	CodeError      = 10001
+	CodeForbidden  = 10002
+	CodeAuthFailed = 10003
 )
 
 func JSON(c *gin.Context, code int, msg string, data interface{}) {

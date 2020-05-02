@@ -8,24 +8,21 @@ import (
 )
 
 func Info(c *gin.Context) {
-	username, err := c.Cookie(middleware.CooAdmin)
-	if err != nil {
-		req.JSON(c, req.CodeError, "sorry, fetch admin failed", nil)
+	userId, exist := c.Get(middleware.LoginUser)
+	if !exist {
+		req.JSON(c, req.CodeError, "获取信息失败", nil)
 		return
 	}
 
-	if username == "" {
-		req.JSON(c, req.CodeError, "empty user", nil)
-	}
-
-	admin := model.Admin{
-		Username: username,
-	}
-	err = admin.FetchInfo()
+	login, err := (&model.User{}).FetchRow(model.Query{
+		Query: "`id` = ?",
+		Args:  []interface{}{userId},
+	})
 	if err != nil {
 		req.JSON(c, req.CodeError, "sorry, fetch user failed", nil)
 		return
 	}
+	js, _ := login.FormatJson()
 
-	req.JSON(c, req.CodeSuccess, "userinfo", admin)
+	req.JSON(c, req.CodeSuccess, "userinfo", js)
 }

@@ -25,14 +25,16 @@ export function Set(key, val, ttl) {
 export function Get(key) {
     let expire = localStorage.getItem(ttlKey(key))
     if (expire === "" || expire == null) {
-        return false
-    }
-    if (expire != -1 && parseInt(expire) < (new Date()).getTime()) {
+        // do nothing
+    } else if (expire != -1 && parseInt(expire) < (new Date()).getTime()) {
         Del(key)
         return false
     }
-
-    return localStorage.getItem(formatKey(key))
+    let res = localStorage.getItem(formatKey(key))
+    if (res == undefined || res == null) {
+        return false;
+    }
+    return res
 }
 
 export function Del(key) {

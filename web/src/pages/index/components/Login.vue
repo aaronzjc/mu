@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {Get} from "../tools/http";
+import {Get} from "@/tools/http";
 
 export default {
     name: "Login",
@@ -30,13 +30,13 @@ export default {
     },
     methods: {
         fetchConfig() {
-            Get("/auth_config", {
+            Get("/oauth/config", {
                 from: "index"
             }).then(resp => {
                 if (resp.data.code === 10000) {
                     this.auth = resp.data.data;
                 } else {
-                    alert(resp.data.msg);
+                    console.log(resp.data.msg);
                 }
             })
         }
