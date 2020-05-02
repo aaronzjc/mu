@@ -49,7 +49,7 @@
 
 <script>
 import {routes} from "../router/router";
-import {Get, Del} from "@/tools/ls";
+import {Get, Set, Del} from "@/tools/ls";
 
 const LIGHT = "light";
 const DARK = "dark";
@@ -59,7 +59,7 @@ export default {
     name: "Navbar",
     mounted() {
         this.rs = routes[0].children;
-        var t = localStorage.getItem(THEME_KEY);
+        var t = Get(THEME_KEY);
         this.initTheme(t);
     },
     data() {
@@ -92,7 +92,7 @@ export default {
                 ht.className = ht.className.replace(DARK, "");
             }
             this.theme = type;
-            Get(THEME_KEY, this.theme);
+            Set(THEME_KEY, this.theme, -1);
         },
         toggleTheme() {
             if (this.theme === LIGHT) {
