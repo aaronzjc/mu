@@ -1,6 +1,6 @@
 <template>
-<div class="columns">
-    <div class="column switch" v-if="tabs.length > 0">
+<div class="columns switch">
+    <div class="column" v-if="tabs.length > 0">
         <div class="tabs">
             <ul>
                 <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
@@ -16,6 +16,10 @@
 <script>
 export default {
     name: "HoTab",
+    mounted() {
+        // 监听吸顶事件
+        document.addEventListener("scroll", this.sticky);
+    },
     data() {
         return {
             selected: {
@@ -31,6 +35,10 @@ export default {
         },
     },
     methods: {
+        sticky() {
+            const ele = document.getElementsByClassName("switch")[0]
+            ele.classList.toggle("sticky", ele.getBoundingClientRect().top === 0)
+        },
         switchTab(idx) {
             this.selected = {
                 tab: idx,
