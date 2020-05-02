@@ -15,11 +15,15 @@ var appConfig Config
 type Config struct {
 	AppName string `json:"app_name"`
 	Server  struct {
-		Https bool   `json:"https"`
-		Host  string `json:"host"`
-		Port  string `json:"port"`
-		Web   string `json:"web"`
+		Https  bool   `json:"https"`
+		Host   string `json:"host"`
+		Port   string `json:"port"`
+		Static bool   `json:"static"`
 	} `json:"server"`
+	Frontend struct {
+		Index string `json:"index"`
+		Admin string `json:"admin"`
+	} `json:"frontend"`
 	Redis struct {
 		Host string `json:"host"`
 		Port int    `json:"port"`
@@ -50,8 +54,28 @@ func (c *Config) ServerUrl() string {
 	return fmt.Sprintf("%s://%s", proto, c.Server.Host)
 }
 
-func (c *Config) WebUrl() string {
-	return c.Server.Web
+// 如果后端托管静态资源，则构造路由。
+// 因为和api公用域名，为了不混淆，不支持history模式
+func (c *Config) IndexUrl() string {
+	if c.Server.Static {
+		return c.ServerUrl() + "/#/"
+	}
+	if c.Frontend.Index == "" {
+		panic("index route empty")
+	}
+	return c.Frontend.Index
+}
+
+// 如果后端托管静态资源，则构造路由。
+// 因为和api公用域名，为了不混淆，不支持history模式
+func (c *Config) AdminUrl() string {
+	if c.Server.Static {
+		return c.ServerUrl() + "/admin/#/"
+	}
+	if c.Frontend.Admin == "" {
+		panic("admin route empty")
+	}
+	return c.Frontend.Admin
 }
 
 func FindConfigFile() (string, error) {

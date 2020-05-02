@@ -20,7 +20,8 @@ WORKDIR /app/bin
 CMD ["./mu"]
 
 FROM nginx:stable-alpine as mu-frontend
-COPY --from=mu /app/public /usr/share/nginx/html
+COPY ./public /usr/share/nginx/html
 COPY ./deploy/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
+VOLUME /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

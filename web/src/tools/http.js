@@ -1,20 +1,18 @@
 import axios from "axios";
-import Router from "../router/router"
+import * as ls from  "./ls"
 
 const client = axios.create({
     baseURL: process.env.VUE_APP_URL,
-    timeout: 1000,
+    timeout: 3000,
     withCredentials: true
 });
 
-client.interceptors.response.use(resp => {
-    let res = resp.data;
-    if (res.code === 10002) {
-        Router.push({"name": "login"}).catch(() => {});
-        return Promise.reject(resp);
+client.interceptors.request.use(req => {
+    let token = ls.Get("token")
+    if (token) {
+        req.headers.Authorization = token;
     }
-
-    return resp;
+    return req;
 });
 
 export function Get(url, params, headers) {

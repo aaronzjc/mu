@@ -3,13 +3,13 @@ module.exports = {
     assetsDir: "static",
     pages: {
         index: {
-            entry: "src/index/main.js",
+            entry: "src/pages/index/main.js",
             template: "public/index.html",
             filename: "index.html",
             title: "首页",
         },
         admin: {
-            entry: "src/admin/main.js",
+            entry: "src/pages/admin/main.js",
             template: "public/admin.html",
             filename: "admin.html",
             title: "后台",

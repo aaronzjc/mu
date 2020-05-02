@@ -17,16 +17,16 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import Get, {Post} from "../tools/http"
-import * as ls from "../tools/ls"
+import Get, {Post} from "@/tools/http"
+import * as ls from "@/tools/ls"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
 
-import {CardMap, Cards} from "../tools/card";
+import {CardMap, Cards} from "../ext/card";
 
 const API = {
-    config: "/config",
-    list: "/list",
+    config: "/api/config",
+    list: "/api/list",
 };
 
 export default {

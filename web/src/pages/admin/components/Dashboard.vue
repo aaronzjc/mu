@@ -25,7 +25,7 @@
 <script>
 import 'bulma/css/bulma.css'
 import Menu from "./Menu"
-import {Get} from "../tools/http";
+import {Get} from "@/tools/http";
 
 export default {
     name: "Dashboard",
@@ -47,7 +47,7 @@ export default {
                 if (resp.data.code === 10000) {
                     this.login = resp.data.data
                 } else {
-                    alert(resp.data.msg)
+                    console.log(resp.data.msg)
                 }
             }).catch(err => {
                 // eslint-disable-next-line

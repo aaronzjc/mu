@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {Get} from "../tools/http";
+import {Get} from "@/tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -61,7 +61,7 @@ export default {
             NProgress.start();
             Get("/admin/user/list").then(resp => {
                 if (resp.data.code === 10001) {
-                    alert(resp.data.msg);
+                    console.log(resp.data.msg);
                 } else {
                     this.list = resp.data.data;
                 }
