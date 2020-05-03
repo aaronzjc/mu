@@ -118,6 +118,11 @@ export default {
         tabChange(data) {
             this.selected = data;
             this.fetchList(false);
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
         },
         toggleFavor(idx) {
             if (this.list[idx].mark) {
