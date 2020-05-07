@@ -10,7 +10,7 @@
 
     "frontend": {
         "index": "http://mu.memosa.local:8081/#/",
-        "admin": "http://mu.memosa.local:8081/admin/#/"
+        "admin": "http://mu.memosa.local:8081/admin#/"
     },
 
     "redis": {

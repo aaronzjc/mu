@@ -70,7 +70,7 @@ func (c *Config) IndexUrl() string {
 // 因为和api公用域名，为了不混淆，不支持history模式
 func (c *Config) AdminUrl() string {
 	if c.Server.Static {
-		return c.ServerUrl() + "/admin/#/"
+		return c.ServerUrl() + "/admin#/"
 	}
 	if c.Frontend.Admin == "" {
 		panic("admin route empty")
