@@ -86,7 +86,7 @@ func Callback(c *gin.Context) {
 
 	var redirect = ""
 	if from == "admin" {
-		redirect = fmt.Sprintf("%s?token=%s", cnf.Frontend.Admin, token)
+		redirect = fmt.Sprintf("%s?token=%s", cnf.AdminUrl(), token)
 	} else {
 		redirect = fmt.Sprintf("%s?token=%s", cnf.IndexUrl(), token)
 	}
