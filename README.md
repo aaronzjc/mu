@@ -1,7 +1,6 @@
 ## 项目
 
 ![build & release](https://github.com/aaronzjc/mu/workflows/build%20&%20release/badge.svg)
-[![DroneCI](https://drone.memosa.cn/api/badges/aaronzjc/mu/status.svg)](https://drone.memosa.cn/aaronzjc/mu)
 
 ### 介绍
 
