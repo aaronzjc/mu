@@ -15,18 +15,13 @@ jobs:
       - name: setup nodejs
         uses: actions/setup-node@v1
       - name: build frontend
-        run: |
-          cd web 
-          npm install 
-          npm run build
+        run: make vue
       - name: setup go env
         uses: actions/setup-go@v2
       - name: build app dist
         run: |
-          # set env linux
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 
-          go build -o ./bin/mu ./cmd/master/main.go 
-          go build -o ./bin/crawler ./cmd/node/main.go
+          make mu
+          make crawler
       - name: release mu
         uses: docker/build-push-action@v1.1.0
         with:
