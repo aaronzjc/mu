@@ -12,6 +12,7 @@
     padding: 0 0.75rem;
   }
   .switch {
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     left: 0;
