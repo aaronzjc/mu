@@ -2,7 +2,7 @@ name: build & release
 
 on:
   push:
-    branches: [ gh_actions ]
+    branches: [ master ]
 
 jobs:
 
