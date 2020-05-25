@@ -27,7 +27,6 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 
           go build -o ./bin/mu ./cmd/master/main.go 
           go build -o ./bin/crawler ./cmd/node/main.go
-      # release docker image
       - name: release mu
         uses: docker/build-push-action@v1.1.0
         with:
@@ -36,7 +35,6 @@ jobs:
           repository: aaronzjc/mu
           target: mu
           tags: gh
-          
       - name: release crawler
         uses: docker/build-push-action@v1.1.0
         with:
@@ -45,7 +43,6 @@ jobs:
           repository: aaronzjc/crawler
           target: crawler
           tags: gh
-          
       - name: release frontend
         uses: docker/build-push-action@v1.1.0
         with:
