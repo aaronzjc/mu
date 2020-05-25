@@ -3,6 +3,9 @@ name: build & release
 on:
   push:
     branches: [ master ]
+  create:
+    tags:
+      - v*
 
 jobs:
 
@@ -29,7 +32,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu
           target: mu
-          tags: gh, latest
+          tag_with_ref: true
       - name: release crawler
         uses: docker/build-push-action@v1.1.0
         with:
@@ -37,7 +40,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/crawler
           target: crawler
-          tags: gh
+          tag_with_ref: true
       - name: release frontend
         uses: docker/build-push-action@v1.1.0
         with:
@@ -45,4 +48,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-frontend
           target: mu-frontend
-          tags: gh, latest
+          tag_with_ref: true
