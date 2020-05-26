@@ -1,6 +1,6 @@
-## 项目
-
 ![build & release](https://github.com/aaronzjc/mu/workflows/build%20&%20release/badge.svg)
+
+## 项目
 
 ### 介绍
 
