@@ -23,23 +23,32 @@ jobs:
         uses: actions/setup-go@v2
       - name: build app dist
         run: |
-          make mu
-          make crawler
-      - name: release mu
+          make api
+          make commander
+          make agent
+      - name: release api
         uses: docker/build-push-action@v1.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: aaronzjc/mu
-          target: mu
+          repository: aaronzjc/mu-api
+          target: api
           tag_with_ref: true
-      - name: release crawler
+      - name: release commander
         uses: docker/build-push-action@v1.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: aaronzjc/crawler
-          target: crawler
+          repository: aaronzjc/mu-commander
+          target: commander
+          tag_with_ref: true
+      - name: release agent
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: aaronzjc/mu-agent
+          target: agent
           tag_with_ref: true
       - name: release frontend
         uses: docker/build-push-action@v1.1.0
@@ -47,5 +56,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-frontend
-          target: mu-frontend
+          target: frontend
           tag_with_ref: true

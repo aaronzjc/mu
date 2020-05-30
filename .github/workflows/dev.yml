@@ -15,7 +15,7 @@ jobs:
       - name: setup nodejs
         uses: actions/setup-node@v1
       - name: build frontend
-        run: make vue
+        run: make vue-dev-build
       - name: setup go env
         uses: actions/setup-go@v2
       - name: build app dist
@@ -53,5 +53,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-frontend
-          target: mu-frontend
+          target: frontend
           tag_with_ref: true

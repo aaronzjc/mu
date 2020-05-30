@@ -30,7 +30,7 @@ VOLUME /app/conf
 WORKDIR /app/bin
 CMD ["./api"]
 
-FROM nginx:stable-alpine as mu-frontend
+FROM nginx:stable-alpine as frontend
 COPY ./public /usr/share/nginx/html
 COPY ./deploy/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
