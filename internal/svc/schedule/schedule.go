@@ -358,15 +358,13 @@ func (s *Schedule) InitJobs() {
 		err = s.AddJob(site)
 		logger.Info("Done addJob [site = %s]", site.Key)
 	}
-}
 
-func (s *Schedule) InitPool() {
 	job := &CheckJob{
 		Name: "heart_beat",
-		Spec: "* * * * *",
+		Spec: "*/5 * * * *",
 	}
 
-	// 增加一个协程检查服务器状态
+	// 增加一个定时任务检查服务器状态
 	_, _ = s.JobCron.AddJob(job.Spec, job)
 }
 

@@ -5,14 +5,9 @@ import (
 	"mu/internal/svc/schedule"
 )
 
-func initSchedule() {
-	schedule.JobSchedule.InitJobs()
-	schedule.JobSchedule.InitPool()
-}
-
 func init() {
-	// 注册任务
-	initSchedule()
+	// 注册定时任务
+	schedule.JobSchedule.InitJobs()
 }
 
 func main() {
