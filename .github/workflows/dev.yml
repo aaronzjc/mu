@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-api
           target: api
-          tag_with_ref: true
+          tags: dev
       - name: release commander
         uses: docker/build-push-action@v1.1.0
         with:
@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-commander
           target: commander
-          tag_with_ref: true
+          tags: dev
       - name: release agent
         uses: docker/build-push-action@v1.1.0
         with:
@@ -46,7 +46,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-agent
           target: agent
-          tag_with_ref: true
+          tags: dev
       - name: release frontend
         uses: docker/build-push-action@v1.1.0
         with:
@@ -54,4 +54,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: aaronzjc/mu-frontend
           target: frontend
-          tag_with_ref: true
+          tags: dev
