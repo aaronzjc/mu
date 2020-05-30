@@ -2,48 +2,48 @@ version: '3.7'
 
 services:
   api_1:
-    image: aaronzjc/mu-api:latest
+    image: aaronzjc/mu-api:dev
     deploy:
       replicas: 1
     ports:
       - 6981:7980
     configs:
-      - source: mu_config
+      - source: mu_config_dev
         target: /app/conf/app.json
   api_2:
-    image: aaronzjc/mu-api:latest
+    image: aaronzjc/mu-api:dev
     deploy:
       replicas: 1
     ports:
       - 6982:7980
     configs:
-      - source: mu_config
+      - source: mu_config_dev
         target: /app/conf/app.json
 
   commander:
-    image: aaronzjc/mu-commander:latest
+    image: aaronzjc/mu-commander:dev
     deploy:
       replicas: 1
     ports:
       - 6971:7970
     configs:
-      - source: mu_config
+      - source: mu_config_dev
         target: /app/conf/app.json
 
   node_1:
-    image: aaronzjc/mu-agent:latest
+    image: aaronzjc/mu-agent:dev
     deploy:
       replicas: 1
     ports:
       - 6991:7990
 
   node_2:
-    image: aaronzjc/mu-agent:latest
+    image: aaronzjc/mu-agent:dev
     deploy:
       replicas: 1
     ports:
       - 6992:7990
 
 configs:
-  mu_config:
+  mu_config_dev:
     external: true

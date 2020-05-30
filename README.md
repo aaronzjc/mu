@@ -8,10 +8,9 @@
 
 主要是为了学习Go开发，目前使用到的技术栈
 
-+ Go, Vue.js
-+ Goland
-+ Drone CI, Portainer 
-+ Docker, Docker Swarm
++ Go, Vue.js，MySQL, Redis
++ Github Actions，Portainer 
++ Docker，Docker Swarm
 
 ### 预览
 [这里](https://github.com/aaronzjc/mu/tree/master/doc)
