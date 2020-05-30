@@ -24,6 +24,9 @@ type Config struct {
 		Index string `json:"index"`
 		Admin string `json:"admin"`
 	} `json:"frontend"`
+	Commander struct {
+		Addr string `json:"addr"`
+	} `json:"commander"`
 	Redis struct {
 		Host string `json:"host"`
 		Port int    `json:"port"`

@@ -1,4 +1,4 @@
-package crawler
+package agent
 
 import (
 	"context"
@@ -70,6 +70,6 @@ func RegisterRpcServer(addr string) {
 	var opts []grpc.ServerOption
 	rpcServer := grpc.NewServer(opts...)
 	rpc.RegisterAgentServer(rpcServer, &AgentServer{})
-	logger.Info("server is listening on :7990")
+	logger.Info("AgentServer is listening on :7990")
 	logger.Fatal(rpcServer.Serve(lis))
 }

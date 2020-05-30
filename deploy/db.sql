@@ -22,7 +22,7 @@ CREATE DATABASE IF NOT EXISTS `mu` default CHARACTER SET utf8mb4 COLLATE utf8mb4
 # Dump of table node
 # ------------------------------------------------------------
 
-CREATE TABLE `node` IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS `node` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `name` varchar(64) NOT NULL DEFAULT '' COMMENT '节点名字',
     `addr` varchar(128) NOT NULL DEFAULT '' COMMENT '节点IP',
@@ -39,7 +39,7 @@ CREATE TABLE `node` IF NOT EXISTS (
 # Dump of table site
 # ------------------------------------------------------------
 
-CREATE TABLE `site` IF NOT EXISTS  (
+CREATE TABLE IF NOT EXISTS `site` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '站点名字',
   `root` varchar(256) NOT NULL DEFAULT '' COMMENT '站点根地址',
@@ -60,7 +60,7 @@ CREATE TABLE `site` IF NOT EXISTS  (
 # Dump of table user
 # ------------------------------------------------------------
 
-CREATE TABLE `user` IF NOT EXISTS  (
+CREATE TABLE IF NOT EXISTS `user` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `username` varchar(64) NOT NULL DEFAULT '',
     `nickname` varchar(64) NOT NULL DEFAULT '',
@@ -75,7 +75,7 @@ CREATE TABLE `user` IF NOT EXISTS  (
 # Dump of table favor
 # ------------------------------------------------------------
 
-CREATE TABLE `favor` IF NOT EXISTS  (
+CREATE TABLE IF NOT EXISTS `favor` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `site` varchar(64) NOT NULL,

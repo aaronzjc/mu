@@ -3,10 +3,15 @@ package site
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 	"mu/internal/model"
+	"mu/internal/svc/rpc"
 	"mu/internal/svc/schedule"
+	"mu/internal/util/config"
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
+	"time"
 )
 
 type InfoForm struct {
@@ -149,25 +154,18 @@ func UpdateSite(c *gin.Context) {
 		return
 	}
 
-	// 检查当前更新状态，操作Job
-	s := om.Enable == m.Enable
-	if !s {
-		if m.Enable == model.Enable {
-			// add
-			_ = schedule.JobSchedule.AddJob(m)
-		} else {
-			// delete
-			schedule.JobSchedule.RemoveJob(m.Key)
-		}
-		logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
+	// 更新调度任务
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+	}
+	conn, err := grpc.Dial(config.NewConfig().Commander.Addr, opts...)
+	if err != nil {
+		logger.Error("connect error " + err.Error())
 	} else {
-		if m.Enable == model.Enable && m.Cron != om.Cron {
-			// update
-			schedule.JobSchedule.RemoveJob(m.Key)
-			if err = schedule.JobSchedule.AddJob(m); err == nil {
-				logger.Info("[%s] cron updated to %s ", m.Key, m.Cron)
-			}
-		}
+		client := rpc.NewCommanderClient(conn)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+		defer cancel()
+		client.UpdateCron(ctx, &rpc.Cron{Site: om.Key})
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", nil)

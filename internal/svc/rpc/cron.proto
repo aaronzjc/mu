@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package rpc;
+
+service Commander {
+    rpc UpdateCron(cron) returns (cronRes) {}
+}
+
+message cron {
+    string site = 1;
+}
+
+message cronRes {
+    bool success = 1;
+}
