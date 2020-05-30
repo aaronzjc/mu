@@ -272,7 +272,6 @@ func (j *CrawlerJob) Run() {
 	hotJson.T = result.T
 	for tag, hotStr := range result.HotMap {
 		err := json.Unmarshal([]byte(hotStr), &hotJson.List)
-		fmt.Println(hotStr)
 		data, err := json.Marshal(hotJson)
 		if err != nil {
 			logger.Error("Json_encode hotJson error , err = %s .", err.Error())
@@ -357,13 +356,14 @@ func (s *Schedule) InitJobs() {
 
 	for _, site := range sites {
 		err = s.AddJob(site)
+		logger.Info("Done addJob [site = %s]", site.Key)
 	}
 }
 
 func (s *Schedule) InitPool() {
 	job := &CheckJob{
 		Name: "heart_beat",
-		Spec: "*/5 * * * *",
+		Spec: "* * * * *",
 	}
 
 	// 增加一个协程检查服务器状态
@@ -406,7 +406,11 @@ func (s *Schedule) RemoveJob(siteKey string) bool {
 	return true
 }
 
-func (s *Schedule) UpdateJob(site model.Site) bool {
+func (s *Schedule) UpdateJob(siteKey string) bool {
+	site, _ := (&model.Site{}).FetchRow(model.Query{
+		Query: "`key` = ?",
+		Args:  []interface{}{siteKey},
+	})
 	_, exist := s.JobMap.Load(site.Key)
 	if exist {
 		s.RemoveJob(site.Key)

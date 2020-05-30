@@ -3,7 +3,6 @@ package mu
 import (
 	"github.com/gin-gonic/gin"
 	"mu/internal/model"
-	"mu/internal/svc/schedule"
 	"mu/internal/util/config"
 	"mu/internal/util/logger"
 	"os"
@@ -25,9 +24,8 @@ func (ins *Instance) initConfig() {
 	ins.Config = config.NewConfig()
 }
 
-func (ins *Instance) initSchedule() {
-	schedule.JobSchedule.InitJobs()
-	schedule.JobSchedule.InitPool()
+func (ins *Instance) initSites() {
+	(&model.Site{}).InitSites()
 }
 
 func init() {
@@ -43,9 +41,6 @@ func init() {
 	// 初始化配置
 	App.initConfig()
 
-	// 初始化数据库
-	(&model.Site{}).InitSites()
-
-	// 初始化任务队列，rpc等
-	App.initSchedule()
+	// 初始化站点
+	App.initSites()
 }
