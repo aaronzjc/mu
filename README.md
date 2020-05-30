@@ -19,18 +19,19 @@
 ### 本地运行
 
 ```shell
-# 1. 安装MySQL和Redis
-# 2. 执行deploy/db.sql导入数据库结构
-# 3. 修改配置`conf/app.json`里面的各项配置
-# 4. 本地添加host: 127.0.0.1 mu.memosa.local。如果熟悉了可以改成其他
-# 5. 修改`deploy/compose.yml`配置文件目录为你的`app.json`目录
-
-$docker-compose -f deploy/compose.yml up
+1. 安装MySQL和Redis
+2. 执行deploy/db.sql导入数据库结构
+3. 修改配置`conf/app.json`里面的各项配置
+4. 参考deploy/stack.yml启动个各个容器
 ```
 
 ### 本地开发
 
-参考`Makefile`。
+```shell
+make api-dev # api服务
+make commander-dev #调度服务
+make agent-dev # 任务执行服务
+```
 
 [开发说明](doc/DEV.md)
 
