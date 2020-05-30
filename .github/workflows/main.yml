@@ -18,7 +18,7 @@ jobs:
       - name: setup nodejs
         uses: actions/setup-node@v1
       - name: restore node cache
-      - uses: actions/cache@v2
+        uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
