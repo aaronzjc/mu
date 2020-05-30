@@ -17,10 +17,24 @@ jobs:
         uses: actions/checkout@v2
       - name: setup nodejs
         uses: actions/setup-node@v1
+      - name: restore node cache
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: build frontend
         run: make vue
       - name: setup go env
         uses: actions/setup-go@v2
+      - name: restore Go mod cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: build app dist
         run: |
           make api
