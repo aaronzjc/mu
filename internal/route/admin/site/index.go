@@ -183,8 +183,13 @@ func Debug(c *gin.Context) {
 		client := rpc.NewCommanderClient(conn)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 		defer cancel()
-		res, _ := client.Debug(ctx, &rpc.Empty{})
-		c.String(req.CodeSuccess, res.Res)
+		res, err := client.Debug(ctx, &rpc.Empty{})
+		if err != nil {
+			logger.Error("Debug error " + err.Error())
+			c.String(req.CodeError, "错误")
+		} else {
+			c.String(req.CodeSuccess, res.Res)
+		}
 	}
 	return
 }
