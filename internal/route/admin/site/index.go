@@ -166,6 +166,7 @@ func UpdateSite(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 		defer cancel()
 		client.UpdateCron(ctx, &rpc.Cron{Site: om.Key})
+		logger.Info("remote update cron [%s]", om.Key)
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", nil)
