@@ -186,9 +186,9 @@ func Debug(c *gin.Context) {
 		res, err := client.Debug(ctx, &rpc.Empty{})
 		if err != nil {
 			logger.Error("Debug error " + err.Error())
-			c.String(req.CodeError, "错误")
+			c.String(200, "错误")
 		} else {
-			c.String(req.CodeSuccess, res.Res)
+			c.String(200, res.Res)
 		}
 	}
 	return
