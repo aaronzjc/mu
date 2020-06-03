@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc"
 	"mu/internal/model"
 	"mu/internal/svc/rpc"
-	"mu/internal/svc/schedule"
 	"mu/internal/util/config"
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
@@ -174,7 +173,18 @@ func UpdateSite(c *gin.Context) {
 }
 
 func Debug(c *gin.Context) {
-	result := schedule.Debug()
-	req.JSON(c, req.CodeSuccess, "成功", result)
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+	}
+	conn, err := grpc.Dial(config.NewConfig().Commander.Addr, opts...)
+	if err != nil {
+		logger.Error("connect error " + err.Error())
+	} else {
+		client := rpc.NewCommanderClient(conn)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+		defer cancel()
+		res, _ := client.Debug(ctx, nil)
+		req.JSON(c, req.CodeSuccess, "成功", res.Data)
+	}
 	return
 }
