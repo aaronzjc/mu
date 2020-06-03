@@ -183,8 +183,8 @@ func Debug(c *gin.Context) {
 		client := rpc.NewCommanderClient(conn)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 		defer cancel()
-		res, _ := client.Debug(ctx, nil)
-		req.JSON(c, req.CodeSuccess, "成功", res.Data)
+		res, _ := client.Debug(ctx, &rpc.Empty{})
+		c.String(req.CodeSuccess, res.Res)
 	}
 	return
 }

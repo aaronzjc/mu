@@ -19,5 +19,5 @@ message CronRes {
 }
 
 message DebugRes {
-    string data = 1;
+    string res = 1;
 }

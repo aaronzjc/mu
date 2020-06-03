@@ -425,7 +425,7 @@ func (s *Schedule) UpdateJob(siteKey string) bool {
 	return true
 }
 
-func Debug() string {
+func Debug() map[string]interface{} {
 	jm := make(map[cron.EntryID]string)
 	r := func(k interface{}, v interface{}) bool {
 		jm[v.(cron.EntryID)] = k.(string)
@@ -454,12 +454,10 @@ func Debug() string {
 		}
 	}
 
-	res, _ := json.Marshal(map[string]interface{}{
+	return map[string]interface{}{
 		"JobMap":  jm,
 		"CronMap": cm,
-	})
-
-	return string(res)
+	}
 }
 
 func init() {

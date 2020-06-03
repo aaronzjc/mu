@@ -1,6 +1,7 @@
 package commander
 
 import (
+	"encoding/json"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"mu/internal/svc/rpc"
@@ -18,9 +19,10 @@ func (commander *CommanderServer) UpdateCron(ctx context.Context, req *rpc.Cron)
 }
 
 func (commander *CommanderServer) Debug(ctx context.Context, req *rpc.Empty) (*rpc.DebugRes, error) {
-	res := schedule.Debug()
+	data := schedule.Debug()
+	js, _ := json.Marshal(data)
 	logger.Info("Rpc Debug success !")
-	return &rpc.DebugRes{Data: res}, nil
+	return &rpc.DebugRes{Res: string(js)}, nil
 }
 
 func RegisterRpcServer(addr string) {
