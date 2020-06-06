@@ -3,13 +3,21 @@ syntax = "proto3";
 package rpc;
 
 service Commander {
-    rpc UpdateCron(cron) returns (cronRes) {}
+    rpc UpdateCron (Cron) returns (CronRes) {}
+
+    rpc Debug (Empty) returns (DebugRes) {}
 }
 
-message cron {
+message Cron {
     string site = 1;
 }
 
-message cronRes {
+message Empty {}
+
+message CronRes {
     bool success = 1;
+}
+
+message DebugRes {
+    string res = 1;
 }

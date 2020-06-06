@@ -63,6 +63,37 @@ func (m *Cron) GetSite() string {
 	return ""
 }
 
+type Empty struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Empty) Reset()         { *m = Empty{} }
+func (m *Empty) String() string { return proto.CompactTextString(m) }
+func (*Empty) ProtoMessage()    {}
+func (*Empty) Descriptor() ([]byte, []int) {
+	return fileDescriptor_21379dc2cd81a5b8, []int{1}
+}
+
+func (m *Empty) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Empty.Unmarshal(m, b)
+}
+func (m *Empty) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Empty.Marshal(b, m, deterministic)
+}
+func (m *Empty) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Empty.Merge(m, src)
+}
+func (m *Empty) XXX_Size() int {
+	return xxx_messageInfo_Empty.Size(m)
+}
+func (m *Empty) XXX_DiscardUnknown() {
+	xxx_messageInfo_Empty.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Empty proto.InternalMessageInfo
+
 type CronRes struct {
 	Success              bool     `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -74,7 +105,7 @@ func (m *CronRes) Reset()         { *m = CronRes{} }
 func (m *CronRes) String() string { return proto.CompactTextString(m) }
 func (*CronRes) ProtoMessage()    {}
 func (*CronRes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_21379dc2cd81a5b8, []int{1}
+	return fileDescriptor_21379dc2cd81a5b8, []int{2}
 }
 
 func (m *CronRes) XXX_Unmarshal(b []byte) error {
@@ -102,48 +133,91 @@ func (m *CronRes) GetSuccess() bool {
 	return false
 }
 
-func init() {
-	proto.RegisterType((*Cron)(nil), "rpc.cron")
-	proto.RegisterType((*CronRes)(nil), "rpc.cronRes")
+type DebugRes struct {
+	Res                  string   `protobuf:"bytes,1,opt,name=res,proto3" json:"res,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DebugRes) Reset()         { *m = DebugRes{} }
+func (m *DebugRes) String() string { return proto.CompactTextString(m) }
+func (*DebugRes) ProtoMessage()    {}
+func (*DebugRes) Descriptor() ([]byte, []int) {
+	return fileDescriptor_21379dc2cd81a5b8, []int{3}
+}
+
+func (m *DebugRes) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DebugRes.Unmarshal(m, b)
+}
+func (m *DebugRes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DebugRes.Marshal(b, m, deterministic)
+}
+func (m *DebugRes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DebugRes.Merge(m, src)
+}
+func (m *DebugRes) XXX_Size() int {
+	return xxx_messageInfo_DebugRes.Size(m)
+}
+func (m *DebugRes) XXX_DiscardUnknown() {
+	xxx_messageInfo_DebugRes.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DebugRes proto.InternalMessageInfo
+
+func (m *DebugRes) GetRes() string {
+	if m != nil {
+		return m.Res
+	}
+	return ""
 }
 
 func init() {
-	proto.RegisterFile("cron.proto", fileDescriptor_21379dc2cd81a5b8)
+	proto.RegisterType((*Cron)(nil), "rpc.Cron")
+	proto.RegisterType((*Empty)(nil), "rpc.Empty")
+	proto.RegisterType((*CronRes)(nil), "rpc.CronRes")
+	proto.RegisterType((*DebugRes)(nil), "rpc.DebugRes")
 }
+
+func init() { proto.RegisterFile("cron.proto", fileDescriptor_21379dc2cd81a5b8) }
 
 var fileDescriptor_21379dc2cd81a5b8 = []byte{
-	// 138 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x2e, 0xca, 0xcf,
-	0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2e, 0x2a, 0x48, 0x56, 0x92, 0xe2, 0x62, 0x01,
-	0x09, 0x09, 0x09, 0x71, 0xb1, 0x14, 0x67, 0x96, 0xa4, 0x4a, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06,
-	0x81, 0xd9, 0x4a, 0xca, 0x5c, 0xec, 0x20, 0xb9, 0xa0, 0xd4, 0x62, 0x21, 0x09, 0x2e, 0xf6, 0xe2,
-	0xd2, 0xe4, 0xe4, 0xd4, 0xe2, 0x62, 0xb0, 0x0a, 0x8e, 0x20, 0x18, 0xd7, 0xc8, 0x84, 0x8b, 0xd3,
-	0x39, 0x3f, 0x37, 0x37, 0x31, 0x2f, 0x25, 0xb5, 0x48, 0x48, 0x9d, 0x8b, 0x2b, 0xb4, 0x20, 0x25,
-	0xb1, 0x24, 0xd5, 0x19, 0x64, 0x26, 0xa7, 0x5e, 0x51, 0x41, 0xb2, 0x1e, 0xc8, 0x08, 0x29, 0x1e,
-	0x38, 0x33, 0x28, 0xb5, 0x58, 0x89, 0x21, 0x89, 0x0d, 0xec, 0x04, 0x63, 0x40, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x31, 0xb6, 0x5e, 0x51, 0x90, 0x00, 0x00, 0x00,
+	// 183 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x3c, 0x8f, 0xc1, 0x0a, 0x82, 0x40,
+	0x10, 0x86, 0x15, 0x35, 0x75, 0x28, 0x88, 0x3d, 0x89, 0x74, 0x88, 0x2d, 0xa8, 0x93, 0x87, 0x7a,
+	0x04, 0xeb, 0x05, 0x16, 0xba, 0x74, 0xd3, 0x75, 0x88, 0x0e, 0xba, 0xcb, 0xce, 0x7a, 0xe8, 0xed,
+	0x63, 0x87, 0xec, 0xf6, 0x0d, 0xf3, 0xf1, 0xff, 0x33, 0x00, 0xda, 0x99, 0xa9, 0xb1, 0xce, 0x78,
+	0x23, 0x12, 0x67, 0xb5, 0xac, 0x21, 0x6d, 0x9d, 0x99, 0x84, 0x80, 0x94, 0xde, 0x1e, 0xab, 0x78,
+	0x1f, 0x9f, 0x4b, 0xc5, 0x2c, 0x73, 0xc8, 0xee, 0xa3, 0xf5, 0x1f, 0x79, 0x80, 0x3c, 0x48, 0x0a,
+	0x49, 0x54, 0x90, 0xd3, 0xac, 0x35, 0x12, 0xb1, 0x5a, 0xa8, 0x65, 0x94, 0x3b, 0x28, 0x6e, 0xd8,
+	0xcf, 0xaf, 0x60, 0x6d, 0x21, 0x71, 0x48, 0xbf, 0xb0, 0x80, 0x97, 0x27, 0x94, 0xad, 0x19, 0xc7,
+	0x6e, 0x1a, 0xd0, 0x89, 0x13, 0xc0, 0xc3, 0x0e, 0x9d, 0x47, 0xae, 0x2e, 0x1b, 0x67, 0x75, 0x13,
+	0xb0, 0x5e, 0xff, 0x51, 0x21, 0xc9, 0x48, 0x1c, 0x21, 0xe3, 0x4c, 0x01, 0xbc, 0xe0, 0x6b, 0xea,
+	0x0d, 0xf3, 0xd2, 0x25, 0xa3, 0x7e, 0xc5, 0xff, 0x5c, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x32,
+	0xd4, 0x6d, 0xad, 0xdd, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConnInterface
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion6
+const _ = grpc.SupportPackageIsVersion4
 
 // CommanderClient is the client API for Commander service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CommanderClient interface {
 	UpdateCron(ctx context.Context, in *Cron, opts ...grpc.CallOption) (*CronRes, error)
+	Debug(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DebugRes, error)
 }
 
 type commanderClient struct {
-	cc grpc.ClientConnInterface
+	cc *grpc.ClientConn
 }
 
-func NewCommanderClient(cc grpc.ClientConnInterface) CommanderClient {
+func NewCommanderClient(cc *grpc.ClientConn) CommanderClient {
 	return &commanderClient{cc}
 }
 
@@ -156,9 +230,19 @@ func (c *commanderClient) UpdateCron(ctx context.Context, in *Cron, opts ...grpc
 	return out, nil
 }
 
+func (c *commanderClient) Debug(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DebugRes, error) {
+	out := new(DebugRes)
+	err := c.cc.Invoke(ctx, "/rpc.Commander/Debug", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommanderServer is the server API for Commander service.
 type CommanderServer interface {
 	UpdateCron(context.Context, *Cron) (*CronRes, error)
+	Debug(context.Context, *Empty) (*DebugRes, error)
 }
 
 // UnimplementedCommanderServer can be embedded to have forward compatible implementations.
@@ -167,6 +251,9 @@ type UnimplementedCommanderServer struct {
 
 func (*UnimplementedCommanderServer) UpdateCron(ctx context.Context, req *Cron) (*CronRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCron not implemented")
+}
+func (*UnimplementedCommanderServer) Debug(ctx context.Context, req *Empty) (*DebugRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Debug not implemented")
 }
 
 func RegisterCommanderServer(s *grpc.Server, srv CommanderServer) {
@@ -191,6 +278,24 @@ func _Commander_UpdateCron_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Commander_Debug_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommanderServer).Debug(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpc.Commander/Debug",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommanderServer).Debug(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Commander_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "rpc.Commander",
 	HandlerType: (*CommanderServer)(nil),
@@ -198,6 +303,10 @@ var _Commander_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCron",
 			Handler:    _Commander_UpdateCron_Handler,
+		},
+		{
+			MethodName: "Debug",
+			Handler:    _Commander_Debug_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

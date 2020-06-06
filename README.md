@@ -1,4 +1,4 @@
-![build & release](https://github.com/aaronzjc/mu/workflows/build%20&%20release/badge.svg)
+![Master CI](https://github.com/aaronzjc/mu/workflows/Master%20CI/badge.svg)
 
 ## 项目
 
