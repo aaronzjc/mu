@@ -4,11 +4,13 @@
 
 ### 介绍
 
-热榜聚合这个产品已经有很多很多了。我只是按照自己的想法写了个自己用的而已。
+热榜聚合这个产品已经有很多很多了。按照自己的想法写了个自己用的。
 
-主要是为了学习Go开发，目前使用到的技术栈
+主要目的是为了学习Go开发，以及其他技术实践，目前使用到的技术栈
 
-+ Go, Vue.js，MySQL, Redis
++ Golang
++ Gin, gRpc, Vue.js 
++ MySQL, Redis
 + Github Actions，Portainer 
 + Docker，Docker Swarm
 
