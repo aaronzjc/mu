@@ -14,6 +14,7 @@ import * as ls from "@/tools/ls"
 client.interceptors.response.use(resp => {
   let res = resp.data;
   if (res.code === 10003) {
+    ls.Del("token")
     router.push({"name": "login"}).catch(() => {});
     return Promise.reject(resp);
   }
