@@ -28,8 +28,9 @@ type Config struct {
 		Addr string `json:"addr"`
 	} `json:"commander"`
 	Redis struct {
-		Host string `json:"host"`
-		Port int    `json:"port"`
+		Host     string `json:"host"`
+		Port     int    `json:"port"`
+		Password string `json:"password"`
 	} `json:"redis"`
 	Db struct {
 		Host     string `json:"host"`
