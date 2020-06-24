@@ -1,4 +1,4 @@
-FROM scratch as commander
+FROM alpine:3.7 as commander
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir -p /app/bin /app/conf
@@ -9,7 +9,7 @@ VOLUME /app/conf
 WORKDIR /app/bin
 CMD ["./commander"]
 
-FROM scratch as agent
+FROM alpine:3.7 as agent
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir -p /app/bin
@@ -18,7 +18,7 @@ WORKDIR /app/bin
 EXPOSE 7990
 CMD ["./agent"]
 
-FROM scratch as api
+FROM alpine:3.7 as api
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN mkdir -p /app/bin /app/conf app/public
