@@ -7,6 +7,7 @@ const FILES_TO_CACHE = [
     "/favicon.png",
     "/pwa/imgs/android-chrome-512x512.png",
     "/pwa/imgs/android-chrome-192x192.png",
+    "/pwa/imgs/apple-touch-icon.png",
     OFFLINE_PAGE
 ];
 
