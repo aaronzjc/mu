@@ -2,6 +2,7 @@ package commander
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"mu/internal/svc/rpc"
@@ -10,7 +11,9 @@ import (
 	"mu/internal/util/logger"
 	"net"
 	"strconv"
+	"strings"
 	"time"
+	"os"
 )
 
 const idMachine = "id_machine"
@@ -53,6 +56,11 @@ func RegisterRpcServer(addr string) {
 
 // 初始化，分配一个ID，并且选择一个主节点
 func InitCommander() {
+	env := strings.ToLower(os.Getenv("APP_ENV"))
+	if env == "production" || env == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	redis := cache.RedisConn()
 
 	// 初始化当前节点ID
