@@ -103,8 +103,8 @@ func MasterDuty() {
 				logger.Info("empty queue, break")
 				break
 			}
+			logger.Info("receive update [site = %s] from queue", data.Val())
 			schedule.JobSchedule.UpdateJob(data.Val())
-			logger.Info("Rpc UpdateCron [site = %s] success !", data)
 		}
 	}
 }
