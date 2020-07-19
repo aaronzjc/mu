@@ -359,13 +359,24 @@ func (s *Schedule) InitJobs() {
 		logger.Info("Done addJob [site = %s]", site.Key)
 	}
 
+	jobName := "heart_beat"
 	job := &CheckJob{
-		Name: "heart_beat",
+		Name: jobName,
 		Spec: "*/5 * * * *",
 	}
 
 	// 增加一个定时任务检查服务器状态
-	_, _ = s.JobCron.AddJob(job.Spec, job)
+	jobId, _ := s.JobCron.AddJob(job.Spec, job)
+	s.JobMap.Store(jobName, jobId)
+}
+
+func (s *Schedule) TruncateJobs() error {
+	s.JobMap.Range(func(k, v interface{}) bool {
+		s.JobCron.Remove(v.(cron.EntryID))
+		s.JobMap.Delete(k)
+		return true
+	})
+	return nil
 }
 
 func (s *Schedule) AddJob(site model.Site) error {
