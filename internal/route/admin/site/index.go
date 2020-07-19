@@ -164,8 +164,12 @@ func UpdateSite(c *gin.Context) {
 		client := rpc.NewCommanderClient(conn)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 		defer cancel()
-		client.UpdateCron(ctx, &rpc.Cron{Site: om.Key})
-		logger.Info("remote update cron [%s]", om.Key)
+		_, err := client.UpdateCron(ctx, &rpc.Cron{Site: om.Key})
+		if err != nil {
+			logger.Error("remote update cron error. err = %s", err.Error())
+		} else {
+			logger.Info("remote update cron [%s]", om.Key)
+		}
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", nil)

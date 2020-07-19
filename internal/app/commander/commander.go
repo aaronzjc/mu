@@ -27,6 +27,7 @@ type CommanderServer struct{}
 func (commander *CommanderServer) UpdateCron(ctx context.Context, req *rpc.Cron) (*rpc.CronRes, error) {
 	redis := cache.RedisConn()
 	redis.LPush(jobVisor, req.Site)
+	logger.Info("Rpc UpdateCron [site = %s] success !", req.Site)
 	return &rpc.CronRes{Success: true}, nil
 }
 
@@ -76,8 +77,9 @@ func MasterDuty() {
 
 	for {
 		<- t.C
-		if isLeader {
+		if !isLeader {
 			// 再次判断是否是master，可能中途出现状况，执行了主从切换
+			logger.Info("%s no more master, done own duty", id)
 			break
 		}
 
@@ -122,6 +124,7 @@ func ManageMaster() {
 			if ok := redis.SetNX(election, id, time.Second * 10); ok.Val() {
 				logger.Info("election done, current master is %s", id)
 				masterId = id
+				isLeader = true
 				// 选举成功，恭喜当上老大
 				go MasterDuty()
 			}
