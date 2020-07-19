@@ -87,7 +87,7 @@ func MasterDuty() {
 		<- t.C
 		if !isLeader {
 			// 再次判断是否是master，可能中途出现状况，执行了主从切换
-			logger.Info("%s no more master, done own duty", id)
+			logger.Debug("%s no more master, done own duty", id)
 			break
 		}
 
@@ -95,16 +95,16 @@ func MasterDuty() {
 
 		// 上报自己的状态
 		redis.Set(election, id, time.Second * 10)
-		logger.Info("Health Set success , time at %v", time.Now())
+		logger.Debug("Health Set success , time at %v", time.Now())
 
 		for {
 			data := redis.LPop(jobVisor)
 			if data.Val() == "" {
-				logger.Info("empty queue, break")
+				logger.Debug("empty queue, break")
 				break
 			}
+			logger.Info("receive update [site = %s] from queue", data.Val())
 			schedule.JobSchedule.UpdateJob(data.Val())
-			logger.Info("Rpc UpdateCron [site = %s] success !", data)
 		}
 	}
 }
@@ -125,7 +125,7 @@ func ManageMaster() {
 		var needElection bool
 		if masterId == "" {
 			needElection = true
-			logger.Info("need re-election")
+			logger.Debug("need re-election")
 		}
 
 		if needElection {
