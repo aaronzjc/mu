@@ -132,9 +132,12 @@ func ManageMaster() {
 			if ok := redis.SetNX(election, id, time.Second * 10); ok.Val() {
 				logger.Info("election done, current master is %s", id)
 				masterId = id
-				isLeader = true
-				// 选举成功，恭喜当上老大
-				go MasterDuty()
+				// 只有之前不是leader，新当上leader才走这里
+				if !isLeader {
+					isLeader = true
+					// 选举成功，恭喜当上老大
+					go MasterDuty()
+				}
 			}
 		}
 
