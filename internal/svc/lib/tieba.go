@@ -12,8 +12,8 @@ const SITE_TIEBA = "tieba"
 var TiebaTabs = []map[string]string{
 	{
 		"tag":  "beiguo",
-		"name": "背锅吧",
-		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=背锅&fr=search",
+		"name": "抗压背锅吧",
+		"url":  "https://tieba.baidu.com/f?ie=utf-8&kw=抗压背锅&fr=search",
 	},
 	{
 		"tag":  "ruozhi",
