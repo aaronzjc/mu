@@ -25,6 +25,10 @@ func Config(c *gin.Context) {
 			"name": "Github登录",
 			"url":  fmt.Sprintf("%s%s", cnf.ServerUrl(), path),
 		},
+		{
+			"name": "微博登录",
+			"url": fmt.Sprintf("%s%s", cnf.ServerUrl(), path),
+		},
 	}
 
 	req.JSON(c, req.CodeSuccess, "成功", authCnf)
