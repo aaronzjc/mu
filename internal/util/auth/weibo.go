@@ -9,6 +9,7 @@ import (
 	"mu/internal/util/logger"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 type WeiboAccessToken struct {
@@ -85,7 +86,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	var uidRes map[string]string
+	var uidRes map[string]int
 	err = json.Unmarshal(body, &uidRes)
 	if err != nil {
 		logger.Error("error get weibo uid e = %v", err)
@@ -95,7 +96,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	uid := uidRes["uid"]
 
 	// 根据UID获取信息
-	api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid)
+	api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.Itoa(uid))
 	resp, err = http.Get(api)
 	if err != nil {
 		logger.Error("request user failed %s .", err.Error())

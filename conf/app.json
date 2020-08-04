@@ -38,8 +38,8 @@
             "admins": ["aaronzjc"]
         },
         "weibo": {
-            "client_id": "1111111111",
-            "client_secret": "jklsadjfaksdjflsjdflsjfjsdkfjl",
+            "client_id": "111",
+            "client_secret": "222",
             "admins": ["2505245962"]
         }
     },
