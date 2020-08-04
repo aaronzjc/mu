@@ -86,7 +86,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	var uidRes map[string]int64
+	var uidRes map[string]string
 	err = json.Unmarshal(body, &uidRes)
 	if err != nil {
 		logger.Error("error get weibo uid e = %v", err)
@@ -96,7 +96,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	uid := uidRes["uid"]
 
 	// 根据UID获取信息
-	api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.FormatInt(uid, 10))
+	api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid)
 	resp, err = http.Get(api)
 	if err != nil {
 		logger.Error("request user failed %s .", err.Error())
