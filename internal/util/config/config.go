@@ -45,6 +45,11 @@ type Config struct {
 			ClientSecret string   `json:"client_secret"`
 			Admins       []string `json:"admins"`
 		} `json:"github"`
+		Weibo struct {
+			ClientId     string   `json:"client_id"`
+			ClientSecret string   `json:"client_secret"`
+			Admins       []string `json:"admins"`
+		} `json:"weibo"`
 	} `json:"auth"`
 	Salt string `json:"salt"`
 }

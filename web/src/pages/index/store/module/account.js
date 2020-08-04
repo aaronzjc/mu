@@ -1,6 +1,7 @@
 const state = {
     id: 0,
     username: "",
+    nickname: "",
     avatar: ""
 };
 
@@ -10,6 +11,9 @@ const getters = {
     },
     getUsername(state) {
         return state.username;
+    },
+    getNickname(state) {
+        return state.nickname;
     },
     getAvatar(state) {
         return state.avatar;
@@ -26,6 +30,7 @@ const mutations = {
     initUser(state, info) {
         state.id = info.id;
         state.username = info.username;
+        state.nickname = info.nickname;
         state.avatar = info.avatar;
     }
 };

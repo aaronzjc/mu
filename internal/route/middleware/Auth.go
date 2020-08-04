@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"github.com/gin-gonic/gin"
 	"mu/internal/model"
+	"mu/internal/util/auth"
 	"mu/internal/util/config"
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
@@ -46,23 +47,30 @@ func ApiAuth(admin bool) gin.HandlerFunc {
 			req.JSON(c, req.CodeAuthFailed, "禁止访问", nil)
 			c.Abort()
 			return
-		} else {
-			if admin {
-				cnf := config.NewConfig()
-				if ok, _ := tool.ArrSearch(user.Username, cnf.Auth.Github.Admins); !ok {
-					if ok, _ = tool.ArrSearch("everyone", cnf.Auth.Github.Admins); !ok {
-						req.JSON(c, req.CodeForbidden, "不好意思，您没有权限。请联系管理员。", nil)
-						c.Abort()
-						return
-					}
+		}
+
+		u, _ := user.FetchRow(model.Query{
+			Query: "`id` = ?",
+			Args:  []interface{}{user.ID},
+		})
+
+		if admin {
+			var admins []string
+			cnf := config.NewConfig()
+			if u.AuthType == auth.TYPE_GITHUB {
+				admins = cnf.Auth.Github.Admins
+			} else if u.AuthType == auth.TYPE_WEIBO {
+				admins = cnf.Auth.Weibo.Admins
+			}
+			if ok, _ := tool.ArrSearch(user.Username, admins); !ok {
+				if ok, _ = tool.ArrSearch("everyone", admins); !ok {
+					req.JSON(c, req.CodeForbidden, "不好意思，您没有权限。请联系管理员。", nil)
+					c.Abort()
+					return
 				}
 			}
-			u, _ := user.FetchRow(model.Query{
-				Query: "`username` = ?",
-				Args:  []interface{}{user.Username},
-			})
-			c.Set(LoginUser, u.ID)
 		}
+		c.Set(LoginUser, u.ID)
 
 		c.Next()
 	}

@@ -10,10 +10,10 @@ import (
 	"mu/internal/util/cache"
 	"mu/internal/util/logger"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"time"
-	"os"
 )
 
 const idMachine = "id_machine"
@@ -21,7 +21,7 @@ const jobVisor = "job_visor"
 const election = "election"
 
 var (
-	id	string
+	id       string
 	isLeader bool
 )
 
@@ -84,7 +84,7 @@ func MasterDuty() {
 	defer t.Stop()
 
 	for {
-		<- t.C
+		<-t.C
 		if !isLeader {
 			// 再次判断是否是master，可能中途出现状况，执行了主从切换
 			logger.Debug("%s no more master, done own duty", id)
@@ -94,7 +94,7 @@ func MasterDuty() {
 		redis := cache.RedisConn()
 
 		// 上报自己的状态
-		redis.Set(election, id, time.Second * 10)
+		redis.Set(election, id, time.Second*10)
 		logger.Debug("Health Set success , time at %v", time.Now())
 
 		for {
@@ -118,7 +118,7 @@ func ManageMaster() {
 	t := time.NewTicker(time.Second * 3)
 	defer t.Stop()
 	for {
-		<- t.C
+		<-t.C
 		redis := cache.RedisConn()
 		masterId := redis.Get(election).Val()
 
@@ -129,7 +129,7 @@ func ManageMaster() {
 		}
 
 		if needElection {
-			if ok := redis.SetNX(election, id, time.Second * 10); ok.Val() {
+			if ok := redis.SetNX(election, id, time.Second*10); ok.Val() {
 				logger.Info("election done, current master is %s", id)
 				masterId = id
 				// 只有之前不是leader，新当上leader才走这里

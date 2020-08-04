@@ -141,6 +141,9 @@ func (u *User) CheckToken() (bool, error) {
 	if login.ID <= 0 {
 		return false, errors.New("user not exists")
 	}
+
+	u.ID = login.ID
+
 	if login.ExpireAt <= time.Now().Unix() {
 		return false, errors.New("token expired")
 	}

@@ -26,14 +26,14 @@
         </template>
         <template v-else>
             <div class="mini-navbar-opt" v-show="open">
-                <span class="navbar-item">欢迎，{{ $store.getters['account/getUsername'] }}</span>
+                <span class="navbar-item">欢迎，{{ $store.getters['account/getNickname'] }}</span>
                 <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
                 <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
                 <a class="navbar-item" @click="logout">退出登录</a>
             </div>
 
             <div class="navbar-item has-dropdown is-hoverable navbar-opt">
-                <a class="navbar-link">{{ $store.getters['account/getUsername'] }}</a>
+                <a class="navbar-link">{{ $store.getters['account/getNickname'] }}</a>
 
                 <div class="navbar-dropdown is-right">
                     <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
