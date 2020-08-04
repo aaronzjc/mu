@@ -5,12 +5,12 @@
         "https": false,
         "host": "api.memosa.local:7980",
         "port": ":7980",
-        "static": true
+        "static": false
     },
 
     "frontend": {
-        "index": "http://mu.memosa.local:8081/#/",
-        "admin": "http://mu.memosa.local:8081/admin#/"
+        "index": "http://mu.memosa.local:8080/#/",
+        "admin": "http://mu.memosa.local:8080/admin#/"
     },
 
     "commander": {
@@ -25,9 +25,9 @@
 
     "db": {
         "host": "127.0.0.1",
-        "port": 3306,
+        "port": 3307,
         "user": "root",
-        "password": "123456",
+        "password": "root",
         "database": "mu"
     },
 
@@ -38,8 +38,8 @@
             "admins": ["aaronzjc"]
         },
         "weibo": {
-            "client_id": "1653091935",
-            "client_secret": "564fbd4523268e20122ce0259367480a",
+            "client_id": "1111111111",
+            "client_secret": "jklsadjfaksdjflsjdflsjfjsdkfjl",
             "admins": ["2505245962"]
         }
     },

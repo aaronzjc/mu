@@ -28,6 +28,7 @@ export default {
                     this.$store.dispatch("account/initUser", {
                         id: info.id,
                         username: info.username,
+                        nickname: info.nickname,
                         avatar: info.avatar
                     });
                 } else {
