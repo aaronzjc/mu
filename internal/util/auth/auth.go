@@ -46,17 +46,18 @@ func New(by string) Auth {
 }
 
 func AvailableWays(from string) []map[string]string {
+	path := "/oauth/auth"
 	cnf := config.NewConfig()
 	return []map[string]string{
 		{
 			"name": "Github登录",
 			"type": BY_GITHUB,
-			"url":  fmt.Sprintf("%s?from=%s&by=%s", cnf.ServerUrl(), from, BY_GITHUB),
+			"url":  fmt.Sprintf("%s%s?from=%s&by=%s", cnf.ServerUrl(), path, from, BY_GITHUB),
 		},
 		{
 			"name": "微博登录",
 			"type": BY_WEIBO,
-			"url":  fmt.Sprintf("%s?from=%s&by=%s", cnf.ServerUrl(), from, BY_WEIBO),
+			"url":  fmt.Sprintf("%s%s?from=%s&by=%s", cnf.ServerUrl(), path, from, BY_WEIBO),
 		},
 	}
 }
