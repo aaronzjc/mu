@@ -1,12 +1,15 @@
 package lib
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"github.com/PuerkitoBio/goquery"
+	"io"
 	"io/ioutil"
 	"mu/internal/util/logger"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -14,11 +17,13 @@ import (
 const (
 	CrawApi = iota + 1
 	CrawHtml
+	CrawNew
 )
 
 const (
 	CardText = iota
 	CardRichText
+	CardVideo
 )
 
 // 热榜新闻
@@ -29,6 +34,7 @@ type Hot struct {
 	Rank      float64 `json:"rank"`
 	OriginUrl string  `json:"origin_url"`
 	Card      uint8   `json:"card_type"`
+	Ext 	  map[string]interface{} `json:"ext"`
 }
 
 // 热榜新闻列表
@@ -48,14 +54,16 @@ type Link struct {
 	Key string
 	Url string
 	Tag string
+	Method string
+
 	Sp  Spider
 }
 
 // 抓取的页面信息
 type Page struct {
 	Link    Link
-	Content string
 
+	Content string
 	Doc  *goquery.Document
 	Json []map[string]interface{}
 
@@ -153,6 +161,82 @@ func (s *Site) Craw(link Link, headers map[string]string) (Page, error) {
 	return page, nil
 }
 
+func (s *Site) FetchData(link Link, params map[string]string, headers map[string]string) (res Page, err error) {
+	var data io.Reader
+	// 构造请求参数
+	switch link.Method {
+	case "GET":
+	case "POST":
+		var contentType string
+		contentType, ok := headers["Content-Type"];
+		if !ok {
+			contentType = "application/json"
+			headers["Content-Type"] = "application/json"
+		}
+		switch contentType {
+		case "application/json":
+			var jstr []byte
+			jstr, err = json.Marshal(params)
+			data = bytes.NewReader(jstr)
+		case "application/x-www-form-urlencoded":
+			dstr := url.Values{}
+			for k, v := range params {
+				dstr.Add(k, v)
+			}
+			data = strings.NewReader(dstr.Encode())
+		}
+	default:
+		link.Method = "GET"
+	}
+
+	if err != nil {
+		return
+	}
+
+	client := http.Client{}
+	req, err := http.NewRequest(link.Method, link.Url, data)
+	if err != nil {
+		logger.Error("init http request error e = %v", err)
+		return
+	}
+
+	// 添加浏览器头
+	if _, ok := headers["User-Agent"]; !ok {
+		req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
+	}
+	if len(headers) > 0 {
+		for k, v := range headers {
+			if k == "" || v == "" {
+				continue
+			}
+			req.Header.Add(k, v)
+		}
+	}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+	if err != nil {
+		logger.Error("request error e = %v", err)
+		return
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	bodyStr := string(body)
+
+	var doc *goquery.Document
+	if s.CrawType == CrawHtml {
+		doc, err = goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
+		if err != nil {
+			return
+		}
+	}
+
+	return Page{
+		Link:    link,
+		Content: bodyStr,
+		Doc:     doc,
+	}, nil
+}
+
 func FSite(t string) Spider {
 	switch t {
 	case SITE_V2EX:
@@ -161,6 +245,8 @@ func FSite(t string) Spider {
 		return &Chouti{NewSite(t)}
 	case SITE_WEIBO:
 		return &Weibo{NewSite(t)}
+	case SITE_WBVIDEO:
+		return &Wbvideo{NewSite(t)}
 	case SITE_ZHIHU:
 		return &Zhihu{NewSite(t)}
 	case SITE_GUANGGU:
@@ -209,6 +295,15 @@ func NewSite(t string) Site {
 			Desc:     "微博热搜",
 			CrawType: CrawHtml,
 			Tabs:     WeiboTabs,
+		}
+	case SITE_WBVIDEO:
+		return Site{
+			Name: "微博视频",
+			Key: t,
+			Root: "https://weibo.com/tv/home",
+			Desc: "微博视频榜单",
+			CrawType: CrawApi,
+			Tabs: WbvideoTabs,
 		}
 	case SITE_ZHIHU:
 		return Site{
