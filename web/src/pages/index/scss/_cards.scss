@@ -72,16 +72,14 @@
     justify-content: left;
     align-items: center;
     .hot-cover {
-      display: unset;
       margin-right: 8px;
+      position: relative;
       img {
-        float: left;
         border-radius: 4px 4px;
         width: 128px;
         display: block;
       }
       .rank {
-        float: left;
         display: block;
         width: 24px;
         height: 16px;
@@ -90,6 +88,9 @@
         font-size: 8px;
         background: #ffaf24;
         color:#fff;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
     .hot-content {

@@ -2,6 +2,7 @@
     <div class="hot card2">
         <div class="hot-item" @click="redirect(item.origin_url)">
             <div class="hot-cover">
+                <span class="rank">{{ idx+1 }}</span>
                 <img src="../../assets/video.jpg" alt="">
             </div>
             <div class="hot-content">
