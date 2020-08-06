@@ -1,12 +1,14 @@
 package lib
 
 import (
+	"bytes"
 	"encoding/json"
-	"errors"
 	"github.com/PuerkitoBio/goquery"
+	"io"
 	"io/ioutil"
 	"mu/internal/util/logger"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -19,16 +21,18 @@ const (
 const (
 	CardText = iota
 	CardRichText
+	CardVideo
 )
 
-// 热榜新闻
+// 热榜
 type Hot struct {
-	Key       string  `json:"key"`
-	Title     string  `json:"title"`
-	Desc      string  `json:"desc"`
-	Rank      float64 `json:"rank"`
-	OriginUrl string  `json:"origin_url"`
-	Card      uint8   `json:"card_type"`
+	Key       string            `json:"key"`
+	Title     string            `json:"title"`
+	Desc      string            `json:"desc"`
+	Rank      float64           `json:"rank"`
+	OriginUrl string            `json:"origin_url"`
+	Card      uint8             `json:"card_type"`
+	Ext       map[string]string `json:"ext"`
 }
 
 // 热榜新闻列表
@@ -45,85 +49,24 @@ type Spider interface {
 
 // 链接信息
 type Link struct {
-	Key string
-	Url string
-	Tag string
-	Sp  Spider
+	Key    string
+	Url    string
+	Tag    string
+	Method string
+
+	Sp Spider
 }
 
 // 抓取的页面信息
 type Page struct {
-	Link    Link
-	Content string
+	Link Link
 
-	Doc  *goquery.Document
-	Json []map[string]interface{}
+	Content string
+	Doc     *goquery.Document
+	Json    []map[string]interface{}
 
 	List []Hot
 	T    time.Time
-}
-
-func CrawJSON(link Link) (Page, error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", link.Url, nil)
-	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
-	resp, err := client.Do(req)
-	if err != nil {
-		logger.Error("CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
-		return Page{}, err
-	}
-
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	var list HotList
-	if err := json.Unmarshal(body, &list); err != nil {
-		logger.Error(err.Error())
-		return Page{}, err
-	}
-
-	return Page{
-		Link:    link,
-		Content: string(body),
-		Json:    nil,
-	}, nil
-}
-
-func CrawHTML(link Link, headers map[string]string) (Page, error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", link.Url, nil)
-	if _, ok := headers["User-Agent"]; !ok {
-		req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
-	}
-	if len(headers) > 0 {
-		for k, v := range headers {
-			if k == "" || v == "" {
-				continue
-			}
-			req.Header.Add(k, v)
-		}
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		logger.Error("CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
-		return Page{}, err
-	}
-
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
-	bodyStr := string(body)
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
-	if err != nil {
-		logger.Error("Encode html error , err = %s\n", err.Error())
-	}
-
-	return Page{
-		Link:    link,
-		Content: bodyStr,
-		Doc:     doc,
-	}, nil
 }
 
 // 站点信息
@@ -136,21 +79,83 @@ type Site struct {
 	Tabs     []map[string]string
 }
 
-func (s *Site) Craw(link Link, headers map[string]string) (Page, error) {
-	var page Page
-	var err error
-	if s.CrawType == CrawApi {
-		page, err = CrawJSON(link)
-	} else if s.CrawType == CrawHtml {
-		page, err = CrawHTML(link, headers)
-	} else {
-		err = errors.New("[error] No matched CrawType")
-	}
-	if err != nil {
-		return Page{}, err
+func (s *Site) FetchData(link Link, params map[string]string, headers map[string]string) (res Page, err error) {
+	var data io.Reader
+	// 构造请求参数
+	switch link.Method {
+	case "GET":
+	case "POST":
+		var contentType string
+		contentType, ok := headers["Content-Type"]
+		if !ok {
+			contentType = "application/json"
+			if headers == nil {
+				headers = make(map[string]string)
+			}
+			headers["Content-Type"] = "application/json"
+		}
+		switch contentType {
+		case "application/json":
+			var jstr []byte
+			jstr, err = json.Marshal(params)
+			data = bytes.NewReader(jstr)
+		case "application/x-www-form-urlencoded":
+			dstr := url.Values{}
+			for k, v := range params {
+				dstr.Add(k, v)
+			}
+			data = strings.NewReader(dstr.Encode())
+		}
+	default:
+		link.Method = "GET"
 	}
 
-	return page, nil
+	if err != nil {
+		return
+	}
+
+	client := http.Client{}
+	req, err := http.NewRequest(link.Method, link.Url, data)
+	if err != nil {
+		logger.Error("init http request error e = %v", err)
+		return
+	}
+
+	// 添加浏览器头
+	if _, ok := headers["User-Agent"]; !ok {
+		req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
+	}
+	if len(headers) > 0 {
+		for k, v := range headers {
+			if k == "" || v == "" {
+				continue
+			}
+			req.Header.Add(k, v)
+		}
+	}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+	if err != nil {
+		logger.Error("request error e = %v", err)
+		return
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	bodyStr := string(body)
+
+	var doc *goquery.Document
+	if s.CrawType == CrawHtml {
+		doc, err = goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
+		if err != nil {
+			return
+		}
+	}
+
+	return Page{
+		Link:    link,
+		Content: bodyStr,
+		Doc:     doc,
+	}, nil
 }
 
 func FSite(t string) Spider {
@@ -161,6 +166,8 @@ func FSite(t string) Spider {
 		return &Chouti{NewSite(t)}
 	case SITE_WEIBO:
 		return &Weibo{NewSite(t)}
+	case SITE_WBVIDEO:
+		return &Wbvideo{NewSite(t)}
 	case SITE_ZHIHU:
 		return &Zhihu{NewSite(t)}
 	case SITE_GUANGGU:
@@ -209,6 +216,15 @@ func NewSite(t string) Site {
 			Desc:     "微博热搜",
 			CrawType: CrawHtml,
 			Tabs:     WeiboTabs,
+		}
+	case SITE_WBVIDEO:
+		return Site{
+			Name:     "微博视频",
+			Key:      t,
+			Root:     "https://weibo.com/tv/home",
+			Desc:     "微博视频榜单",
+			CrawType: CrawApi,
+			Tabs:     WbvideoTabs,
 		}
 	case SITE_ZHIHU:
 		return Site{
@@ -285,6 +301,7 @@ func AvailableSites() []string {
 		SITE_CT,
 		SITE_ZHIHU,
 		SITE_WEIBO,
+		SITE_WBVIDEO,
 		SITE_GUANGGU,
 		SITE_HACKER,
 		SITE_GITHUB,

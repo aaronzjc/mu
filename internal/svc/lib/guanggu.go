@@ -43,7 +43,7 @@ func (g *Guanggu) BuildUrl() ([]Link, error) {
 }
 
 func (g *Guanggu) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := g.Craw(link, nil)
+	page, err := g.FetchData(link, nil, nil)
 	if err != nil {
 		return Page{}, err
 	}

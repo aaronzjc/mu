@@ -28,7 +28,7 @@ var ChoutiTabs = []map[string]string{
 	},
 }
 
-type HotList struct {
+type ChoutiList struct {
 	Data    []map[string]interface{} `json:"data"`
 	Code    int                      `json:"code"`
 	Success bool                     `json:"success"`
@@ -55,12 +55,12 @@ func (c *Chouti) BuildUrl() ([]Link, error) {
 }
 
 func (c *Chouti) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := c.Craw(link, nil)
+	page, err := c.FetchData(link, nil, nil)
 	if err != nil {
 		return Page{}, err
 	}
 
-	var list HotList
+	var list ChoutiList
 	if err := json.Unmarshal([]byte(page.Content), &list); err != nil {
 		logger.Error("%v", err.Error())
 		return Page{}, err

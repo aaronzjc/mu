@@ -40,7 +40,7 @@ func (w *Weibo) BuildUrl() ([]Link, error) {
 }
 
 func (w *Weibo) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := w.Craw(link, nil)
+	page, err := w.FetchData(link, nil, nil)
 	if err != nil {
 		return Page{}, err
 	}
