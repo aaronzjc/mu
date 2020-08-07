@@ -43,7 +43,7 @@ func (t *Tieba) BuildUrl() ([]Link, error) {
 }
 
 func (t *Tieba) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := t.Craw(link, nil)
+	page, err := t.FetchData(link, nil, nil)
 	if err != nil {
 		return Page{}, err
 	}

@@ -38,7 +38,7 @@ func (z *Zaobao) BuildUrl() ([]Link, error) {
 }
 
 func (z *Zaobao) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := z.Craw(link, nil)
+	page, err := z.FetchData(link, nil, nil)
 	if err != nil {
 		return Page{}, err
 	}
