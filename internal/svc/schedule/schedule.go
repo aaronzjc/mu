@@ -232,7 +232,7 @@ func (j *CrawlerJob) Run() {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
 	client, err := Pool.Get(node.Addr)
