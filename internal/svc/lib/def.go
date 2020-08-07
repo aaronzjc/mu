@@ -3,7 +3,6 @@ package lib
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"github.com/PuerkitoBio/goquery"
 	"io"
 	"io/ioutil"
@@ -17,7 +16,6 @@ import (
 const (
 	CrawApi = iota + 1
 	CrawHtml
-	CrawNew
 )
 
 const (
@@ -26,15 +24,15 @@ const (
 	CardVideo
 )
 
-// 热榜新闻
+// 热榜
 type Hot struct {
-	Key       string  `json:"key"`
-	Title     string  `json:"title"`
-	Desc      string  `json:"desc"`
-	Rank      float64 `json:"rank"`
-	OriginUrl string  `json:"origin_url"`
-	Card      uint8   `json:"card_type"`
-	Ext 	  map[string]interface{} `json:"ext"`
+	Key       string            `json:"key"`
+	Title     string            `json:"title"`
+	Desc      string            `json:"desc"`
+	Rank      float64           `json:"rank"`
+	OriginUrl string            `json:"origin_url"`
+	Card      uint8             `json:"card_type"`
+	Ext       map[string]string `json:"ext"`
 }
 
 // 热榜新闻列表
@@ -51,87 +49,24 @@ type Spider interface {
 
 // 链接信息
 type Link struct {
-	Key string
-	Url string
-	Tag string
+	Key    string
+	Url    string
+	Tag    string
 	Method string
 
-	Sp  Spider
+	Sp Spider
 }
 
 // 抓取的页面信息
 type Page struct {
-	Link    Link
+	Link Link
 
 	Content string
-	Doc  *goquery.Document
-	Json []map[string]interface{}
+	Doc     *goquery.Document
+	Json    []map[string]interface{}
 
 	List []Hot
 	T    time.Time
-}
-
-func CrawJSON(link Link) (Page, error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", link.Url, nil)
-	req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
-	resp, err := client.Do(req)
-	if err != nil {
-		logger.Error("CrawJSON error, url = %s, err = %s\n", link.Url, err.Error())
-		return Page{}, err
-	}
-
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	var list HotList
-	if err := json.Unmarshal(body, &list); err != nil {
-		logger.Error(err.Error())
-		return Page{}, err
-	}
-
-	return Page{
-		Link:    link,
-		Content: string(body),
-		Json:    nil,
-	}, nil
-}
-
-func CrawHTML(link Link, headers map[string]string) (Page, error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", link.Url, nil)
-	if _, ok := headers["User-Agent"]; !ok {
-		req.Header.Add("User-Agent", `Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Mobile Safari/537.36`)
-	}
-	if len(headers) > 0 {
-		for k, v := range headers {
-			if k == "" || v == "" {
-				continue
-			}
-			req.Header.Add(k, v)
-		}
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		logger.Error("CrawHTML error, url = %s, err = %s\n", link.Url, err.Error())
-		return Page{}, err
-	}
-
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
-	bodyStr := string(body)
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
-	if err != nil {
-		logger.Error("Encode html error , err = %s\n", err.Error())
-	}
-
-	return Page{
-		Link:    link,
-		Content: bodyStr,
-		Doc:     doc,
-	}, nil
 }
 
 // 站点信息
@@ -144,23 +79,6 @@ type Site struct {
 	Tabs     []map[string]string
 }
 
-func (s *Site) Craw(link Link, headers map[string]string) (Page, error) {
-	var page Page
-	var err error
-	if s.CrawType == CrawApi {
-		page, err = CrawJSON(link)
-	} else if s.CrawType == CrawHtml {
-		page, err = CrawHTML(link, headers)
-	} else {
-		err = errors.New("[error] No matched CrawType")
-	}
-	if err != nil {
-		return Page{}, err
-	}
-
-	return page, nil
-}
-
 func (s *Site) FetchData(link Link, params map[string]string, headers map[string]string) (res Page, err error) {
 	var data io.Reader
 	// 构造请求参数
@@ -168,9 +86,12 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 	case "GET":
 	case "POST":
 		var contentType string
-		contentType, ok := headers["Content-Type"];
+		contentType, ok := headers["Content-Type"]
 		if !ok {
 			contentType = "application/json"
+			if headers == nil {
+				headers = make(map[string]string)
+			}
 			headers["Content-Type"] = "application/json"
 		}
 		switch contentType {
@@ -298,12 +219,12 @@ func NewSite(t string) Site {
 		}
 	case SITE_WBVIDEO:
 		return Site{
-			Name: "微博视频",
-			Key: t,
-			Root: "https://weibo.com/tv/home",
-			Desc: "微博视频榜单",
+			Name:     "微博视频",
+			Key:      t,
+			Root:     "https://weibo.com/tv/home",
+			Desc:     "微博视频榜单",
 			CrawType: CrawApi,
-			Tabs: WbvideoTabs,
+			Tabs:     WbvideoTabs,
 		}
 	case SITE_ZHIHU:
 		return Site{
@@ -380,6 +301,7 @@ func AvailableSites() []string {
 		SITE_CT,
 		SITE_ZHIHU,
 		SITE_WEIBO,
+		SITE_WBVIDEO,
 		SITE_GUANGGU,
 		SITE_HACKER,
 		SITE_GITHUB,

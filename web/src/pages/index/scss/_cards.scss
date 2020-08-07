@@ -60,3 +60,54 @@
     }
   }
 }
+
+.card2 {
+  color: $grey-dark;
+  .hot-item {
+    &:hover {
+      cursor: pointer;
+    }
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    .hot-cover {
+      margin-right: 8px;
+      position: relative;
+      img {
+        border-radius: 4px 4px;
+        width: 128px;
+        display: block;
+      }
+      .rank {
+        display: block;
+        width: 24px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        font-size: 8px;
+        background: #ffaf24;
+        color:#fff;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    .hot-content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: space-between;
+      .hot-ext {
+        font-size: .8rem;
+        p {
+          color: #666;
+        }
+        span {
+          color: #096;
+        }
+      }
+    }
+  }
+}

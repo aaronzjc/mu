@@ -2,7 +2,7 @@
 <div class="content-box">
     <HoTab @change="tabChange" :tabs="tabs"></HoTab>
 
-    <p class="hot-ts" v-if="t != '' ">更新时间: {{ t }}</p>
+    <p class="hot-ts" v-if="t !== '' ">更新时间: {{ t }}</p>
     <div class="columns hot-container">
         <div class="column hot-list">
             <component v-for="(hot, idx) in list" :is="CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>

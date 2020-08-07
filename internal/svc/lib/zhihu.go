@@ -38,7 +38,7 @@ func (z *Zhihu) BuildUrl() ([]Link, error) {
 }
 
 func (z *Zhihu) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := z.Craw(link, headers)
+	page, err := z.FetchData(link, nil, headers)
 	if err != nil {
 		return Page{}, err
 	}

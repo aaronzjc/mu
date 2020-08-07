@@ -34,6 +34,7 @@ commander-dev:
 	./bin/commander
 
 agent-dev:
+	go fmt ./...
 	go build -o ./bin/agent ./cmd/agent/main.go
 	./bin/agent
 

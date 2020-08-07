@@ -3,7 +3,6 @@ package lib
 import (
 	"encoding/json"
 	"fmt"
-	"mu/internal/util/tool"
 	"time"
 )
 
@@ -12,43 +11,50 @@ const SITE_WBVIDEO = "wbvideo"
 var WbvideoTabs = []map[string]string{
 	{
 		"tag":  "all",
-		"url":  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard%2F4418219809678881",
+		"url":  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard",
+		"cid":  "4418213501411061",
 		"name": "全站",
 	},
-}
-
-type Wbvideo struct {
-	Site
+	{
+		"tag":  "funny",
+		"url":  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard%2F4418219809678869",
+		"cid":  "4418219809678869",
+		"name": "搞笑幽默",
+	},
 }
 
 type WbVideoList struct {
 	Code string `json:"code"`
-	Msg	 string `json:"msg"`
-	Data struct{
-		Categorys interface{} `json:"Component_Billboard_Billboardcategory"`
-		Videos struct{
+	Msg  string `json:"msg"`
+	Data struct {
+		Videos struct {
 			Next int `json:"next_cursor"`
-			List []struct{
-				Title string `json:"title"`
-				Cover string `json:"cover_image"`
-				Id 	 string `json:"mid"`
-				Oid string `json:"oid"`
-				Date string `json:"date"`
+			List []struct {
+				Title     string `json:"title"`
+				Cover     string `json:"cover_image"`
+				Id        int64  `json:"mid"`
+				Oid       string `json:"oid"`
+				Date      string `json:"date"`
 				PlayCount string `json:"play_count"`
 			} `json:"list"`
 		} `json:"Component_Billboard_Billboardlist"`
 	} `json:"data"`
 }
 
+type Wbvideo struct {
+	Site
+}
+
 func (w *Wbvideo) BuildUrl() ([]Link, error) {
 	var list []Link
-	for _, tab := range WeiboTabs {
+	for _, tab := range WbvideoTabs {
 		url := tab["url"]
 		link := Link{
-			Key: url,
-			Url: url,
-			Tag: tab["tag"],
-			Sp:  w,
+			Key:    tab["cid"],
+			Url:    url,
+			Tag:    tab["tag"],
+			Method: "POST",
+			Sp:     w,
 		}
 		list = append(list, link)
 	}
@@ -57,15 +63,16 @@ func (w *Wbvideo) BuildUrl() ([]Link, error) {
 }
 
 func (w *Wbvideo) CrawPage(link Link, headers map[string]string) (res Page, err error) {
-	var videos []map[string]interface{}
-	var nextCursor string
+	var page Page
+	var hotList []Hot
+	var nextCursor int
 	post := make(map[string]map[string]interface{})
 	for {
-		if nextCursor == "" {
+		if nextCursor == 0 {
 			post = map[string]map[string]interface{}{
 				"Component_Billboard_Billboardcategory": {},
 				"Component_Billboard_Billboardlist": {
-					"cid": "4418213501411061",
+					"cid":   link.Key,
 					"count": 20,
 				},
 			}
@@ -75,11 +82,11 @@ func (w *Wbvideo) CrawPage(link Link, headers map[string]string) (res Page, err 
 		data, _ := json.Marshal(post)
 
 		videoList := WbVideoList{}
-		page, err := w.FetchData(link, map[string]string{"data": string(data)}, headers)
+		page, err = w.FetchData(link, map[string]string{"data": string(data)}, headers)
 		if err != nil {
 			return
 		}
-		err = json.Unmarshal([]byte(page.Content), videoList)
+		err = json.Unmarshal([]byte(page.Content), &videoList)
 		if err != nil {
 			// 但凡一次报错，全部不算了
 			return
@@ -88,32 +95,30 @@ func (w *Wbvideo) CrawPage(link Link, headers map[string]string) (res Page, err 
 			break
 		}
 		for _, v := range videoList.Data.Videos.List {
-			videos = append(videos, map[string]interface{}{
-				"id": v.Id,
-				"url": fmt.Sprintf("https://weibo.com/tv/show/%s", v.Oid),
-				"title": v.Title,
-				"cover": v.Cover,
-				"date": v.Date,
-				"count": v.PlayCount,
+			hotList = append(hotList, Hot{
+				Key:       w.FetchKey(v.Oid),
+				Title:     v.Title,
+				OriginUrl: fmt.Sprintf("https://weibo.com/tv/show/%s", v.Oid),
+				Card:      CardVideo,
+				Ext: map[string]string{
+					"cover": v.Cover,
+					"date":  v.Date,
+					"score": v.PlayCount,
+				},
 			})
 		}
+		nextCursor = videoList.Data.Videos.Next
 	}
-	
+
 	res = Page{
-		Link:    link,
-		Content: "",
-		Doc:     nil,
-		Json:    nil,
-		List:    nil,
-		T:       time.Time{},
+		Link: link,
+		List: hotList,
+		T:    time.Now(),
 	}
 
 	return
 }
 
-func (w *Wbvideo) FetchKey(link string) string {
-	if link == "" {
-		return ""
-	}
-	return tool.MD55(link)
+func (w *Wbvideo) FetchKey(key string) string {
+	return key
 }
