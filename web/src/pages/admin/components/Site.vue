@@ -28,7 +28,6 @@
                     <tbody>
                     <tr v-for="(item, idx) in list" :key="idx">
                         <td>{{ item.name }}</td>
-                        <td><span class="tag is-white">{{ item.root }}</span></td>
                         <td><span class="tag is-warning" v-if="item.cron !== '' ">{{ item.cron }}</span></td>
                         <td><span class="tag is-light" v-if="item.type != 0">{{ typeMap[item.type] }}</span></td>
                         <td>
