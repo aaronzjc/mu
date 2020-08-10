@@ -106,7 +106,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	var u WeiboUser
 	err = json.Unmarshal(body, &u)
 	if err != nil {
-		logger.Error("weibo user decode failed %s .", err.Error())
+		logger.Error("weibo user decode failed src = %s, err = %s .", string(body), err.Error())
 	}
 
 	us := AuthUser{
