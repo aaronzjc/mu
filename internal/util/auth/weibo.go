@@ -9,6 +9,8 @@ import (
 	"mu/internal/util/logger"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strconv"
 )
 
 type WeiboAccessToken struct {
@@ -94,19 +96,30 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 
 	uid := uidRes["uid"]
 
-	// 根据UID获取信息
-	api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid)
-	resp, err = http.Get(api)
+	if reflect.TypeOf(uid).String() == "float64" {
+		// 根据UID获取信息
+		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.FormatFloat(uid.(float64), 'f', 0, 64))
+	} else if reflect.TypeOf(uid).String() == "string" {
+		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid.(string))
+	}
+
+	respUsr, err := http.Get(api)
+	defer respUsr.Body.Close()
 	if err != nil {
 		logger.Error("request user failed %s .", err.Error())
 		return AuthUser{}, errors.New("request weibo user failed")
 	}
-	body, _ = ioutil.ReadAll(resp.Body)
+	body, err = ioutil.ReadAll(respUsr.Body)
 
+	fmt.Println(string(body), err, api)
 	var u WeiboUser
 	err = json.Unmarshal(body, &u)
 	if err != nil {
 		logger.Error("weibo user decode failed src = %s, err = %s .", string(body), err.Error())
+	}
+
+	if u.Username == "" || u.ID == 0 {
+		return AuthUser{}, errors.New("exception")
 	}
 
 	us := AuthUser{
@@ -115,6 +128,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 		Nickname: u.Nickname,
 		Avatar:   u.Avatar,
 	}
+	fmt.Println(u)
 
 	return us, nil
 }
