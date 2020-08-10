@@ -96,11 +96,13 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 
 	uid := uidRes["uid"]
 
-	if reflect.TypeOf(uid).String() == "float64" {
-		// 根据UID获取信息
+	switch uid.(type) {
+	case float64:
 		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.FormatFloat(uid.(float64), 'f', 0, 64))
-	} else if reflect.TypeOf(uid).String() == "string" {
+	case string:
 		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid.(string))
+	default:
+		return AuthUser{}, errors.New("unknown type")
 	}
 
 	respUsr, err := http.Get(api)
