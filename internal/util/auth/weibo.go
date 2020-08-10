@@ -9,7 +9,6 @@ import (
 	"mu/internal/util/logger"
 	"net/http"
 	"net/url"
-	"strconv"
 )
 
 type WeiboAccessToken struct {
