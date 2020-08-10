@@ -7,6 +7,7 @@ import (
 	"mu/internal/model"
 	"mu/internal/util/auth"
 	"mu/internal/util/config"
+	"mu/internal/util/logger"
 	"mu/internal/util/req"
 	"net/http"
 )
@@ -77,6 +78,7 @@ func Callback(c *gin.Context) {
 	// 根据access_token获取当前用户信息
 	usr, err := ath.RequestUser(accessToken)
 	if err != nil {
+		logger.Error("request user error . e = %v", err)
 		c.String(http.StatusForbidden, "获取oauth用户信息失败")
 		return
 	}

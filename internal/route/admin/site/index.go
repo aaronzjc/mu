@@ -24,6 +24,10 @@ type ListForm struct {
 
 type UpdateForm model.SiteJson
 
+type CrawForm struct {
+	Id int `json:"id"`
+}
+
 func Info(c *gin.Context) {
 	var r InfoForm
 	if err := c.ShouldBindQuery(&r); err != nil {
@@ -179,7 +183,7 @@ func UpdateSite(c *gin.Context) {
 
 func Craw(c *gin.Context) {
 	var r InfoForm
-	if err := c.ShouldBindQuery(&r); err != nil {
+	if err := c.ShouldBindJSON(&r); err != nil {
 		req.JSON(c, req.CodeError, "参数异常", nil)
 		return
 	}

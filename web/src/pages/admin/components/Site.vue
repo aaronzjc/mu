@@ -23,13 +23,13 @@
                         <th width="5%">类型</th>
                         <th width="10%">节点</th>
                         <th width="5%">状态</th>
-                        <th width="15%">操作</th>
+                        <th width="25%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(item, idx) in list" :key="idx">
                         <td>{{ item.name }}</td>
-                        <td>{{ item.root }}</td>
+                        <td><span class="tag is-white">{{ item.root }}</span></td>
                         <td><span class="tag is-warning" v-if="item.cron !== '' ">{{ item.cron }}</span></td>
                         <td><span class="tag is-light" v-if="item.type != 0">{{ typeMap[item.type] }}</span></td>
                         <td>
