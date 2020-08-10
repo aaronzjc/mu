@@ -51,6 +51,7 @@ section.section {
   }
   .hot-container {
     margin-top:0;
+    min-height: 10rem;
 
     .hot-list {
       padding-top: 0;
@@ -64,6 +65,17 @@ section.section {
 .login {
   margin: 4rem auto !important;
   height: 40%;
+
+  .backidx {
+    background: none;
+    border:none;
+    font-size: 0.8rem;
+    color: #666;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .tag:not(body).is-light-dark {

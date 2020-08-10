@@ -3,7 +3,6 @@ import * as ls from  "./ls"
 
 const client = axios.create({
     baseURL: process.env.VUE_APP_URL,
-    timeout: 3000,
     withCredentials: true
 });
 

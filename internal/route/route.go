@@ -89,6 +89,7 @@ func RegisterRoutes() {
 		admin.GET("/site", site.Info)
 		admin.GET("/site/list", site.List)
 		admin.POST("/site/update", site.UpdateSite)
+		admin.POST("/site/craw", site.Craw)
 
 		// 用户管理
 		admin.GET("/user/list", user.List)

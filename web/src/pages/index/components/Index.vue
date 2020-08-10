@@ -36,13 +36,15 @@ export default {
     },
     data() {
         return {
-            tabs: [],
+            tabs: [
+                {"name":"Moo-Yuu","key":"新闻","tags":[{"key":"昨天","name":"昨天","enable":1},{"key":"今天","name":"今天","enable":1},{"key":"明天","name":"明天","enable":1}]},
+            ],
             selected: {
                 tab: 0,
                 tag: 0,
             },
             list: [],
-            t: "",
+            t: "还没更新呢",
 
             CardMap: CardMap
         }

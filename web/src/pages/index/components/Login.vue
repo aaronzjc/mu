@@ -14,6 +14,9 @@
             </span>
             </a>
         </div>
+        <div class="column">
+            <button class="backidx" @click="toIdx">随便看看</button>
+        </div>
     </div>
 </div>
 </template>
@@ -32,6 +35,9 @@ export default {
         }
     },
     methods: {
+        toIdx() {
+            this.$router.push({"name": "index"}).catch(() => {});
+        },
         fetchConfig() {
             Get("/oauth/config", {
                 from: "index"

@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"mu/internal/model"
 	"mu/internal/svc/rpc"
+	"mu/internal/svc/schedule"
 	"mu/internal/util/config"
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
@@ -174,6 +175,36 @@ func UpdateSite(c *gin.Context) {
 
 	req.JSON(c, req.CodeSuccess, "成功", nil)
 	return
+}
+
+func Craw(c *gin.Context) {
+	var r InfoForm
+	if err := c.ShouldBindQuery(&r); err != nil {
+		req.JSON(c, req.CodeError, "参数异常", nil)
+		return
+	}
+
+	m := &model.Site{
+		ID: r.Id,
+	}
+
+	site, err := m.FetchInfo()
+	if err != nil || site.ID <= 0 {
+		req.JSON(c, req.CodeError, "失败", nil)
+		return
+	}
+
+	job := &schedule.CrawlerJob{Site: site}
+	node, err := job.PickAgent()
+	if err == nil {
+		err = job.RunDirect(node)
+		if err == nil {
+			req.JSON(c, req.CodeSuccess, "成功", nil)
+			return
+		}
+	}
+
+	req.JSON(c, req.CodeError, err.Error(), nil)
 }
 
 func Debug(c *gin.Context) {

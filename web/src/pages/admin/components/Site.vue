@@ -55,6 +55,7 @@
                             <div class="buttons are-small">
                                 <a class="button is-primary" @click="view(idx)">查看</a>
                                 <a class="button is-warning" @click="edit(idx)">编辑</a>
+                                <a class="button is-info" @click="craw(idx)">立刻拉取</a>
                             </div>
                         </td>
                     </tr>
@@ -522,6 +523,15 @@ export default {
             var c = this.editForm.tags[idx]["enable"];
             var r = c === 0 ? 1 : 0 ;
             this.editForm.tags[idx]["enable"] = r;
+        },
+        craw(idx) {
+            Post("/admin/site/craw", {"id": this.list[idx]["id"]}).then(resp => {
+                if (resp.data.code === 10000) {
+                    alert("数据抓取成功")
+                } else {
+                    alert(resp.data.msg);
+                }
+            });
         }
     }
 }

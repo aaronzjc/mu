@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/robfig/cron/v3"
 	"google.golang.org/grpc"
 	"math/rand"
@@ -155,7 +154,7 @@ func (j *CrawlerJob) PickAgent() (model.Node, error) {
 	return nodes[idx], nil
 }
 
-func (j *CrawlerJob) RunDirect(node model.Node) {
+func (j *CrawlerJob) RunDirect(node model.Node) error {
 	var err error
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
@@ -178,7 +177,7 @@ func (j *CrawlerJob) RunDirect(node model.Node) {
 
 	if err != nil {
 		logger.Error("get rpc client failed %v .", err)
-		return
+		return err
 	}
 
 	// 从数据库获取请求header配置
@@ -201,7 +200,7 @@ func (j *CrawlerJob) RunDirect(node model.Node) {
 	})
 	if err != nil {
 		logger.Error("remote craw err %v", err)
-		return
+		return err
 	}
 
 	logger.Info("remote craw [%s] done", j.Site.Key)
@@ -213,11 +212,12 @@ func (j *CrawlerJob) RunDirect(node model.Node) {
 		data, err := json.Marshal(hotJson)
 		if err != nil {
 			logger.Error("Json_encode weibo error , err = %s .", err.Error())
-			return
+			return err
 		}
-		fmt.Println(hotStr)
 		cache.SaveToRedis(j.Site.Key, tag, string(data))
 	}
+
+	return nil
 }
 
 /**
