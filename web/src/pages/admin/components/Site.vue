@@ -17,9 +17,8 @@
                 <table class="table is-bordered">
                     <thead>
                     <tr>
-                        <th width="10%">网站</th>
-                        <th width="15%">地址</th>
-                        <th width="10%">cron</th>
+                        <th width="15%">网站</th>
+                        <th width="15%">cron</th>
                         <th width="5%">类型</th>
                         <th width="10%">节点</th>
                         <th width="5%">状态</th>
