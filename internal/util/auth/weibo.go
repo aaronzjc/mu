@@ -95,12 +95,15 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 
 	uid := uidRes["uid"]
 
-	switch uid.(type) {
+	switch t := uid.(type) {
 	case float64:
 		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.FormatFloat(uid.(float64), 'f', 0, 64))
 	case string:
 		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, uid.(string))
+	case int:
+		api = fmt.Sprintf("%s?access_token=%s&uid=%s", "https://api.weibo.com/2/users/show.json", token, strconv.Itoa(uid.(int)))
 	default:
+		logger.Error("unknown type %v", t)
 		return AuthUser{}, errors.New("unknown type")
 	}
 
