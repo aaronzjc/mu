@@ -85,7 +85,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	var uidRes map[string]string
+	var uidRes map[string]interface{}
 	err = json.Unmarshal(body, &uidRes)
 	if err != nil {
 		logger.Error("error get weibo uid e = %v", err)
