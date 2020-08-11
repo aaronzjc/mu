@@ -65,6 +65,7 @@ func (auth WeiboAuth) RequestAccessToken(code string) (string, error) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	var data WeiboAccessToken
 	err = json.Unmarshal(body, &data)
+	logger.Info("access_token = %s", string(body))
 	if err != nil {
 		return "", errors.New("RequestAccessToken decode json failed")
 	}
@@ -85,6 +86,7 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 		return AuthUser{}, errors.New("requestUid api failed")
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
+	logger.Info("uid = %s", string(body))
 
 	var uidRes map[string]interface{}
 	err = json.Unmarshal(body, &uidRes)
@@ -94,6 +96,10 @@ func (auth WeiboAuth) RequestUser(token string) (AuthUser, error) {
 	}
 
 	uid := uidRes["uid"]
+
+	if uid == nil {
+		return AuthUser{}, errors.New("fetch uid failed")
+	}
 
 	switch t := uid.(type) {
 	case float64:
