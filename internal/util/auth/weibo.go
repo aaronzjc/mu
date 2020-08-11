@@ -46,6 +46,7 @@ func (auth WeiboAuth) RedirectAuth() string {
 
 func (auth WeiboAuth) RequestAccessToken(code string) (string, error) {
 	api := "https://api.weibo.com/oauth2/access_token"
+	cnf := config.NewConfig()
 	callback := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/oauth/callback")
 
 	client := &http.Client{}
