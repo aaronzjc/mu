@@ -46,6 +46,7 @@ func (auth WeiboAuth) RedirectAuth() string {
 
 func (auth WeiboAuth) RequestAccessToken(code string) (string, error) {
 	api := "https://api.weibo.com/oauth2/access_token"
+	callback := fmt.Sprintf("%s%s", cnf.ServerUrl(), "/oauth/callback")
 
 	client := &http.Client{}
 	resp, err := client.PostForm(api, url.Values{
@@ -53,7 +54,7 @@ func (auth WeiboAuth) RequestAccessToken(code string) (string, error) {
 		"client_secret": {auth.ClientSecret},
 		"grant_type":    {"authorization_code"},
 		"code":          {code},
-		"redirect_uri":  {"http://api.memosa.local:7980/oauth/callback"},
+		"redirect_uri":  {callback},
 	})
 	if err != nil {
 		logger.Error("weibo request access_token failed %s .", err.Error())
