@@ -6,7 +6,7 @@
     <template v-if="loading">
         <p>正在加载. . .</p>
     </template>
-    <template v-else>
+    <template v-if="!loading">
     <div class="columns hot-container">
         <div class="column hot-list">
             <component v-for="(hot, idx) in list" :is="CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
@@ -124,7 +124,7 @@ export default {
                     this.list = [];
                 }
                 NProgress.done();
-                // this.loading = false;
+                this.loading = false;
             }.bind(this))
         },
         tabChange(data) {
