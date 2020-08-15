@@ -6,7 +6,7 @@
     <template v-if="loading">
         <p>正在加载. . .</p>
     </template>
-    <template v-if="!loading">
+    <template v-else>
     <div class="columns hot-container">
         <div class="column hot-list">
             <component v-for="(hot, idx) in list" :is="CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
