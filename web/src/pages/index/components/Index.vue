@@ -3,16 +3,11 @@
     <HoTab @change="tabChange" :tabs="tabs"></HoTab>
 
     <p class="hot-ts" v-if="t !== '' ">更新时间: {{ t }}</p>
-    <template v-if="loading">
-        <p>正在加载. . .</p>
-    </template>
-    <template v-else>
     <div class="columns hot-container">
         <div class="column hot-list">
             <component v-for="(hot, idx) in list" :is="CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
         </div>
     </div>
-    </template>
 
     <Footer></Footer>
 </div>
@@ -50,8 +45,6 @@ export default {
             },
             list: [],
             t: "还没更新呢",
-
-            loading: false, // 为了优化CLS指标
 
             CardMap: CardMap
         }
@@ -93,7 +86,6 @@ export default {
                 return false;
             }
             NProgress.start();
-            this.loading = true;
             let cacheKey = "init_list";
             var needCache = parseInt(this.selected.tab + this.selected.tag) === 0;
             if ( needCache && landing) {
@@ -103,7 +95,6 @@ export default {
                     this.list = data.list;
                     this.t = data.t;
                     NProgress.done();
-                    this.loading = false;
                     return true;
                 }
             }
@@ -124,7 +115,6 @@ export default {
                     this.list = [];
                 }
                 NProgress.done();
-                this.loading = false;
             }.bind(this))
         },
         tabChange(data) {
