@@ -24,7 +24,6 @@ type Item struct {
 
 func List(c *gin.Context) {
 	client := cache.RedisConn()
-	defer client.Close()
 
 	key := c.Request.URL.Query()["key"][0]
 	hkey := c.Request.URL.Query()["hkey"][0]
