@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mu-api
+  namespace: k3s-apps
+spec:
+  selector:
+    matchLabels:
+      app: mu-api
+  replicas: 2
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: mu-api
+    spec:
+      volumes:
+        - name: mu-conf
+          configMap:
+            name: mu-config
+      containers:
+        - name: mu-api
+          image: aaronzjc/mu-api:latest
+          volumeMounts:
+            - name: mu-conf
+              mountPath: /app/conf
+          ports:
+            - containerPort: 7980
+          resources:
+            limits:
+              cpu: 100m
+              memory: 50Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mu-commander
+  namespace: k3s-apps
+spec:
+  selector:
+    matchLabels:
+      app: mu-commander
+  replicas: 2
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: mu-commander
+    spec:
+      volumes:
+        - name: mu-conf
+          configMap:
+            name: mu-config
+      containers:
+        - name: mu-commander
+          image: aaronzjc/mu-commander:latest
+          volumeMounts:
+            - name: mu-conf
+              mountPath: /app/conf
+          ports:
+            - containerPort: 7970
+          resources:
+            limits:
+              cpu: 100m
+              memory: 50Mi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mu-agent-nami
+  namespace: k3s-apps
+  labels:
+    app: mu-agent-nami
+spec:
+  containers:
+    - name: mu-agent-nami
+      image: aaronzjc/mu-agent:latest
+      ports:
+        - containerPort: 7990
+      resources:
+        limits:
+          cpu: 100m
+          memory: 50Mi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mu-agent-zyra
+  namespace: k3s-apps
+  labels:
+    app: mu-agent-zyra
+spec:
+  containers:
+    - name: mu-agent-zyra
+      image: aaronzjc/mu-agent:latest
+      ports:
+        - containerPort: 7990
+      resources:
+        limits:
+          cpu: 100m
+          memory: 50Mi
