@@ -10,7 +10,7 @@ on:
 jobs:
 
   Build_and_Release:
-    name: Build & Release
+    name: Build & Release & Deploy
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
