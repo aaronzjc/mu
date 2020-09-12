@@ -72,15 +72,11 @@ jobs:
           repository: aaronzjc/mu-frontend
           target: frontend
           tag_with_ref: true
-      - name: setup k8s
-        uses: azure/k8s-set-context@v1
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONF }}
-        id: setcontext
-      - name: deploy to k8s
-        uses: Azure/k8s-deploy@v1
-        with:
-          namespace: 'k3s-apps'
-          manifests: |
-            deploy/k8s/deployment.yml
+      - name: setup ktl
+        uses: azure/setup-kubectl@v1
+        id: install
+      - name: deploy
+        run: |
+          cat ${{ secrets.KUBECONF }} > kube-config
+          export KUBECONFIG=$(pwd)/kube-config
+          kubectl rollout restart -f deploy/k8s/deployment.yml -n k3s-apps
