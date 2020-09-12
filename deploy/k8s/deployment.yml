@@ -21,6 +21,7 @@ spec:
       containers:
         - name: mu-api
           image: aaronzjc/mu-api:latest
+          imagePullPolicy: Always
           volumeMounts:
             - name: mu-conf
               mountPath: /app/conf
@@ -55,6 +56,7 @@ spec:
       containers:
         - name: mu-commander
           image: aaronzjc/mu-commander:latest
+          imagePullPolicy: Always
           volumeMounts:
             - name: mu-conf
               mountPath: /app/conf
@@ -77,6 +79,7 @@ spec:
   containers:
     - name: mu-agent-nami
       image: aaronzjc/mu-agent:latest
+      imagePullPolicy: Always
       ports:
         - containerPort: 7990
       resources:
@@ -96,6 +99,7 @@ spec:
   containers:
     - name: mu-agent-zyra
       image: aaronzjc/mu-agent:latest
+      imagePullPolicy: Always
       ports:
         - containerPort: 7990
       resources:
