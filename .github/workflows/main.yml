@@ -17,61 +17,61 @@ jobs:
         uses: actions/checkout@v2
       - name: setup nodejs
         uses: actions/setup-node@v1
-#       - name: restore node cache
-#         uses: actions/cache@v2
-#         with:
-#           path: ~/.npm
-#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-node-
-#       - name: build frontend
-#         run: make vue
-#       - name: setup go env
-#         uses: actions/setup-go@v2
-#       - name: restore Go mod cache
-#         uses: actions/cache@v2
-#         with:
-#           path: ~/go/pkg/mod
-#           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-#           restore-keys: |
-#             ${{ runner.os }}-go-
-#       - name: build app dist
-#         run: |
-#           make api
-#           make commander
-#           make agent
-#       - name: release api
-#         uses: docker/build-push-action@v1.1.0
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
-#           repository: aaronzjc/mu-api
-#           target: api
-#           tag_with_ref: true
-#       - name: release commander
-#         uses: docker/build-push-action@v1.1.0
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
-#           repository: aaronzjc/mu-commander
-#           target: commander
-#           tag_with_ref: true
-#       - name: release agent
-#         uses: docker/build-push-action@v1.1.0
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
-#           repository: aaronzjc/mu-agent
-#           target: agent
-#           tag_with_ref: true
-#       - name: release frontend
-#         uses: docker/build-push-action@v1.1.0
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
-#           repository: aaronzjc/mu-frontend
-#           target: frontend
-#           tag_with_ref: true
+       - name: restore node cache
+         uses: actions/cache@v2
+         with:
+           path: ~/.npm
+           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+           restore-keys: |
+             ${{ runner.os }}-node-
+       - name: build frontend
+         run: make vue
+       - name: setup go env
+         uses: actions/setup-go@v2
+       - name: restore Go mod cache
+         uses: actions/cache@v2
+         with:
+           path: ~/go/pkg/mod
+           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+           restore-keys: |
+             ${{ runner.os }}-go-
+       - name: build app dist
+         run: |
+           make api
+           make commander
+           make agent
+       - name: release api
+         uses: docker/build-push-action@v1.1.0
+         with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
+           repository: aaronzjc/mu-api
+           target: api
+           tag_with_ref: true
+       - name: release commander
+         uses: docker/build-push-action@v1.1.0
+         with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
+           repository: aaronzjc/mu-commander
+           target: commander
+           tag_with_ref: true
+       - name: release agent
+         uses: docker/build-push-action@v1.1.0
+         with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
+           repository: aaronzjc/mu-agent
+           target: agent
+           tag_with_ref: true
+       - name: release frontend
+         uses: docker/build-push-action@v1.1.0
+         with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_PASSWORD }}
+           repository: aaronzjc/mu-frontend
+           target: frontend
+           tag_with_ref: true
       - name: setup ktl
         uses: azure/setup-kubectl@v1
         id: install
@@ -82,3 +82,4 @@ jobs:
           EOF
           export KUBECONFIG=$(pwd)/kube-config
           kubectl rollout restart -f deploy/k8s/deployment.yml -n k3s-apps
+          kubectl replace --force -f deploy/k8s/pod.yml -n k3s-apps
