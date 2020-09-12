@@ -77,6 +77,8 @@ jobs:
         id: install
       - name: deploy
         run: |
-          echo ${{ secrets.KUBECONF }} > kube-config
+          cat << EOF > kube-config
+          ${{ secrets.KUBECONF }}
+          EOF
           export KUBECONFIG=$(pwd)/kube-config
           kubectl rollout restart -f deploy/k8s/deployment.yml -n k3s-apps
