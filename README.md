@@ -4,37 +4,22 @@
 
 ### 介绍
 
-热榜聚合这个产品已经有很多很多了。按照自己的想法写了个自己用的。
+热榜聚合这个产品已经有很多很多了。按照自己的想法写了个自己用的，[点这里预览](https://github.com/aaronzjc/mu/blob/master/doc/assets/preview.png)。
 
-主要目的是为了学习Go开发，以及其他技术实践，目前使用到的技术栈
+初衷是为了学习Go开发，以及其他相关技术实践。目前使用到的技术栈
 
-+ Golang
-+ Gin, gRpc, Vue.js 
++ Golang，JS
++ Gin, gRpc, Vue.js，PWA，HTTP/2 
 + MySQL, Redis
-+ Github Actions，Portainer 
-+ Docker，Docker Swarm
++ Github Actions
++ Docker，Docker Swarm，k8s
 
-### 预览
-[这里](https://github.com/aaronzjc/mu/tree/master/doc)
+相关技术介绍
 
-### 本地运行
++ [开发说明](doc/DEV.md)
++ [一个小项目的迭代](https://memosa.cn/web/2020/07/19/mu.html)
 
-```shell
-1. 安装MySQL和Redis
-2. 执行deploy/db.sql导入数据库结构
-3. 修改配置`conf/app.json`里面的各项配置
-4. 参考deploy/stack.yml启动个各个容器
-```
-
-### 本地开发
-
-```shell
-make api-dev # api服务
-make commander-dev #调度服务
-make agent-dev # 任务执行服务
-```
-
-[开发说明](doc/DEV.md)
+本项目采用`Github Action`进行项目构建，Docker镜像打包，k8s自动部署。细节请参考项目相关文件。
 
 ### LICENSE
 
