@@ -1,7 +1,5 @@
 ![Master CI](https://github.com/aaronzjc/mu/workflows/Master%20CI/badge.svg)
 
-## 项目
-
 ### 介绍
 
 热榜聚合这个产品已经有很多很多了。按照自己的想法写了个自己用的，[点这里预览](https://github.com/aaronzjc/mu/blob/master/doc/assets/preview.png)。
@@ -19,7 +17,7 @@
 + [开发说明](doc/DEV.md)
 + [一个小项目的迭代](https://memosa.cn/web/2020/07/19/mu.html)
 
-本项目采用`Github Action`进行项目构建，Docker镜像打包，k8s自动部署。细节请参考项目相关文件。
+项目采用`Github Action`进行构建，Docker镜像打包，k8s自动部署。细节请参考项目相关文件。
 
 ### LICENSE
 
