@@ -1,0 +1,38 @@
+@include is($desktop){
+  .container {
+    max-width: 960px !important;
+  }
+  .search-form {
+    width: 50%;
+  }
+}
+
+@include until($desktop) {
+  .content-box {
+    padding: 0 0.75rem;
+  }
+  .switch {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 99;
+    top: 0;
+    left: 0;
+
+    &.sticky {
+      background: #fff;
+      box-shadow: 0px 2px 6px 0px #dadada;
+    }
+  }
+  html.dark {
+    .switch.sticky {
+      background: #181a1b;
+      box-shadow: 0px 2px 6px 0px #0c0c0c;;
+    }
+  }
+  .navbar-item.navbar-opt {
+    display: none;
+  }
+  .mini-navbar-opt {
+    display: block;
+  }
+}
