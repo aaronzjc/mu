@@ -41,6 +41,9 @@ export default {
         }
 
         onMounted(fetchConfig)
+        return {
+            state
+        }
     },
     methods: {
         toIdx() {

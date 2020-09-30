@@ -26,10 +26,6 @@ export default {
         redirect(url) {
             window.open(url)
         },
-        toggleFavor(idx) {
-            // Do nothing
-            return idx
-        }
     }
 }
 </script>

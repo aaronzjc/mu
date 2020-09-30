@@ -5,7 +5,7 @@
     <p class="hot-ts" v-if="state.t !== '' ">更新时间: {{ state.t }}</p>
     <div class="columns hot-container">
         <div class="column hot-list">
-            <component v-for="(hot, idx) in state.list" :is="state.CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
+            <component v-for="(hot, idx) in state.list" :is="state.CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx"></component>
         </div>
     </div>
 
@@ -14,15 +14,16 @@
 </template>
 
 <script>
+import { computed, provide } from "vue"
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import { Get, Post } from "@/tools/http"
+import { Get } from "@/tools/http"
 import * as ls from "@/tools/ls"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
 
-import {CardMap, Cards} from "../ext/card";
+import { CardMap, Cards } from "../ext/card";
 import { onMounted, reactive } from 'vue'
 export default {
     name: "Content",
@@ -113,6 +114,8 @@ export default {
 
         onMounted(fetchConfig(fetchList))
 
+        provide("currentSite", computed(() => state.tabs[state.selected.tab]["key"]))
+
         return {
             state,
             fetchConfig,
@@ -127,43 +130,6 @@ export default {
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
-            })
-        },
-        toggleFavor(idx) {
-            if (this.state.list[idx].mark) {
-                this.remove(idx);
-            } else {
-                this.add(idx);
-            }
-        },
-        add(idx) {
-            let item = this.state.list[idx];
-            Post("/api/favor/add", {
-                key: item.key,
-                url: item.origin_url,
-                title: item.title,
-                site: this.state.tabs[this.state.selected.tab]["key"]
-            }).then(resp => {
-                if (resp.data.code != 10000) {
-                    alert("操作失败");
-                    return false;
-                }
-
-                this.state.list[idx].mark = true;
-            })
-        },
-        remove(idx) {
-            let item = this.state.list[idx];
-            Post("/api/favor/remove", {
-                key: item.key,
-                site: this.state.tabs[this.state.selected.tab]["key"]
-            }).then(resp => {
-                if (resp.data.code != 10000) {
-                    alert("操作失败");
-                    return false;
-                }
-
-                this.state.list[idx].mark = false;
             })
         }
     },

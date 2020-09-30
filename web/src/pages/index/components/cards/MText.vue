@@ -4,7 +4,7 @@
         <a :href="item.origin_url" :title="item.title" target="_blank" rel="noopener">{{ item.title }}</a>
     </div>
     <div class="divider"></div>
-    <Opt :mark="item.mark" @toggle="toggleFavor(idx)"></Opt>
+    <Opt :item="item" :idx="idx"></Opt>
 </div>
 </template>
 
@@ -14,11 +14,6 @@ import Opt from "./Opt"
 export default {
     name: "MText",
     props: ["idx", "item"],
-    methods: {
-        toggleFavor(idx) {
-            this.$emit("toggle-favor", idx);
-        }
-    },
     components: {
         Opt
     }
