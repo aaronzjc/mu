@@ -260,8 +260,8 @@
   display: flex;
   display: -webkit-box;
   display: -ms-flexbox;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
   justify-content: flex-start;
 
   .control {
