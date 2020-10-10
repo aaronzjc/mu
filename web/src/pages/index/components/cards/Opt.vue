@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, inject } from 'vue'
 import { Post } from "@/tools/http"
 
 export default {
@@ -22,6 +22,7 @@ export default {
     props: ["idx", "item"],
     setup(props) {
         const site = inject("currentSite")
+        const updateMark = inject("updateMark")
         const state = reactive({
             mark: props.item.mark
         })
@@ -38,6 +39,7 @@ export default {
                 return false;
             }
             state.mark = true
+            updateMark(props.idx, true)
         }
         async function remove() {
             let resp = await Post("/api/favor/removee", {
@@ -49,6 +51,7 @@ export default {
                 return false;
             }
             state.mark = false
+            updateMark(props.idx, false)
         }
 
         return {

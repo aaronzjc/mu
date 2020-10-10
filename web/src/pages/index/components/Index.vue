@@ -114,6 +114,7 @@ export default {
 
         onMounted(fetchConfig(fetchList))
 
+        provide("updateMark", (idx, res) => {state.list[idx]["mark"] = res})
         provide("currentSite", computed(() => state.tabs[state.selected.tab]["key"]))
 
         return {
