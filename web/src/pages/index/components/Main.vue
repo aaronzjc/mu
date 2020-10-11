@@ -10,10 +10,12 @@ import Navbar from "./Navbar"
 import { Get } from "@/tools/http"
 import { Get as lsGet } from "@/tools/ls"
 import { onMounted } from 'vue'
+import { useStore } from "vuex";
 
 export default {
     name: "Main",
     setup() {
+        const store = useStore()
         async function fetchUserInfo() {
             // 如果本地没有用户cookie，不发送请求了。
             let token = lsGet("token")
@@ -22,8 +24,8 @@ export default {
             }
             let resp = await Get("/api/info")
             if (resp.data.code == 10000) {
-                var info = resp.data.data;
-                this.$store.dispatch("account/initUser", {
+                let info = resp.data.data;
+                await store.dispatch("account/initUser", {
                     id: info.id,
                     username: info.username,
                     nickname: info.nickname,

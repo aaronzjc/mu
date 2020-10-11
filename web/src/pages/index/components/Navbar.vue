@@ -12,7 +12,7 @@
     </div>
 
     <div class="navbar-end">
-        <template v-if="!$store.getters['account/isLogin']">
+        <template v-if="!store.getters['account/isLogin']">
             <div class="mini-navbar-opt" v-show="state.open">
                 <a class="navbar-item" @click="toLogin">登录</a>
                 <a class="navbar-item" @click="toggleTheme">{{ state.theme === "light" ? "黑夜模式" : "白天模式" }}</a>
@@ -26,14 +26,14 @@
         </template>
         <template v-else>
             <div class="mini-navbar-opt" v-show="state.open">
-                <span class="navbar-item">欢迎，{{ $store.getters['account/getNickname'] }}</span>
+                <span class="navbar-item">欢迎，{{ store.getters['account/getNickname'] }}</span>
                 <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
                 <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
                 <a class="navbar-item" @click="logout">退出登录</a>
             </div>
 
             <div class="navbar-item has-dropdown is-hoverable navbar-opt">
-                <a class="navbar-link">{{ $store.getters['account/getNickname'] }}</a>
+                <a class="navbar-link">{{ store.getters['account/getNickname'] }}</a>
 
                 <div class="navbar-dropdown is-right">
                     <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
@@ -51,6 +51,8 @@
 import { routes } from "../router/router";
 import { Get, Set, Del } from "@/tools/ls";
 import { onMounted, reactive } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 const LIGHT = "light";
 const DARK = "dark";
@@ -59,13 +61,15 @@ const THEME_KEY = "theme";
 export default {
     name: "Navbar",
     setup() {
+        const router = useRouter()
+        const store = useStore()
         const state = reactive({
             open: false,
             rs: [], // 菜单项
             theme: ""
         })
         const initTheme = (type) => {
-            if (type != LIGHT && type != DARK) {
+            if (type !== LIGHT && type !== DARK) {
                 type = LIGHT;
             }
             var ht = document.getElementsByTagName("html")[0];
@@ -79,11 +83,11 @@ export default {
         }
 
         let go = (path) => {
-            this.$router.push(path).catch(() => {})
+            router.push(path).catch(() => {})
             state.open = false
         }
         let toLogin = () => {
-            this.$router.push({
+            router.push({
                 name: "login"
             }).catch(() => {});
         }
@@ -106,6 +110,7 @@ export default {
             initTheme(Get(THEME_KEY))
         })
         return {
+            store,
             state,
             initTheme,
             go,

@@ -23,11 +23,13 @@
 
 <script>
 import { onMounted, reactive } from 'vue'
+import { useRouter } from 'vue-router';
 import {Get} from "@/tools/http";
 
 export default {
     name: "Login",
     setup() {
+        const router = useRouter()
         const state = reactive({
             auth: []
         })
@@ -41,7 +43,7 @@ export default {
         }
 
         let toIdx = () => {
-            this.$router.push({"name": "index"}).catch(() => {});
+            router.push({"name": "index"}).catch(() => {});
         }
 
         onMounted(fetchConfig)
