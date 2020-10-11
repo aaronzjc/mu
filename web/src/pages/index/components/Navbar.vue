@@ -77,37 +77,41 @@ export default {
             state.theme = type;
             Set(THEME_KEY, state.theme, -1);
         }
+
+        let go = (path) => {
+            this.$router.push(path).catch(() => {})
+            state.open = false
+        }
+        let toLogin = () => {
+            this.$router.push({
+                name: "login"
+            }).catch(() => {});
+        }
+        let logout = () => {
+            Del("token")
+            window.location.href = "/"
+        }
+        let toggleTheme = () => {
+            if (state.theme === LIGHT) {
+                initTheme(DARK)
+            } else if (state.theme === DARK) {
+                initTheme(LIGHT)
+            }
+            initTheme(state.theme)
+            state.open = false
+        }
+
         onMounted(() => {
             state.rs = routes[0].children
             initTheme(Get(THEME_KEY))
         })
         return {
             state,
-            initTheme
-        }
-    },
-    methods: {
-        go(path) {
-            this.$router.push(path).catch(() => {});
-            this.state.open = false;
-        },
-        toLogin() {
-            this.$router.push({
-                name: "login"
-            }).catch(() => {});
-        },
-        logout() {
-            Del("token")
-            window.location.href = "/"
-        },
-        toggleTheme() {
-            if (this.state.theme === LIGHT) {
-                this.initTheme(DARK);
-            } else if (this.state.theme === DARK) {
-                this.initTheme(LIGHT);
-            }
-            this.initTheme(this.state.theme);
-            this.state.open = false;
+            initTheme,
+            go,
+            toLogin,
+            logout,
+            toggleTheme
         }
     }
 }

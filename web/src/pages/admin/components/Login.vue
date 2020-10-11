@@ -2,7 +2,7 @@
 <div class="container">
     <div class="login has-text-centered columns">
         <div class="column">
-            <h4 class="title is-4">首页登录</h4>
+            <h4 class="title is-4">管理后台</h4>
             <a v-for="(item, idx) in state.auth" :key="idx" :href="item.url"  class="button is-medium is-white" :title="item.name">
             <span class="icon is-medium">
                 <svg v-if="item.type === 'github'" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
@@ -14,16 +14,13 @@
             </span>
             </a>
         </div>
-        <div class="column">
-            <button class="backidx" @click="toIdx">随便看看</button>
-        </div>
     </div>
 </div>
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue'
 import {Get} from "@/tools/http";
+import { onMounted, reactive } from 'vue';
 
 export default {
     name: "Login",
@@ -31,24 +28,32 @@ export default {
         const state = reactive({
             auth: []
         })
+
         async function fetchConfig() {
-            let resp = await Get("/oauth/config", {from: "index"})
-            if (resp.data.code === 10000) {
-                state.auth = resp.data.data;
-            } else {
-                console.log(resp.data.msg);
+            try {
+                let resp = await Get("/oauth/config", {from: "admin"})
+                if (resp.data.code === 10000) {
+                    this.auth = resp.data.data;
+                } else {
+                    console.log(resp.data.msg);
+                }
+            } catch(err) {
+                console.log(err)
             }
         }
 
-        let toIdx = () => {
-            this.$router.push({"name": "index"}).catch(() => {});
-        }
+        onMounted(fetchConfig())
 
-        onMounted(fetchConfig)
         return {
-            state,
-            toIdx
+            state
         }
     }
 }
 </script>
+
+<style scoped>
+.login {
+    margin: 4rem auto;
+    height: 40%;
+}
+</style>

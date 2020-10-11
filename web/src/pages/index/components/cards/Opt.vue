@@ -54,19 +54,19 @@ export default {
             updateMark(props.idx, false)
         }
 
+        let toggle = () => {
+            if (state.mark == true) {
+                remove()
+            } else {
+                add()
+            }
+        }
+
         return {
             state,
             add,
-            remove
-        }
-    },
-    methods: {
-        toggle() {
-            if (this.state.mark == true) {
-                this.remove()
-            } else {
-                this.add()
-            }
+            remove,
+            toggle
         }
     }
 }

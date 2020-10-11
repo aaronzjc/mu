@@ -25,6 +25,7 @@ import Footer from "./Footer"
 
 import { CardMap, Cards } from "../ext/card";
 import { onMounted, reactive } from 'vue'
+
 export default {
     name: "Content",
     setup() {
@@ -112,6 +113,16 @@ export default {
             NProgress.done();
         }
 
+        let tabChange = (data) => {
+            state.selected = data;
+            fetchList(false);
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
+        }
+
         onMounted(fetchConfig(fetchList))
 
         provide("updateMark", (idx, res) => {state.list[idx]["mark"] = res})
@@ -120,18 +131,8 @@ export default {
         return {
             state,
             fetchConfig,
-            fetchList
-        }
-    },
-    methods: {
-        tabChange(data) {
-            this.state.selected = data;
-            this.fetchList(false);
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            })
+            fetchList,
+            tabChange
         }
     },
     components: {

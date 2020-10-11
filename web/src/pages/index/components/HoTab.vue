@@ -1,54 +1,56 @@
 <template>
 <div class="columns switch">
-    <div class="column" v-if="tabs.length > 0">
+    <div class="column" v-if="state.tabs.length > 0">
         <div class="tabs">
             <ul>
-                <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
+                <li v-for="(tab, idx) in state.tabs" :class="{ 'is-active' : idx == state.selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
             </ul>
         </div>
-        <div class="tags" v-if="tabs[selected.tab].tags.length > 0">
-            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-light-dark' : idx == selected.tag } ]" v-for="(tag, idx) in tabs[selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
+        <div class="tags" v-if="state.tabs[state.selected.tab].tags.length > 0">
+            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-light-dark' : idx == state.selected.tag } ]" v-for="(tag, idx) in state.tabs[state.selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+import { onMounted, reactive } from 'vue';
 export default {
     name: "HoTab",
-    mounted() {
-        // 监听吸顶事件
-        document.addEventListener("scroll", this.sticky);
-    },
-    data() {
-        return {
+    props: ["tabs"],
+    setup(props, ctx) {
+        const state = reactive({
             selected: {
                 tab: 0,
                 tag: 0
-            }
-        }
-    },
-    props: {
-        tabs: {
-            type: Array,
-            default: () => []
-        },
-    },
-    methods: {
-        sticky() {
+            },
+            tabs: props.tabs
+        })
+
+        let sticky = () => {
             const ele = document.getElementsByClassName("switch")[0]
             ele.classList.toggle("sticky", ele.getBoundingClientRect().top === 0)
-        },
-        switchTab(idx) {
-            this.selected = {
+        }
+        let switchTab = (idx) => {
+            state.selected = {
                 tab: idx,
                 tag: 0
             };
-            this.$emit("change", this.selected);
-        },
-        switchTag(idx) {
-            this.selected.tag = idx;
-            this.$emit("change", this.selected);
+            ctx.emit("change", state.selected);
+        }
+        let switchTag = (idx) => {
+            state.selected.tag = idx;
+            ctx.emit("change", state.selected);
+        }
+
+        onMounted(() => {
+            document.addEventListener("scroll", sticky);
+        })
+
+        return {
+            state,
+            switchTab,
+            switchTag
         }
     }
 }
