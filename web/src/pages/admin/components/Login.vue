@@ -42,7 +42,7 @@ export default {
             }
         }
 
-        onMounted(fetchConfig())
+        onMounted(fetchConfig)
 
         return {
             state
