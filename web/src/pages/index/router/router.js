@@ -38,7 +38,7 @@ const publicRoutes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory("/"),
     routes: routes.concat(publicRoutes)
 })
 

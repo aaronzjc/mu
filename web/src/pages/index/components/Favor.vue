@@ -16,11 +16,11 @@
         </div>
     </div>
 
-    <HoTab @change="tabChange" :tabs="tabs"></HoTab>
+    <HoTab @change="tabChange" :tabs="state.tabs"></HoTab>
 
     <div class="columns">
         <div class="column hot-list">
-            <div class="hot" v-for="(hot, idx) in list" :key="idx">
+            <div class="hot" v-for="(hot, idx) in state.list" :key="idx">
                 <div class="hot-item">
                     <p class="hot-ts has-text-grey">{{ hot.create_at }}</p>
                     <a :href="hot.origin_url" :title="hot.title" target="_blank">{{ hot.title }}</a>
