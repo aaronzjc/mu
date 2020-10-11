@@ -2,6 +2,7 @@ bin/
 .DS_Store
 dist
 cmd/dev
+/public/
 
 # Editor directories and files
 .idea
@@ -11,4 +12,3 @@ cmd/dev
 *.njsproj
 *.sln
 *.sw?
-/public/
