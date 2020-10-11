@@ -1,11 +1,11 @@
 <template>
 <div class="content-box">
-    <HoTab @change="tabChange" :tabs="tabs"></HoTab>
+    <HoTab @change="tabChange" :tabs="state.tabs"></HoTab>
 
-    <p class="hot-ts" v-if="t !== '' ">更新时间: {{ t }}</p>
+    <p class="hot-ts" v-if="state.t !== '' ">更新时间: {{ state.t }}</p>
     <div class="columns hot-container">
         <div class="column hot-list">
-            <component v-for="(hot, idx) in list" :is="CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx" @toggle-favor="toggleFavor"></component>
+            <component v-for="(hot, idx) in state.list" :is="state.CardMap[hot['card_type']]" :item="hot" :idx="idx" :key="idx"></component>
         </div>
     </div>
 
@@ -14,29 +14,27 @@
 </template>
 
 <script>
+import { computed, provide } from "vue"
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import Get, {Post} from "@/tools/http"
+import { Get } from "@/tools/http"
 import * as ls from "@/tools/ls"
 import HoTab from "./HoTab"
 import Footer from "./Footer"
 
-import {CardMap, Cards} from "../ext/card";
-
-const API = {
-    config: "/api/config",
-    list: "/api/list",
-};
+import { CardMap, Cards } from "../ext/card";
+import { onMounted, reactive } from 'vue'
 
 export default {
     name: "Content",
-    mounted() {
-        this.fetchConfig(this.fetchList);
-    },
-    data() {
-        return {
-            tabs: [
+    setup() {
+        const API = {
+            config: "/api/config",
+            list: "/api/list",
+        }
+        const state = reactive({
+            tab: [
                 {"name":"Moo-Yuu","key":"新闻","tags":[{"key":"昨天","name":"昨天","enable":1},{"key":"今天","name":"今天","enable":1},{"key":"明天","name":"明天","enable":1}]},
             ],
             selected: {
@@ -45,123 +43,96 @@ export default {
             },
             list: [],
             t: "还没更新呢",
-
             CardMap: CardMap
-        }
-    },
-    methods: {
-        fetchConfig(callback) {
+        })
+        
+        // 获取Tab列表
+        async function fetchConfig(callback) {
             // 使用本地缓存，减少一个请求
             let cacheKey = "tabs";
             let tabStr = ls.Get(cacheKey)
             if (tabStr !== false) {
-                this.tabs = JSON.parse(tabStr)
+                state.tabs = JSON.parse(tabStr)
                 if (typeof callback == "function") {
                     callback(true);
                 }
                 return true
             }
-            Get(API.config).then(function (resp) {
-                if (resp.data.code === 10000) {
-                    this.tabs = Object.freeze(resp.data.data);
-                    ls.Set(cacheKey, JSON.stringify(resp.data.data), 5*60)
-                } else {
-                    alert(resp.data.msg);
-                }
-                if (typeof callback == "function") {
-                    callback(true);
-                }
-            }.bind(this))
-        },
-        fetchList(landing) {
-            if (this.tabs.length === 0) {
+            let resp = await Get(API.config)
+            if (resp.data.code === 10000) {
+                state.tabs = Object.freeze(resp.data.data);
+                ls.Set(cacheKey, JSON.stringify(resp.data.data), 5*60)
+            } else {
+                alert(resp.data.msg);
+            }
+            if (typeof callback == "function") {
+                callback(true);
+            }
+        }
+
+        // 获取卡片列表
+        async function fetchList(landing) {
+            if (state.tabs.length === 0) {
                 return false;
             }
-            var key = this.tabs[this.selected.tab]["key"];
-            var hkey = undefined;
-            if (this.tabs[this.selected.tab]["tags"].length > 0) {
-                hkey = this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"];
+            let key = state.tabs[state.selected.tab]["key"]
+            let hkey = undefined;
+            if (state.tabs[state.selected.tab]["tags"].length > 0) {
+                hkey = state.tabs[state.selected.tab]["tags"][state.selected.tag]["key"];
             }
             if (hkey === undefined || key === undefined) {
                 return false;
             }
             NProgress.start();
             let cacheKey = "init_list";
-            var needCache = parseInt(this.selected.tab + this.selected.tag) === 0;
+            let needCache = parseInt(state.selected.tab + state.selected.tag) === 0;
             if ( needCache && landing) {
                 let listStr = ls.Get(cacheKey)
                 if (listStr !== false) {
                     let data = JSON.parse(listStr);
-                    this.list = data.list;
-                    this.t = data.t;
+                    state.list = data.list;
+                    state.t = data.t;
                     NProgress.done();
                     return true;
                 }
             }
-            Get(API.list, {
-                params: {
-                    key: this.tabs[this.selected.tab]["key"],
-                    hkey: this.tabs[this.selected.tab]["tags"][this.selected.tag]["key"]
-                }
-            }).then(function (resp) {
-                if (resp.data.code === 10000) {
-                    this.list = Object.freeze(resp.data.data.list);
-                    this.t = resp.data.data.t;
+            let resp = await Get(API.list, {
+                key: state.tabs[state.selected.tab]["key"],
+                hkey: state.tabs[state.selected.tab]["tags"][state.selected.tag]["key"]
+            })
+            if (resp.data.code === 10000) {
+                state.list = Object.freeze(resp.data.data.list);
+                state.t = resp.data.data.t;
 
-                    if (needCache) {
-                        ls.Set(cacheKey, JSON.stringify(resp.data.data), 60);
-                    }
-                } else {
-                    this.list = [];
+                if (needCache) {
+                    ls.Set(cacheKey, JSON.stringify(resp.data.data), 60);
                 }
-                NProgress.done();
-            }.bind(this))
-        },
-        tabChange(data) {
-            this.selected = data;
-            this.fetchList(false);
+            } else {
+                state.list = [];
+            }
+            NProgress.done();
+        }
+
+        let tabChange = (data) => {
+            state.selected = data;
+            fetchList(false);
 
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
             })
-        },
-        toggleFavor(idx) {
-            if (this.list[idx].mark) {
-                this.remove(idx);
-            } else {
-                this.add(idx);
-            }
-        },
-        add(idx) {
-            var item = this.list[idx];
-            Post("/api/favor/add", {
-                key: item.key,
-                url: item.origin_url,
-                title: item.title,
-                site: this.tabs[this.selected.tab]["key"]
-            }).then(resp => {
-                if (resp.data.code != 10000) {
-                    alert("操作失败");
-                    return false;
-                }
+        }
 
-                this.list[idx].mark = true;
-            })
-        },
-        remove(idx) {
-            var item = this.list[idx];
-            Post("/api/favor/remove", {
-                key: item.key,
-                site: this.tabs[this.selected.tab]["key"]
-            }).then(resp => {
-                if (resp.data.code != 10000) {
-                    alert("操作失败");
-                    return false;
-                }
+        onMounted(fetchConfig(fetchList))
 
-                this.list[idx].mark = false;
-            })
+        provide("updateMark", (idx, res) => {state.list[idx]["mark"] = res})
+        provide("currentSite", computed(() => state.tabs[state.selected.tab]["key"]))
+
+        return {
+            state,
+            fetchConfig,
+            fetchList,
+            tabChange
         }
     },
     components: {

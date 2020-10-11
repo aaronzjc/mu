@@ -1,12 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+
 import Site from "../components/Site"
 import Node from "../components/Node"
 import Dashboard from "../components/Dashboard";
 import Login from "../components/Login";
 import User from "../components/User";
-
-Vue.use(Router);
 
 const routes = [
     {
@@ -14,7 +12,7 @@ const routes = [
         name: 'default',
         title: "系统",
         component: Dashboard,
-        redirect: "/site",
+        redirect: "site",
         children : [
             {
                 path: '/site',
@@ -38,7 +36,7 @@ const routes = [
     },
 ];
 
-const publicRouters = [
+const publicRoutes = [
     {
         path: '/login',
         name: 'login',
@@ -46,9 +44,10 @@ const publicRouters = [
     }
 ];
 
-const router = new Router({
-    routes: routes.concat(publicRouters)
-});
+const router = createRouter({
+    history: createWebHistory("admin"),
+    routes: routes.concat(publicRoutes)
+})
 
 export {routes}
 

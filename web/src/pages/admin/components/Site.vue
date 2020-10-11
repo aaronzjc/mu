@@ -26,22 +26,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, idx) in list" :key="idx">
+                    <tr v-for="(item, idx) in state.list" :key="idx">
                         <td>{{ item.name }}</td>
                         <td><span class="tag is-warning" v-if="item.cron !== '' ">{{ item.cron }}</span></td>
-                        <td><span class="tag is-light" v-if="item.type != 0">{{ typeMap[item.type] }}</span></td>
+                        <td><span class="tag is-light" v-if="item.type != 0">{{ state.typeMap[item.type] }}</span></td>
                         <td>
                             <template v-if="item.node_option === 1">
-                                <span class="tag is-light">{{ nodeTypeMap[item.node_type] }}</span>
+                                <span class="tag is-light">{{ state.nodeTypeMap[item.node_type] }}</span>
                             </template>
                             <template v-if="item.node_option === 2">
                                 <template v-if="item.node_hosts.length > 1">
                                     <div class="tags">
-                                        <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ nodes[nodeId]["name"] }}</span>
+                                        <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ state.nodes[nodeId]["name"] }}</span>
                                     </div>
                                 </template>
                                 <template v-if="item.node_hosts.length == 1">
-                                    <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ nodes[nodeId]["name"] }}</span>
+                                    <span class="tag is-info" v-for="nodeId in item.node_hosts" :key="nodeId">{{ state.nodes[nodeId]["name"] }}</span>
                                 </template>
                             </template>
                         </td>
@@ -62,11 +62,11 @@
             </div>
         </div>
 
-        <div :class='[ "modal", { "is-active" : editModal } ]'>
+        <div :class='[ "modal", { "is-active" : state.editModal } ]'>
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">{{ editForm.id > 0 ? "编辑网站" : "添加网站" }}</p>
+                    <p class="modal-card-title">{{ state.editForm.id > 0 ? "编辑网站" : "添加网站" }}</p>
                     <button class="delete" aria-label="close" @click="closeEdit"></button>
                 </header>
                 <section class="modal-card-body">
@@ -76,7 +76,7 @@
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="名字" v-model="editForm.name">
+                                <input class="input" type="text" placeholder="名字" v-model="state.editForm.name">
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                             <label class="label">地址</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ editForm.root }}</strong>
+                            <strong>{{ state.editForm.root }}</strong>
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="key" v-model="editForm.key">
+                                <input class="input" type="text" placeholder="key" v-model="state.editForm.key">
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="描述" v-model="editForm.desc">
+                                    <input class="input" type="text" placeholder="描述" v-model="state.editForm.desc">
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                             <label class="label">抓取类型</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ typeMap[editForm.type] }}</strong>
+                            <strong>{{ state.typeMap[state.editForm.type] }}</strong>
                         </div>
                     </div>
 
@@ -128,18 +128,18 @@
                             <label class="label">请求头</label>
                         </div>
                         <div class="field-body tag-field">
-                            <template v-if="editForm.req_headers.length == 0">
+                            <template v-if="state.editForm.req_headers.length == 0">
                                 <div class="tag-control">
                                     <button class="button is-small is-primary" @click="addHeader">新建</button>
                                 </div>
                             </template>
-                            <template v-if="editForm.req_headers.length > 0">
-                                <div class="tag-item" v-for="(item, idx) in editForm.req_headers" :key="idx">
+                            <template v-if="state.editForm.req_headers.length > 0">
+                                <div class="tag-item" v-for="(item, idx) in state.editForm.req_headers" :key="idx">
                                     <div class="tag-control">
-                                        <input class="input is-small" type="text" placeholder="名称" v-model="editForm.req_headers[idx].key">
+                                        <input class="input is-small" type="text" placeholder="名称" v-model="state.editForm.req_headers[idx].key">
                                     </div>
                                     <div class="tag-control">
-                                        <input class="input is-small" type="text" placeholder="值" v-model="editForm.req_headers[idx].val">
+                                        <input class="input is-small" type="text" placeholder="值" v-model="state.editForm.req_headers[idx].val">
                                     </div>
                                     <div class="tag-control">
                                         <button class="button is-small is-primary" @click="addHeader">新建</button>
@@ -155,12 +155,12 @@
                             <label class="label">标签</label>
                         </div>
                         <div class="field-body tag-field">
-                            <div class="tag-item" v-for="(tag, tagIdx) in editForm.tags" :key="tagIdx">
+                            <div class="tag-item" v-for="(tag, tagIdx) in state.editForm.tags" :key="tagIdx">
                                 <div class="tag-control">
-                                    <input class="input is-small" type="text" placeholder="标识" readonly v-model="editForm.tags[tagIdx].key">
+                                    <input class="input is-small" type="text" placeholder="标识" readonly v-model="state.editForm.tags[tagIdx].key">
                                 </div>
                                 <div class="tag-control">
-                                    <input class="input is-small" type="text" placeholder="名字" v-model="editForm.tags[tagIdx].name">
+                                    <input class="input is-small" type="text" placeholder="名字" v-model="state.editForm.tags[tagIdx].name">
                                 </div>
                                 <div class="tag-control">
                                     <button :class="[ 'button', 'is-small',  { 'is-danger' : tag.enable === 1 }, { 'is-success' : tag.enable === 0 } ]" @click="toggle(tagIdx)">{{ tag.enable === 1 ? "关闭" : "开启" }}</button>
@@ -175,7 +175,7 @@
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="标准Cron表达式" v-model="editForm.cron">
+                                <input class="input" type="text" placeholder="标准Cron表达式" v-model="state.editForm.cron">
                             </div>
                         </div>
                     </div>
@@ -188,11 +188,11 @@
                             <div class="field is-narrow">
                                 <div class="control">
                                     <label class="radio">
-                                        <input type="radio" name="node_option" :value="parseInt(1)" v-model="editForm.node_option">
+                                        <input type="radio" name="node_option" :value="parseInt(1)" v-model="state.editForm.node_option">
                                         按节点类型
                                     </label>
                                     <label class="radio">
-                                        <input type="radio" name="node_option" :value="parseInt(2)" v-model="editForm.node_option">
+                                        <input type="radio" name="node_option" :value="parseInt(2)" v-model="state.editForm.node_option">
                                         按服务器IP
                                     </label>
                                 </div>
@@ -200,7 +200,7 @@
                         </div>
                     </div>
 
-                    <div class="field is-horizontal" v-if="editForm.node_option === 1">
+                    <div class="field is-horizontal" v-if="state.editForm.node_option === 1">
                         <div class="field-label">
                             <label class="label">节点类型</label>
                         </div>
@@ -208,11 +208,11 @@
                             <div class="field is-narrow">
                                 <div class="control">
                                     <label class="radio">
-                                        <input type="radio" name="node_type" :value="parseInt(1)" v-model="editForm.node_type">
+                                        <input type="radio" name="node_type" :value="parseInt(1)" v-model="state.editForm.node_type">
                                         大陆
                                     </label>
                                     <label class="radio">
-                                        <input type="radio" name="node_type" :value="parseInt(2)" v-model="editForm.node_type">
+                                        <input type="radio" name="node_type" :value="parseInt(2)" v-model="state.editForm.node_type">
                                         海外
                                     </label>
                                 </div>
@@ -220,16 +220,16 @@
                         </div>
                     </div>
 
-                    <div class="field is-horizontal" v-if="editForm.node_option === 2">
+                    <div class="field is-horizontal" v-if="state.editForm.node_option === 2">
                         <div class="field-label">
                             <label class="label">节点列表</label>
                         </div>
                         <div class="field-body">
                             <div class="field is-narrow">
                                 <div class="control">
-                                    <div class="node_item" v-for="(node, nodeIdx) in nodes" :key="nodeIdx">
+                                    <div class="node_item" v-for="(node, nodeIdx) in state.nodes" :key="nodeIdx">
                                         <label class="checkbox">
-                                            <input type="checkbox" :value="node.id" v-model="editForm.node_hosts">
+                                            <input type="checkbox" :value="node.id" v-model="state.editForm.node_hosts">
                                             {{ node.name }}
                                         </label>
                                     </div>
@@ -246,11 +246,11 @@
                             <div class="field is-narrow">
                                 <div class="control">
                                     <label class="radio">
-                                        <input type="radio" name="enable" :value="parseInt(0)" v-model="editForm.enable">
+                                        <input type="radio" name="enable" :value="parseInt(0)" v-model="state.editForm.enable">
                                         关闭
                                     </label>
                                     <label class="radio">
-                                        <input type="radio" name="enable" :value="parseInt(1)" v-model="editForm.enable">
+                                        <input type="radio" name="enable" :value="parseInt(1)" v-model="state.editForm.enable">
                                         开启
                                     </label>
                                 </div>
@@ -266,12 +266,12 @@
             </div>
         </div>
 
-        <div :class='[ "modal", { "is-active" : viewModal } ]'>
+        <div :class='[ "modal", { "is-active" : state.viewModal } ]'>
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
                     <p class="modal-card-title">查看站点</p>
-                    <button class="delete" aria-label="close" @click="closeView"></button>
+                    <button class="delete" aria-label="close" @click="state.viewModal = false"></button>
                 </header>
                 <section class="modal-card-body">
                     <div class="field is-horizontal">
@@ -279,7 +279,7 @@
                             <label class="label">站点</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ viewForm.name }}</strong>
+                            <strong>{{ state.viewForm.name }}</strong>
                         </div>
                     </div>
 
@@ -288,7 +288,7 @@
                             <label class="label">地址</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ viewForm.root }}</strong>
+                            <strong>{{ state.viewForm.root }}</strong>
                         </div>
                     </div>
 
@@ -298,7 +298,7 @@
                         </div>
                         <div class="field-body">
                             <div class="field-body fix-align">
-                                <strong>{{ viewForm.key }}</strong>
+                                <strong>{{ state.viewForm.key }}</strong>
                             </div>
                         </div>
                     </div>
@@ -310,7 +310,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <strong>{{ viewForm.desc }}</strong>
+                                    <strong>{{ state.viewForm.desc }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -323,7 +323,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <strong>{{ typeMap[viewForm.type] }}</strong>
+                                    <strong>{{ state.typeMap[state.viewForm.type] }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -336,7 +336,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align tags">
-                                    <template v-for="tag in viewForm.tags">
+                                    <template v-for="tag in state.viewForm.tags">
                                         <span :key="tag.key" v-if="tag.enable === 1" class="tag is-link">{{ tag.key }}-{{ tag.name }}</span>
                                     </template>
                                 </div>
@@ -351,33 +351,33 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <span class="tag is-warning" v-if="viewForm.cron != ''">{{ viewForm.cron }}</span>
+                                    <span class="tag is-warning" v-if="state.viewForm.cron != ''">{{ state.viewForm.cron }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="field is-horizontal" v-if="viewForm.node_option === 1">
+                    <div class="field is-horizontal" v-if="state.viewForm.node_option === 1">
                         <div class="field-label is-normal">
                             <label class="label">节点配置</label>
                         </div>
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <strong>{{ nodeTypeMap[viewForm.node_type] }}</strong>
+                                    <strong>{{ state.nodeTypeMap[state.viewForm.node_type] }}</strong>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="field is-horizontal" v-if="viewForm.node_option === 2">
+                    <div class="field is-horizontal" v-if="state.viewForm.node_option === 2">
                         <div class="field-label is-normal">
                             <label class="label">节点列表</label>
                         </div>
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align tags">
-                                    <span :key="nodeId" v-for="nodeId in viewForm.node_hosts" class="tag is-info">{{ nodes[nodeId].name }}</span>
+                                    <span :key="nodeId" v-for="nodeId in state.viewForm.node_hosts" class="tag is-info">{{ state.nodes[nodeId].name }}</span>
                                 </div>
                             </div>
                         </div>
@@ -390,7 +390,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="field-body fix-align">
-                                    <strong>{{ viewForm.enable === 1 ? "开启" : "未开启" }}</strong>
+                                    <strong>{{ state.viewForm.enable === 1 ? "开启" : "未开启" }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -398,7 +398,7 @@
 
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-primary" @click="closeView">确认</button>
+                    <button class="button is-primary" @click="state.viewModal = false">确认</button>
                 </footer>
             </div>
         </div>
@@ -410,29 +410,12 @@ import {Get, Post} from "@/tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {nodeType, crawType} from "../def";
+import { onMounted, reactive } from 'vue';
 
-const initEdit = {
-    id: 0,
-    name: "",
-    root: "",
-    key: "",
-    desc: "",
-    type: 1,
-    tags: [],
-    cron: "",
-    enable: 0,
-    node_option: 1,
-    node_type: 1,
-    node_hosts: [],
-    req_headers: [],
-};
 export default {
     name: "Site",
-    mounted() {
-        this.fetchList();
-    },
-    data: () => {
-        return {
+    setup() {
+        const state = reactive({
             viewModal: false,
             editModal: false,
 
@@ -463,73 +446,110 @@ export default {
             viewForm: {
 
             }
+        })
+
+        const initEdit = {
+            id: 0,
+            name: "",
+            root: "",
+            key: "",
+            desc: "",
+            type: 1,
+            tags: [],
+            cron: "",
+            enable: 0,
+            node_option: 1,
+            node_type: 1,
+            node_hosts: [],
+            req_headers: [],
         }
-    },
-    methods: {
-        fetchList() {
+
+        async function fetchList() {
             NProgress.start();
-            Get("/admin/site/list").then(resp => {
+            try {
+                let resp = await Get("/admin/site/list")
                 if (resp.data.code === 10000) {
-                    this.nodes = resp.data.data.nodeList;
-                    this.list = resp.data.data.siteList;
+                    state.nodes = resp.data.data.nodeList;
+                    state.list = resp.data.data.siteList;
                 } else {
                     console.log(resp.data.msg);
-                    this.nodes = [];
-                    this.list = [];
+                    state.nodes = [];
+                    state.list = [];
                 }
-                NProgress.done();
-            }).catch( () => {
-                NProgress.done();
-            })
-        },
-        save() {
-            Post("/admin/site/update", this.editForm).then(resp => {
+            } catch(err) {
+                console.log(err)
+            }
+            NProgress.done();
+        }
+
+        async function save() {
+            try {
+                let resp = await Post("/admin/site/update", state.editForm)
                 if (resp.data.code === 10000) {
                     alert("保存成功");
-                    this.closeEdit();
-                    this.fetchList();
+                    closeEdit();
+                    fetchList();
                 } else {
                     alert(resp.data.msg);
                 }
-            });
-        },
-        edit(idx) {
-            this.editModal = true;
-            this.editForm = Object.assign({}, this.list[idx]);
-        },
-        view(idx) {
-            this.viewModal = true;
-            this.viewForm = this.list[idx];
-        },
-        closeView() {
-            this.viewModal = false;
-        },
-        closeEdit() {
-            this.editModal = false;
-            this.editForm = JSON.parse(JSON.stringify(initEdit));
-        },
-        addHeader: function () {
-            this.editForm.req_headers.push({
-                key: "",
-                val: ""
-            });
-        },
-        delHeader: function (idx) {
-            this.editForm.req_headers.splice(idx, 1)
-        },
-        toggle(idx) {
-            var c = this.editForm.tags[idx]["enable"];
-            var r = c === 0 ? 1 : 0 ;
-            this.editForm.tags[idx]["enable"] = r;
-        },
-        craw(idx) {
-            Post("/admin/site/craw", {"id": this.list[idx]["id"]}).then(resp => {
+            } catch(err) {
+                console.log(err)
+            }
+        }
+
+        async function craw(idx) {
+            try {
+                let resp = Post("/admin/site/craw", {"id": state.list[idx]["id"]})
                 if (resp.data.code === 10000) {
                     alert("数据抓取成功")
                 } else {
                     alert(resp.data.msg);
                 }
+            } catch(err) {
+                console.log(err)
+            }
+        }
+
+        let edit = (idx) => {
+            state.editModal = true;
+            state.editForm = Object.assign({}, state.list[idx]);
+        }
+        let view = (idx) => {
+            state.viewModal = true;
+            state.viewForm = state.list[idx];
+        }
+
+        let closeEdit = () => {
+            state.editModal = false;
+            state.editForm = JSON.parse(JSON.stringify(initEdit));
+        }
+        let addHeader = () => {
+            state.editForm.req_headers.push({
+                key: "",
+                val: ""
             });
+        }
+        let delHeader = (idx) => {
+            state.editForm.req_headers.splice(idx, 1)
+        }
+        let toggle = (idx) => {
+            var c = state.editForm.tags[idx]["enable"];
+            var r = c === 0 ? 1 : 0 ;
+            state.editForm.tags[idx]["enable"] = r;
+        }
+
+        onMounted(fetchList)
+
+        return {
+            state,
+            view,
+            edit,
+            save,
+            craw,
+            closeEdit,
+            addHeader,
+            delHeader,
+            toggle
         }
     }
 }

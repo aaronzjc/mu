@@ -4,7 +4,7 @@
         <a class="navbar-item" href="/">
             <img alt="Mu: 快乐摸鱼~" src="../assets/logo.webp" />
         </a>
-        <a role="button" :class='[ "navbar-burger", { "is-active": open } ]' aria-label="menu" aria-expanded="false" @click="open = !open">
+        <a role="button" :class='[ "navbar-burger", { "is-active": state.open } ]' aria-label="menu" aria-expanded="false" @click="open = !open">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -13,19 +13,19 @@
 
     <div class="navbar-end">
         <template v-if="!$store.getters['account/isLogin']">
-            <div class="mini-navbar-opt" v-show="open">
+            <div class="mini-navbar-opt" v-show="state.open">
                 <a class="navbar-item" @click="toLogin">登录</a>
-                <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
+                <a class="navbar-item" @click="toggleTheme">{{ state.theme === "light" ? "黑夜模式" : "白天模式" }}</a>
             </div>
             <div class="navbar-item navbar-opt">
                 <a @click="toLogin">登录</a>
             </div>
             <div class="navbar-item navbar-opt">
-                <a @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
+                <a @click="toggleTheme">{{ state.theme === "light" ? "黑夜模式" : "白天模式" }}</a>
             </div>
         </template>
         <template v-else>
-            <div class="mini-navbar-opt" v-show="open">
+            <div class="mini-navbar-opt" v-show="state.open">
                 <span class="navbar-item">欢迎，{{ $store.getters['account/getNickname'] }}</span>
                 <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
                 <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
@@ -48,8 +48,9 @@
 </template>
 
 <script>
-import {routes} from "../router/router";
-import {Get, Set, Del} from "@/tools/ls";
+import { routes } from "../router/router";
+import { Get, Set, Del } from "@/tools/ls";
+import { onMounted, reactive } from 'vue';
 
 const LIGHT = "light";
 const DARK = "dark";
@@ -57,31 +58,13 @@ const THEME_KEY = "theme";
 
 export default {
     name: "Navbar",
-    mounted() {
-        this.rs = routes[0].children;
-        var t = Get(THEME_KEY);
-        this.initTheme(t);
-    },
-    data() {
-        return {
+    setup() {
+        const state = reactive({
             open: false,
-            rs: [],
-            theme: "",
-        }
-    },
-    methods: {
-        go(path) {
-            this.$router.push(path).catch(() => {});
-            this.open = false;
-        },
-        toLogin() {
-            this.$router.push({name: "login"}).catch(() => {});
-        },
-        logout() {
-            Del("token")
-            window.location.href = "/"
-        },
-        initTheme(type) {
+            rs: [], // 菜单项
+            theme: ""
+        })
+        const initTheme = (type) => {
             if (type != LIGHT && type != DARK) {
                 type = LIGHT;
             }
@@ -91,17 +74,44 @@ export default {
             } else if (type === "light") {
                 ht.className = ht.className.replace(DARK, "");
             }
-            this.theme = type;
-            Set(THEME_KEY, this.theme, -1);
-        },
-        toggleTheme() {
-            if (this.theme === LIGHT) {
-                this.initTheme(DARK);
-            } else if (this.theme === DARK) {
-                this.initTheme(LIGHT);
+            state.theme = type;
+            Set(THEME_KEY, state.theme, -1);
+        }
+
+        let go = (path) => {
+            this.$router.push(path).catch(() => {})
+            state.open = false
+        }
+        let toLogin = () => {
+            this.$router.push({
+                name: "login"
+            }).catch(() => {});
+        }
+        let logout = () => {
+            Del("token")
+            window.location.href = "/"
+        }
+        let toggleTheme = () => {
+            if (state.theme === LIGHT) {
+                initTheme(DARK)
+            } else if (state.theme === DARK) {
+                initTheme(LIGHT)
             }
-            this.initTheme(this.theme);
-            this.open = false;
+            initTheme(state.theme)
+            state.open = false
+        }
+
+        onMounted(() => {
+            state.rs = routes[0].children
+            initTheme(Get(THEME_KEY))
+        })
+        return {
+            state,
+            initTheme,
+            go,
+            toLogin,
+            logout,
+            toggleTheme
         }
     }
 }

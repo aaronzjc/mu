@@ -30,11 +30,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, idx) in list" :key="idx">
+                    <tr v-for="(item, idx) in state.list" :key="idx">
                         <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.addr }}</td>
-                        <td><span class="tag is-warning">{{ typeMap[item.type] }}</span></td>
+                        <td><span class="tag is-warning">{{ state.typeMap[item.type] }}</span></td>
                         <td>
                             <span :class="[ 'ping',  { 'has-background-success' : item.ping === 1 }, { 'has-background-danger' : item.ping === 0,  } ]"></span>
                         </td>
@@ -55,11 +55,11 @@
             </div>
         </div>
 
-        <div :class='[ "modal", { "is-active" : editModal } ]'>
+        <div :class='[ "modal", { "is-active" : state.editModal } ]'>
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">{{ editForm.id > 0 ? "编辑节点" : "添加节点" }}</p>
+                    <p class="modal-card-title">{{ state.editForm.id > 0 ? "编辑节点" : "添加节点" }}</p>
                     <button class="delete" aria-label="close" @click="cancel"></button>
                 </header>
                 <section class="modal-card-body">
@@ -69,7 +69,7 @@
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="节点名字" v-model="editForm.name">
+                                <input class="input" type="text" placeholder="节点名字" v-model="state.editForm.name">
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                         </div>
                         <div class="field-body">
                             <div class="control">
-                                <input class="input" type="text" placeholder="addr, ip:port" v-model="editForm.addr">
+                                <input class="input" type="text" placeholder="addr, ip:port" v-model="state.editForm.addr">
                             </div>
                         </div>
                     </div>
@@ -92,8 +92,8 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control select">
-                                    <select v-model="editForm.type">
-                                        <option :value="parseInt(key)" v-for="(val, key) in typeMap" :key="key">{{ val }}</option>
+                                    <select v-model="state.editForm.type">
+                                        <option :value="parseInt(key)" v-for="(val, key) in state.typeMap" :key="key">{{ val }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -108,11 +108,11 @@
                             <div class="field is-narrow">
                                 <div class="control">
                                     <label class="radio">
-                                        <input type="radio" v-model="editForm.enable" v-bind:value="1">
+                                        <input type="radio" v-model="state.editForm.enable" v-bind:value="1">
                                         是
                                     </label>
                                     <label class="radio">
-                                        <input type="radio" v-model="editForm.enable" v-bind:value="0">
+                                        <input type="radio" v-model="state.editForm.enable" v-bind:value="0">
                                         否
                                     </label>
                                 </div>
@@ -128,12 +128,12 @@
             </div>
         </div>
 
-        <div :class='[ "modal", { "is-active" : viewModal } ]'>
+        <div :class='[ "modal", { "is-active" : state.viewModal } ]'>
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
                     <p class="modal-card-title">节点详情</p>
-                    <button class="delete" aria-label="close" @click="viewModal = false"></button>
+                    <button class="delete" aria-label="close" @click="state.viewModal = false"></button>
                 </header>
                 <section class="modal-card-body">
                     <div class="field is-horizontal">
@@ -141,7 +141,7 @@
                             <label class="label">节点</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ viewForm.name }}</strong>
+                            <strong>{{ state.viewForm.name }}</strong>
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
                             <label class="label">Addr</label>
                         </div>
                         <div class="field-body fix-align">
-                            <strong>{{ viewForm.addr }}</strong>
+                            <strong>{{ state.viewForm.addr }}</strong>
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@
                             <label class="label">节点类型</label>
                         </div>
                         <div class="field-body fix-align">
-                            <span class="tag is-info">{{ typeMap[viewForm.type] }}</span>
+                            <span class="tag is-info">{{ state.typeMap[state.viewForm.type] }}</span>
                         </div>
                     </div>
 
@@ -168,8 +168,8 @@
                             <label class="label">是否启用</label>
                         </div>
                         <div class="field-body fix-align">
-                            <span class="tag is-success" v-if="viewForm.enable">启用</span>
-                            <span class="tag is-warning" v-if="!viewForm.enable">未启用</span>
+                            <span class="tag is-success" v-if="state.viewForm.enable">启用</span>
+                            <span class="tag is-warning" v-if="!state.viewForm.enable">未启用</span>
                         </div>
                     </div>
 
@@ -178,13 +178,13 @@
                             <label class="label">Ping</label>
                         </div>
                         <div class="field-body fix-align">
-                            <span class="tag is-light">{{ viewForm.ping == 1 ? "在线" : "掉线" }}</span>
+                            <span class="tag is-light">{{ state.viewForm.ping == 1 ? "在线" : "掉线" }}</span>
                         </div>
                     </div>
 
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-primary" @click="viewModal = false">确定</button>
+                    <button class="button is-primary" @click="state.viewModal = false">确定</button>
                 </footer>
             </div>
         </div>
@@ -196,90 +196,79 @@ import {Get, Post} from "@/tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {nodeType} from "../def";
+import { onMounted, reactive } from 'vue';
 
 export default {
     name: "Node",
-    created() {
-        this.fetchList();
-    },
-    data: () => {
-        return {
+    setup() {
+        const state = reactive({
             editModal: false,
             viewModal: false,
 
-            typeMap: nodeType,
+            typeMap: Object.freeze(nodeType),
 
             list: [],
 
             editForm: {},
 
             viewForm: {}
-        }
-    },
-    methods: {
-        fetchList() {
+        })
+
+        async function fetchList() {
             NProgress.start();
-            Get("/admin/node/list").then(resp => {
+            try {
+                let resp = await Get("/admin/node/list")
                 if (resp.data.code === 10001) {
                     console.log(resp.data.msg)
                 } else {
-                    this.list = resp.data.data;
+                    state.list = resp.data.data;
                 }
-                NProgress.done();
-            }).catch(() => {
-                NProgress.done();
-            })
-        },
-        del(idx) {
+            } catch(err) {
+                // eslint-disable-next-line
+                console.log(err)
+            }
+            NProgress.done();
+        }
+
+        async function del(idx) {
             if (!confirm("确认删除吗?")) {
                 return false;
             }
-
-            Get("/admin/node/del", {
-                "id": this.list[idx].id
-            }).then(resp => {
+            try {
+                let resp = await Get("/admin/node/del", {"id": state.list[idx].id})
                 if (resp.data.code !== 10000) {
                     alert(resp.data.msg);
                 }
-                this.fetchList()
-            })
-        },
-        save() {
-            Post("/admin/node/upsert", this.editForm).then(resp => {
+                fetchList()
+            } catch(err) {
+                // eslint-disable-next-line
+                console.log(err)
+            }
+        }
+
+        async function save() {
+            try {
+                let resp = await Post("/admin/node/upsert", state.editForm)
                 if (resp.data.code === 10001) {
                     alert(resp.data.msg);
                 } else {
-                    this.cancel();
+                    cancel();
                     alert("保存成功")
                 }
+                fetchList()
+            } catch(err) {
+                // eslint-disable-next-line
+                console.log(err)
+            }
+        }
 
-                this.fetchList()
-            });
-        },
-        view(idx) {
-            this.viewForm = this.list[idx];
-            this.viewModal = true;
-        },
-        add() {
-            this.editForm = {
-                "id": 0,
-                "name": "",
-                "addr": "",
-                "type": 1,
-                "ping": 0,
-                "enable": 0
-            };
-            this.editModal = true;
-        },
-        edit(idx) {
-            this.viewModal = false;
-            this.editForm = Object.assign({}, this.list[idx]);
-            this.editModal = true;
-        },
-        cancel() {
-            this.viewModal = false;
-            this.editModal = false;
-            this.editForm = {
+        let view = (idx) => {
+            state.viewForm = state.list[idx]
+            state.viewModal = true
+        }
+
+        let add = () => {
+            state.editForm = {
                 "id": 0,
                 "name": "",
                 "addr": "",
@@ -287,6 +276,39 @@ export default {
                 "ping": 0,
                 "enable": 0
             }
+            state.editModal = true
+        }
+
+        let edit = (idx) => {
+            state.viewModal = false
+            state.editForm = Object.assign({}, state.list[idx])
+            state.editModal = true
+        }
+
+        let cancel = () => {
+            state.viewModal = false
+            state.editModal = false
+            state.editForm = {
+                "id": 0,
+                "name": "",
+                "addr": "",
+                "type": 1,
+                "ping": 0,
+                "enable": 0
+            }
+        }
+
+        onMounted(fetchList)
+
+        return {
+            state,
+            fetchList,
+            add,
+            view,
+            edit,
+            save,
+            del,
+            cancel
         }
     }
 }

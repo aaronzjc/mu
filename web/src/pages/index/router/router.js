@@ -1,12 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Main from "../components/Main";
 import Index from "../components/Index";
 
 const Favor = () => import(/* webpackChunkName: "idx-comps" */ "../components/Favor");
 const Login = () => import(/* webpackChunkName: "idx-comps" */ "../components/Login");
-
-Vue.use(Router);
 
 const routes = [
     {
@@ -32,7 +29,7 @@ const routes = [
     },
 ];
 
-const publicRouters = [
+const publicRoutes = [
     {
         path: '/login',
         name: 'login',
@@ -40,9 +37,10 @@ const publicRouters = [
     }
 ];
 
-const router = new Router({
-    routes: routes.concat(publicRouters)
-});
+const router = createRouter({
+    history: createWebHistory(),
+    routes: routes.concat(publicRoutes)
+})
 
 export {routes}
 

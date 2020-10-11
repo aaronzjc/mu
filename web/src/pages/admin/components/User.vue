@@ -24,7 +24,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, idx) in list" :key="idx">
+                    <tr v-for="(item, idx) in state.list" :key="idx">
                         <td>{{ item.id }}</td>
                         <td>
                             <figure>
@@ -45,31 +45,35 @@
 import {Get} from "@/tools/http";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import { onMounted, reactive } from 'vue';
 
 export default {
-    name: "User",
-    created() {
-        this.fetchList();
-    },
-    data() {
-        return {
-            list: [],
-        }
-    },
-    methods: {
-        fetchList() {
+    name: "user",
+    setup() {
+        const state = reactive({
+            list: []
+        })
+
+        async function fetchList() {
             NProgress.start();
-            Get("/admin/user/list").then(resp => {
+            try {
+                let resp = await Get("/admin/user/list")
                 if (resp.data.code === 10001) {
                     console.log(resp.data.msg);
                 } else {
-                    this.list = resp.data.data;
+                    state.list = resp.data.data;
                 }
-                NProgress.done();
-            }).catch(() => {
-                NProgress.done();
-            })
-        },
+            } catch(err) {
+                console.log(err)
+            }
+            NProgress.done();
+        }
+
+        onMounted(fetchList)
+
+        return {
+            state
+        }
     }
 }
 </script>

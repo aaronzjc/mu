@@ -1,27 +1,30 @@
 /* styles */
-import './scss/main.scss'
+import "./scss/main.scss"
 
-/* register service worker */
+/* register sw */
 import "./registerSW"
 
-import Vue from 'vue'
+import { createApp } from 'vue'
+import App from './App'
 
-/* router & store */
-import router from "./router/router"
+const app = createApp(App)
+
+/* vue-router staff */
+import router from "./router/router";
 import client from "@/tools/http"
 import * as ls from "@/tools/ls"
 
 client.interceptors.response.use(resp => {
-  let res = resp.data;
-  if (res.code === 10003) {
-    ls.Del("token")
-    router.push({"name": "login"}).catch(() => {});
-    return Promise.reject(resp);
-  }
-
-  return resp;
-});
-
+    let res = resp.data;
+    if (res.code === 10003) {
+      ls.Del("token")
+      router.push({"name": "login"}).catch(() => {});
+      return Promise.reject(resp);
+    }
+  
+    return resp;
+  });
+  
 router.beforeEach((to, from, next) => {
   let token = to.query.token;
 
@@ -33,13 +36,12 @@ router.beforeEach((to, from, next) => {
   return next()
 });
 
-import store from "./store"
-import App from './App.vue'
+app.use(router)
 
-Vue.config.productionTip = false
+/* vuex staff */
+import { store } from "./store"
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+app.use(store)
+
+/* mount #app */
+app.mount('#app')

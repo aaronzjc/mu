@@ -1,12 +1,12 @@
 <template>
-    <section class="section" id="app">
-        <router-view></router-view>
-    </section>
+<section class="section" id="app">
+    <router-view></router-view>
+</section>
 </template>
 
 <script>
 export default {
-  name: 'app',
-  components: {}
+    name: 'App',
+    components: {}
 }
 </script>
