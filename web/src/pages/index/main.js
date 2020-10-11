@@ -21,9 +21,9 @@ client.interceptors.response.use(resp => {
       router.push({"name": "login"}).catch(() => {});
       return Promise.reject(resp);
     }
-  
+
     return resp;
-  });
+});
   
 router.beforeEach((to, from, next) => {
   let token = to.query.token;

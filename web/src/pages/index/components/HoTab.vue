@@ -1,13 +1,13 @@
 <template>
 <div class="columns switch">
-    <div class="column" v-if="state.tabs.length > 0">
+    <div class="column" v-if="tabs.length > 0">
         <div class="tabs">
             <ul>
-                <li v-for="(tab, idx) in state.tabs" :class="{ 'is-active' : idx == state.selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
+                <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == state.selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
             </ul>
         </div>
-        <div class="tags" v-if="state.tabs[state.selected.tab].tags.length > 0">
-            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-light-dark' : idx == state.selected.tag } ]" v-for="(tag, idx) in state.tabs[state.selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
+        <div class="tags" v-if="tabs[state.selected.tab].tags.length > 0">
+            <span @click="switchTag(idx)" :class="[ 'tag', { 'is-light-dark' : idx == state.selected.tag } ]" v-for="(tag, idx) in tabs[state.selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
         </div>
     </div>
 </div>
@@ -24,7 +24,6 @@ export default {
                 tab: 0,
                 tag: 0
             },
-            tabs: props.tabs
         })
 
         let sticky = () => {

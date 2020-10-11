@@ -34,7 +34,7 @@ export default {
             list: "/api/list",
         }
         const state = reactive({
-            tab: [
+            tabs: [
                 {"name":"Moo-Yuu","key":"新闻","tags":[{"key":"昨天","name":"昨天","enable":1},{"key":"今天","name":"今天","enable":1},{"key":"明天","name":"明天","enable":1}]},
             ],
             selected: {
@@ -123,7 +123,9 @@ export default {
             })
         }
 
-        onMounted(fetchConfig(fetchList))
+        onMounted(() => {
+            fetchConfig(fetchList)
+        })
 
         provide("updateMark", (idx, res) => {state.list[idx]["mark"] = res})
         provide("currentSite", computed(() => state.tabs[state.selected.tab]["key"]))
