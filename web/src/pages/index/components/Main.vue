@@ -32,7 +32,7 @@ export default {
                     avatar: info.avatar
                 });
             } else {
-                console.log(info)
+                console.log(resp)
             }
         }
         onMounted(fetchUserInfo)
