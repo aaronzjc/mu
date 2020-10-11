@@ -27,8 +27,8 @@
         <template v-else>
             <div class="mini-navbar-opt" v-show="state.open">
                 <span class="navbar-item">欢迎，{{ store.getters['account/getNickname'] }}</span>
-                <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
-                <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
+                <a :key="idx" v-for="(r, idx) in state.rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
+                <a class="navbar-item" @click="toggleTheme">{{ state.theme === "light" ? "黑夜模式" : "白天模式" }}</a>
                 <a class="navbar-item" @click="logout">退出登录</a>
             </div>
 
@@ -36,8 +36,8 @@
                 <a class="navbar-link">{{ store.getters['account/getNickname'] }}</a>
 
                 <div class="navbar-dropdown is-right">
-                    <a :key="idx" v-for="(r, idx) in rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
-                    <a class="navbar-item" @click="toggleTheme">{{ theme === "light" ? "黑夜模式" : "白天模式" }}</a>
+                    <a :key="idx" v-for="(r, idx) in state.rs" @click="go(r.path)" class="navbar-item">{{ r.title }}</a>
+                    <a class="navbar-item" @click="toggleTheme">{{ state.theme === "light" ? "黑夜模式" : "白天模式" }}</a>
                     <span class="navbar-divider"></span>
                     <a class="navbar-item" @click="logout">退出登录</a>
                 </div>
