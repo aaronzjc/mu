@@ -25,7 +25,7 @@ export default {
         const updateMark = inject("updateMark")
 
         async function add() {
-            let resp = await Post("/api/favor/addd", {
+            let resp = await Post("/api/favor/add", {
                 key: props.item.key,
                 url: props.item.origin_url,
                 title: props.item.title,
@@ -38,7 +38,7 @@ export default {
             updateMark(props.idx, true)
         }
         async function remove() {
-            let resp = await Post("/api/favor/removee", {
+            let resp = await Post("/api/favor/remove", {
                 key: props.item.key,
                 site: site
             })
