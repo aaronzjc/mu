@@ -11,10 +11,11 @@ router.beforeEach((to, from, next) => {
 
     if (token != "" && token != undefined && token != null) {
         ls.Set("token", token, -1)
-        return router.replace({path: '/'})
+        router.replace({path: '/'})
+        return
     }
 
-    return next()
+    next()
 });
 
 app.use(router)

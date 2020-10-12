@@ -22,17 +22,19 @@ export default {
             if (!token) {
                 return false
             }
-            let resp = await Get("/api/info")
-            if (resp.data.code == 10000) {
-                let info = resp.data.data;
-                await store.dispatch("account/initUser", {
-                    id: info.id,
-                    username: info.username,
-                    nickname: info.nickname,
-                    avatar: info.avatar
-                });
-            } else {
-                console.log(resp)
+            try {
+                let resp = await Get("/api/info")
+                if (resp.data.code == 10000) {
+                    let info = resp.data.data;
+                    await store.dispatch("account/initUser", {
+                        id: info.id,
+                        username: info.username,
+                        nickname: info.nickname,
+                        avatar: info.avatar
+                    });
+                }
+            } catch(err) {
+                console.log(err)
             }
         }
         onMounted(fetchUserInfo)
