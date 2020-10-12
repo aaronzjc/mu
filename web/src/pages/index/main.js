@@ -26,15 +26,14 @@ client.interceptors.response.use(resp => {
 });
   
 router.beforeEach((to, from, next) => {
-  let token = to.query.token;
+  let token = to.query.token
 
   if (token != "" && token != undefined && token != null) {
     ls.Set("token", token, -1)
     router.replace({path: '/'})
-    return
+  } else {
+    next()
   }
-
-  next()
 });
 
 app.use(router)

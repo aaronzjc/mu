@@ -34,7 +34,7 @@ export default {
                     });
                 }
             } catch(err) {
-                console.log(err)
+                // err happends
             }
         }
         onMounted(fetchUserInfo)
