@@ -45,7 +45,7 @@ const publicRoutes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory("/admin/"),
+    history: createWebHashHistory(),
     routes: routes.concat(publicRoutes)
 })
 
