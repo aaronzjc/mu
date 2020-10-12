@@ -10,6 +10,7 @@ import (
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
 	"net/http"
+	"net/url"
 )
 
 func Config(c *gin.Context) {
@@ -92,14 +93,14 @@ func Callback(c *gin.Context) {
 
 	_ = user.Auth()
 	token := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s;%s", user.Username, user.Token)))
-
+	tokenEncode := url.QueryEscape(token)
 	cnf := config.NewConfig()
 
 	var redirect = ""
 	if from == "admin" {
-		redirect = fmt.Sprintf("%s?token=%s", cnf.AdminUrl(), token)
+		redirect = fmt.Sprintf("%s?token=%s", cnf.AdminUrl(), tokenEncode)
 	} else {
-		redirect = fmt.Sprintf("%s?token=%s", cnf.IndexUrl(), token)
+		redirect = fmt.Sprintf("%s?token=%s", cnf.IndexUrl(), tokenEncode)
 	}
 
 	c.Redirect(http.StatusTemporaryRedirect, redirect)

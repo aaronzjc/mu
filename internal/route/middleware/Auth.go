@@ -9,6 +9,7 @@ import (
 	"mu/internal/util/logger"
 	"mu/internal/util/req"
 	"mu/internal/util/tool"
+	"net/url"
 	"strings"
 )
 
@@ -24,6 +25,7 @@ func ApiAuth(admin bool) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		token, err := url.QueryUnescape(token)
 		authBytes, err := base64.StdEncoding.DecodeString(token)
 		if err != nil {
 			req.JSON(c, req.CodeAuthFailed, "解析失败", nil)
