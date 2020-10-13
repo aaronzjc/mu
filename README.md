@@ -7,10 +7,10 @@
 初衷是为了学习Go开发，以及其他相关技术实践。目前使用到的技术栈
 
 + Golang，JS
-+ Gin, gRpc, Vue.js，PWA，HTTP/2 
++ Gin, gRpc, Vue3全家桶，PWA，HTTP/2 
 + MySQL, Redis
 + Github Actions
-+ Docker，Docker Swarm，k8s
++ Docker，Docker Swarm，k3s
 
 相关技术介绍
 
