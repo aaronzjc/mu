@@ -2,7 +2,8 @@ package logger
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/sirupsen/logrus"
+	"os"
 )
 
 const (
@@ -12,8 +13,20 @@ const (
 	DebugLevel = "debug"
 )
 
+var log = logrus.New()
+
+func init() {
+	log.SetFormatter(&logrus.JSONFormatter{})
+	file, _ := os.OpenFile("/var/log/mu.log", os.O_CREATE|os.O_WRONLY, 0666)
+	log.SetOutput(file)
+}
+
+func Logger() *logrus.Logger {
+	return log
+}
+
 func Write(level, format string, v ...interface{}) {
-	log.Printf("["+level+"] "+format+"\n", v...)
+	log.Printf("["+level+"] "+format, v...)
 }
 func Info(format string, v ...interface{}) {
 	Write(InfoLevel, format, v...)

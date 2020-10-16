@@ -29,6 +29,7 @@ func (db *DB) Connect(cfg *config.Config) {
 
 	if gin.Mode() != gin.ReleaseMode {
 		c.LogMode(true)
+		c.SetLogger(logger.Logger())
 	}
 
 	db.Conn = c

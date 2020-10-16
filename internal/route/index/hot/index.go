@@ -100,6 +100,8 @@ func Tabs(c *gin.Context) {
 		})
 	}
 
+	logger.Info("hello world")
+
 	if len(tabs) == 0 {
 		req.JSON(c, req.CodeSuccess, "成功", []struct{}{})
 		return
