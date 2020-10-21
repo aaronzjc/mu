@@ -18,7 +18,9 @@ var log *logrus.Logger
 func init() {
 	log = logrus.New()
 
-	log.SetFormatter(&logrus.JSONFormatter{})
+	log.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
 
 	file, _ := os.OpenFile("/var/log/mu.log", os.O_CREATE|os.O_WRONLY, 0666)
 	log.SetOutput(file)
