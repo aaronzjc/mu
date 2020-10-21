@@ -7,17 +7,20 @@ import (
 )
 
 const (
-	InfoLevel  = "info"
-	WarnLevel  = "warning"
-	ErrLevel   = "error"
-	DebugLevel = "debug"
+	InfoLevel  = logrus.InfoLevel
+	WarnLevel  = logrus.WarnLevel
+	ErrLevel   = logrus.ErrorLevel
+	DebugLevel = logrus.DebugLevel
 )
 
-var log = logrus.New()
+var log *logrus.Logger
 
 func init() {
+	log = logrus.New()
+
 	log.SetFormatter(&logrus.JSONFormatter{})
-	file, _ := os.OpenFile("/var/log/mu.log", os.O_CREATE|os.O_WRONLY, 0666)
+
+	file, _ := os.OpenFile("/tmp/fuck.log", os.O_CREATE|os.O_WRONLY, 0666)
 	log.SetOutput(file)
 }
 
@@ -25,8 +28,12 @@ func Logger() *logrus.Logger {
 	return log
 }
 
-func Write(level, format string, v ...interface{}) {
-	log.Printf("["+level+"] "+format, v...)
+func Write(level logrus.Level, format string, v ...interface{}) {
+	host, _ := os.Hostname()
+	ctxLog := log.WithFields(logrus.Fields{
+		"host": host,
+	})
+	ctxLog.Logf(level, format, v...)
 }
 func Info(format string, v ...interface{}) {
 	Write(InfoLevel, format, v...)

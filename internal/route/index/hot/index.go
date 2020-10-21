@@ -73,6 +73,8 @@ func List(c *gin.Context) {
 	result["t"] = hotJson.T
 	result["list"] = list
 
+	logger.Info("req list key = " + key + " hkey = " + hkey)
+
 	req.JSON(c, req.CodeSuccess, "成功", result)
 	return
 }
@@ -99,8 +101,6 @@ func Tabs(c *gin.Context) {
 			Tags: tags,
 		})
 	}
-
-	logger.Info("hello world")
 
 	if len(tabs) == 0 {
 		req.JSON(c, req.CodeSuccess, "成功", []struct{}{})
