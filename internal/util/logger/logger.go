@@ -20,7 +20,7 @@ func init() {
 
 	log.SetFormatter(&logrus.JSONFormatter{})
 
-	file, _ := os.OpenFile("/tmp/fuck.log", os.O_CREATE|os.O_WRONLY, 0666)
+	file, _ := os.OpenFile("/var/log/mu.log", os.O_CREATE|os.O_WRONLY, 0666)
 	log.SetOutput(file)
 }
 
