@@ -15,11 +15,10 @@ type DB struct {
 
 func (db *DB) Connect(cfg *config.Config) {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		cfg.Db.User,
 		cfg.Db.Password,
 		cfg.Db.Host,
-		cfg.Db.Port,
 		cfg.Db.Database,
 	)
 	c, err := gorm.Open("mysql", dsn)
