@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mu-agent-nami
+  name: mu-agent-zyra
   namespace: k3s-apps
   labels:
-    app: mu-agent-nami
+    app: mu-agent-zyra
 spec:
   containers:
-    - name: mu-agent-nami
+    - name: mu-agent-zyra
       image: aaronzjc/mu-agent:latest
       imagePullPolicy: Always
       ports:
@@ -21,13 +21,13 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mu-agent-zyra
+  name: mu-agent-nami
   namespace: k3s-apps
   labels:
-    app: mu-agent-zyra
+    app: mu-agent-nami
 spec:
   containers:
-    - name: mu-agent-zyra
+    - name: mu-agent-nami
       image: aaronzjc/mu-agent:latest
       imagePullPolicy: Always
       ports:
