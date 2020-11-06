@@ -318,7 +318,7 @@ func (j *CheckJob) Run() {
 		}
 		result, err := (*rpcClient).Check(ctx, ping)
 		if err != nil || result.Pong != ping.Ping {
-			logger.Info("rpc health check : [%s] ping error, err %v.", node.Name, err)
+			logger.Error("rpc health check : [%s] ping error, err %v.", node.Name, err)
 			if node.Ping != model.PingFailed {
 				_ = node.Update(map[string]interface{}{
 					"ping": model.PingFailed,
