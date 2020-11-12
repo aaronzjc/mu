@@ -21,7 +21,7 @@ CMD ["./agent"]
 FROM alpine:3.7 as api
 ENV APP_ENV production
 RUN apk add --no-cache ca-certificates tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN mkdir -p /app/bin /app/conf app/public
+RUN mkdir -p /app/bin /app/conf /app/public
 COPY ./bin/api /app/bin
 COPY ./conf /app/conf
 COPY ./public /app/public
