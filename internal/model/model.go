@@ -31,30 +31,30 @@ func DPool() db.DB {
 }
 
 func Prepare(q Query) *gorm.DB {
-	db := DPool().Conn
+	conn := DPool().Conn
 
 	if q.Order != "" {
-		db = db.Order(q.Order)
+		conn = conn.Order(q.Order)
 	}
 
 	if q.Query != "" {
-		db = db.Where(q.Query, q.Args...)
+		conn = conn.Where(q.Query, q.Args...)
 	}
 
 	if q.Limit > 0 {
-		db = db.Limit(q.Limit)
+		conn = conn.Limit(q.Limit)
 	}
 
-	return db
+	return conn
 }
 
 func Select(fields string, q Query, model interface{}) error {
-	db := Prepare(q)
-	defer db.Close()
+	conn := Prepare(q)
+	defer conn.Close()
 
-	db.Select(fields).Find(model)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("Select err %v, exp %s .", err, db.QueryExpr())
+	conn.Select(fields).Find(model)
+	if err := conn.Error; err != nil && !conn.RecordNotFound() {
+		logger.Error("Select err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
@@ -62,12 +62,12 @@ func Select(fields string, q Query, model interface{}) error {
 }
 
 func First(q Query, model interface{}) error {
-	db := Prepare(q)
-	defer db.Close()
+	conn := Prepare(q)
+	defer conn.Close()
 
-	db = db.First(model)
-	if err := db.Error; err != nil && !db.RecordNotFound() {
-		logger.Error("First err %v, exp %s .", err, db.QueryExpr())
+	conn = conn.First(model)
+	if err := conn.Error; err != nil && !conn.RecordNotFound() {
+		logger.Error("First err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
@@ -75,12 +75,12 @@ func First(q Query, model interface{}) error {
 }
 
 func Update(model interface{}, data map[string]interface{}) error {
-	db := DPool().Conn
-	defer db.Close()
+	conn := DPool().Conn
+	defer conn.Close()
 
-	db = db.Model(model).Update(data)
-	if err := db.Error; err != nil {
-		logger.Error("Update err %v, exp %s .", err, db.QueryExpr())
+	conn = conn.Model(model).Update(data)
+	if err := conn.Error; err != nil {
+		logger.Error("Update err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
@@ -88,12 +88,12 @@ func Update(model interface{}, data map[string]interface{}) error {
 }
 
 func Create(model interface{}) error {
-	db := DPool().Conn
-	defer db.Close()
+	conn := DPool().Conn
+	defer conn.Close()
 
-	db = db.Create(model)
-	if err := db.Error; err != nil {
-		logger.Error("Create err %v, exp %s .", err, db.QueryExpr())
+	conn = conn.Create(model)
+	if err := conn.Error; err != nil {
+		logger.Error("Create err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
@@ -101,12 +101,12 @@ func Create(model interface{}) error {
 }
 
 func Del(model interface{}) error {
-	db := DPool().Conn
-	defer db.Close()
+	conn := DPool().Conn
+	defer conn.Close()
 
-	db = db.Delete(model)
-	if err := db.Error; err != nil {
-		logger.Error("Del err %v, exp %s .", err, db.QueryExpr())
+	conn = conn.Delete(model)
+	if err := conn.Error; err != nil {
+		logger.Error("Del err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
@@ -114,12 +114,12 @@ func Del(model interface{}) error {
 }
 
 func FetchRows(q Query, res interface{}) error {
-	db := Prepare(q)
-	defer db.Close()
+	conn := Prepare(q)
+	defer conn.Close()
 
-	db = db.Find(res)
-	if err := db.Error; err != nil {
-		logger.Error("FetchRows err %v, exp %s .", err, db.QueryExpr())
+	conn = conn.Find(res)
+	if err := conn.Error; err != nil {
+		logger.Error("FetchRows err %v, exp %s .", err, conn.QueryExpr())
 		return err
 	}
 
