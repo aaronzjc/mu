@@ -15,6 +15,11 @@ section.section {
 .navbar {
   margin-bottom: 1rem;
 
+  .navbar-item img {
+    width: 28px;
+    height: 28px;
+  }
+
   .navbar-burger:hover {
     background: none;
   }
