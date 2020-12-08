@@ -80,5 +80,7 @@ jobs:
           ${{ secrets.KUBECONF }}
           EOF
           export KUBECONFIG=$(pwd)/kube-config
-          kubectl rollout restart -f deploy/k8s/mu-server.yml -n k3s-apps
-          kubectl replace --force -f deploy/k8s/mu-agent.yml -n k3s-apps
+          curl -o mu-api.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-api.yml
+          kubectl rollout restart -f mu-api.yml -n k3s-apps
+          curl -o mu-agent.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-agent.yml
+          kubectl replace --force -f mu-agent.yml -n k3s-apps
