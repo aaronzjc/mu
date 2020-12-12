@@ -3,7 +3,7 @@
     <div class="column" v-if="tabs.length > 0">
         <div class="tabs">
             <ul>
-                <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == state.selected.tab }" @click="switchTab(idx)" :key="idx"><a>{{ tab.name }}</a></li>
+                <li v-for="(tab, idx) in tabs" :class="{ 'is-active' : idx == state.selected.tab }" @click="switchTab(idx)" :key="idx"><a href="#">{{ tab.name }}</a></li>
             </ul>
         </div>
         <div class="tags" v-if="tabs[state.selected.tab].tags.length > 0">
