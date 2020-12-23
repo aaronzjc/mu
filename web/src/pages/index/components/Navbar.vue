@@ -4,7 +4,7 @@
         <a class="navbar-item" href="/">
             <img alt="Mu: 快乐摸鱼~" style="width: 28px;height: 28px;" src="../assets/logo.webp" />
         </a>
-        <a role="button" :class='[ "navbar-burger", { "is-active": state.open } ]' aria-label="menu" aria-expanded="false" @click="open = !open">
+        <a role="button" :class='[ "navbar-burger", { "is-active": state.open } ]' aria-label="menu" aria-expanded="false" @click="state.open = !state.open">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
