@@ -33,7 +33,7 @@ export default {
             try {
                 let resp = await Get("/oauth/config", {from: "admin"})
                 if (resp.data.code === 10000) {
-                    this.auth = resp.data.data;
+                    state.auth = resp.data.data;
                 } else {
                     console.log(resp.data.msg);
                 }
