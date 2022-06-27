@@ -38,7 +38,7 @@ func (h *Hacker) BuildUrl() ([]Link, error) {
 }
 
 func (h *Hacker) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := h.FetchData(link, nil, nil)
+	page, err := h.FetchData(link, nil, headers)
 	if err != nil {
 		return Page{}, err
 	}
@@ -46,7 +46,7 @@ func (h *Hacker) CrawPage(link Link, headers map[string]string) (Page, error) {
 	doc := page.Doc
 	doc.Find(".athing").Each(func(i int, s *goquery.Selection) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
-		text := s.Find(".title").Find(".storylink").Text()
+		text := s.Find(".title").Find(".titlelink").Text()
 		if text == "" || url == "" {
 			return
 		}

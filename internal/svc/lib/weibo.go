@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"mu/internal/util/tool"
-	"regexp"
-	"strconv"
 	"time"
 )
 
@@ -40,28 +38,22 @@ func (w *Weibo) BuildUrl() ([]Link, error) {
 }
 
 func (w *Weibo) CrawPage(link Link, headers map[string]string) (Page, error) {
-	page, err := w.FetchData(link, nil, nil)
+	page, err := w.FetchData(link, nil, headers)
 	if err != nil {
 		return Page{}, err
 	}
 	var data []Hot
 	doc := page.Doc
-	doc.Find(".list_a li").Each(func(i int, s *goquery.Selection) {
-		text := s.Find("a").Find("span").Text()
-		re := regexp.MustCompile(`\d+\s$`)
-		text = re.ReplaceAllString(text, "")
-		url := s.Find("a").AttrOr("href", "#")
-		rank := s.Find("a").Find("span").Find("em").Text()
+	doc.Find("tbody td.td-02").Each(func(i int, s *goquery.Selection) {
+		link := s.Find("a").First()
+		text, url := link.Text(), link.AttrOr("href", "#")
 		if text == "" {
 			return
 		}
 		hot := Hot{
 			Title:     text,
 			OriginUrl: fmt.Sprintf("%s%s", w.Root, url),
-			Rank: (func() float64 {
-				f, _ := strconv.ParseFloat(rank, 64)
-				return f
-			})(),
+			Rank: 0,
 		}
 		hot.Key = w.FetchKey(hot.OriginUrl)
 		if hot.Key == "" {
