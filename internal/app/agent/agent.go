@@ -30,6 +30,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 	for _, link := range links {
 		wg.Add(1)
 		go func(link lib.Link) {
+			defer wg.Done()
 			page, err := s.CrawPage(link, headers)
 			if err != nil {
 				logger.Error("craw page error, err %v .", err)
@@ -37,7 +38,6 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *rpc.Job) (*rpc.Result, 
 			}
 			logger.Info("craw page done %s .", link.Url)
 			pageMap[link.Tag] = page
-			wg.Done()
 		}(link)
 	}
 

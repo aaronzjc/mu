@@ -134,11 +134,11 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 		}
 	}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		logger.Error("request error e = %v", err)
 		return
 	}
+	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	bodyStr := string(body)
