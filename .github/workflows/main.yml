@@ -71,16 +71,16 @@ jobs:
           repository: aaronzjc/mu-frontend
           target: frontend
           tag_with_ref: true
-      - name: setup ktl
-        uses: azure/setup-kubectl@v1
-        id: install
-      - name: deploy
-        run: |
-          cat << EOF > kube-config
-          ${{ secrets.KUBECONF }}
-          EOF
-          export KUBECONFIG=$(pwd)/kube-config
-          curl -o mu-api.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-api.yml
-          kubectl rollout restart -f mu-api.yml -n k3s-apps
-          curl -o mu-agent.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-agent.yml
-          kubectl replace --force -f mu-agent.yml -n k3s-apps
+      # - name: setup ktl
+      #   uses: azure/setup-kubectl@v1
+      #   id: install
+      # - name: deploy
+      #   run: |
+      #     cat << EOF > kube-config
+      #     ${{ secrets.KUBECONF }}
+      #     EOF
+      #     export KUBECONFIG=$(pwd)/kube-config
+      #     curl -o mu-api.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-api.yml
+      #     kubectl rollout restart -f mu-api.yml -n k3s-apps
+      #     curl -o mu-agent.yml https://raw.githubusercontent.com/aaronzjc/k3s/main/Deployment/mu-agent.yml
+      #     kubectl replace --force -f mu-agent.yml -n k3s-apps

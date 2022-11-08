@@ -3,6 +3,9 @@ bin/
 dist
 cmd/dev
 /public/
+dagger
+scripts/kubeconf.yaml
+scripts/app.json
 
 # Editor directories and files
 .idea

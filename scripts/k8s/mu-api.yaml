@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mu-api
+  namespace: k3s-apps
+spec:
+  selector:
+    matchLabels:
+      app: mu-api
+  replicas: 2
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: mu-api
+    spec:
+      volumes:
+      - name: tz-config
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+      - name: mu-conf
+        configMap:
+          name: mu-config
+      - name: mu-log-dir
+        emptyDir: {}
+      containers:
+      - name: mu-api
+        image: aaronzjc/mu-api:6.2
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: mu-conf
+          mountPath: /app/conf
+        - name: mu-log-dir
+          mountPath: /var/log
+        ports:
+        - containerPort: 7980
+        resources:
+          limits:
+            cpu: 50m
+            memory: 50Mi
