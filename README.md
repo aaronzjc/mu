@@ -15,6 +15,9 @@
 	<img src="./doc/preview.png" alt="preview" width="40%">
     <img src="./doc/tech.png" alt="tech" width="40%">
 </div>
+<div align="center">
+	<img src="./doc/lighthouse.png" alt="preview" width="80%">
+</div>
 
 ## 构建部署
 
