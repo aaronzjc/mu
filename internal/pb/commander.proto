@@ -1,0 +1,17 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "./internal/pb";
+
+service Commander {
+    rpc UpdateCron (Cron) returns (CronRes) {}
+}
+
+message Empty {}
+
+message Cron {
+    string site = 1;
+}
+message CronRes {
+    bool success = 1;
+}

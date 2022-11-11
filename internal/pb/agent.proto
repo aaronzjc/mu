@@ -1,0 +1,30 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "./internal/pb";
+
+service Agent {
+    rpc Craw (Job) returns (Result) {}
+    rpc Check (Ping) returns (Pong) {}
+}
+
+message Job {
+    string name = 1;
+    message Header {
+        string Key = 1;
+        string Val = 2;
+    }
+    repeated Header headers = 2;
+}
+message Result {
+    map<string, string> HotMap = 1;
+    string T = 2;
+}
+
+message Ping {
+    string ping = 1;
+}
+message Pong {
+    string pong = 1;
+}
+

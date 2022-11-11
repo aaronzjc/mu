@@ -1,0 +1,37 @@
+name: mu # 项目名称
+env: dev # 环境类型
+salt: testing # 用户密码加密
+log:
+  level: debug # 日志级别
+  file: /var/log/mu/app.log # 日志文件
+http:
+  tls: false # https
+  url: 127.0.0.1:8980 # 服务地址
+  port: 7980 # 监听端口，默认是7980
+commander:
+  port: 7981 # commander监听端口，某人是7981
+redis:
+  host: 127.0.0.1
+  port: 7379
+  password: 
+database:
+  mu:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: 123456
+    charset: "UTF8"
+service:
+  commander:
+    url: 127.0.0.1:8981
+oauth:
+  github:
+    clientId: 1111
+    clientSecret: 11111
+    admins: 
+    - "11111"
+  weibo:
+    clientId: 11111
+    clientSecret: 11111
+    admins: 
+    - "1111"

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mu-agent-zyra
+  namespace: k3s-apps
+  labels:
+    app: mu-agent-zyra
+spec:
+  containers:
+  - name: mu-agent-zyra
+    image: aaronzjc/mu-agent:8.0
+    imagePullPolicy: Always
+    ports:
+      - containerPort: 7990
+    resources:
+      limits:
+        cpu: 50m
+        memory: 50Mi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mu-agent-nami
+  namespace: k3s-apps
+  labels:
+    app: mu-agent-nami
+spec:
+  containers:
+  - name: mu-agent-nami
+    image: aaronzjc/mu-agent:8.0
+    imagePullPolicy: Always
+    ports:
+      - containerPort: 7990
+    resources:
+      limits:
+        cpu: 50m
+        memory: 50Mi

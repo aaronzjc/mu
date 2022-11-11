@@ -1,0 +1,16 @@
+bin/
+coverage.out
+dagger/
+public/
+**/dev.yml
+**/prod.yml
+**/kubeconf.yaml
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
