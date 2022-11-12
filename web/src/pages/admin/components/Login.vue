@@ -22,6 +22,10 @@
 import {Get} from "@/tools/http";
 import { onMounted, reactive } from 'vue';
 
+const API = {
+    config: "/auth/config"
+}
+
 export default {
     name: "Login",
     setup() {
@@ -31,7 +35,7 @@ export default {
 
         async function fetchConfig() {
             try {
-                let resp = await Get("/oauth/config", {from: "admin"})
+                let resp = await Get(API.config, {from: "admin"})
                 if (resp.data.code === 10000) {
                     state.auth = resp.data.data;
                 } else {

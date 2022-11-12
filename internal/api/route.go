@@ -55,7 +55,7 @@ func SetupRoute(app *gin.Engine) {
 	adminGroup := app.Group("/admin").Use(middleware.ApiAuth(true))
 	{
 		// 节点管理
-		node := admin.NewSite()
+		node := admin.NewNode()
 		adminGroup.GET("/nodes", node.List)
 		adminGroup.POST("/nodes/:id/upsert", node.Upsert)
 		adminGroup.GET("/nodes/:id/del", node.Del)
