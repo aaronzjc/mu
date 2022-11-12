@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: mu-agent-zyra
-    image: aaronzjc/mu-agent:8.1
+    image: aaronzjc/mu-agent:latest
     imagePullPolicy: Always
     ports:
       - containerPort: 7990
@@ -28,7 +28,7 @@ metadata:
 spec:
   containers:
   - name: mu-agent-nami
-    image: aaronzjc/mu-agent:8.1
+    image: aaronzjc/mu-agent:latest
     imagePullPolicy: Always
     ports:
       - containerPort: 7990

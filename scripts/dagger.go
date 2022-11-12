@@ -142,17 +142,24 @@ func deploy(ctx context.Context) error {
 	defer client.Close()
 
 	// 更新部署的版本
+	fileData := make(map[string][]byte)
+	oldTag, newTag := "latest", Version
 	dir := "./scripts/k8s"
 	files := []string{"mu-api.yaml", "mu-agent.yaml", "mu-commander.yaml"}
 	for _, v := range files {
 		file := dir + "/" + v
-		data, err := os.ReadFile(file)
-		if err != nil {
+		if fileData[file], err = os.ReadFile(file); err != nil {
 			return err
 		}
-		out := strings.ReplaceAll(string(data), "latest", Version)
+		out := strings.ReplaceAll(string(fileData[file]), oldTag, newTag)
 		os.WriteFile(file, []byte(out), 0666)
 	}
+	defer func() {
+		for _, v := range files {
+			file := dir + "/" + v
+			os.WriteFile(file, fileData[file], 0666)
+		}
+	}()
 
 	kubectl := client.Container().From("bitnami/kubectl")
 	kubeconfig := client.Host().Workdir().File("./scripts/kubeconf.yaml")
