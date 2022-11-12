@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"dagger.io/dagger"
 	"github.com/aaronzjc/mu/pkg/flow"
 )
 
 const (
-	AppVersion = "8.0"
+	Version = "8.1"
 )
 
 func main() {
@@ -29,9 +30,9 @@ func main() {
 		fw.Step("frontend", buildFrontend)
 		fw.Step("image", buildAndPushImage)
 	case "deploy":
-		fw.Step("backend", buildBackend)
-		fw.Step("frontend", buildFrontend)
-		fw.Step("image", buildAndPushImage)
+		// fw.Step("backend", buildBackend)
+		// fw.Step("frontend", buildFrontend)
+		// fw.Step("image", buildAndPushImage)
 		fw.Step("deploy", deploy)
 	default:
 		fmt.Println("usage: go run ./scripts/dagger.go [backend|frontend|image|deploy]")
@@ -51,9 +52,9 @@ func buildFrontend(ctx context.Context) error {
 		Exclude: []string{"node_modules"},
 	})
 	npm := client.Container().From("node:14-alpine")
-	npm = npm.WithEnvVariable("APP_VERSION", AppVersion)
+	npm = npm.WithEnvVariable("APP_VERSION", Version)
 	npm = npm.WithMountedDirectory("/src/web", src).WithWorkdir("/src/web")
-	npm = npm.WithEnvVariable("VERSION", AppVersion)
+	npm = npm.WithEnvVariable("VERSION", Version)
 	npm = npm.Exec(dagger.ContainerExecOpts{
 		Args: []string{"cat", ".env"},
 	})
@@ -100,7 +101,7 @@ func buildBackend(ctx context.Context) error {
 			Args: []string{
 				"go",
 				"build",
-				"-ldflags", "-X main.version=" + AppVersion,
+				"-ldflags", "-X main.version=" + Version,
 				"-o", path + target,
 				"cmd/" + target + "/main.go"},
 		})
@@ -123,7 +124,7 @@ func buildAndPushImage(ctx context.Context) error {
 	for _, v := range []string{"api", "commander", "agent"} {
 		docker := client.Container()
 		docker = docker.Build(src, dagger.ContainerBuildOpts{Dockerfile: "./scripts/dockerfiles/" + v + ".Dockerfile"})
-		resp, err := docker.Publish(ctx, fmt.Sprintf("aaronzjc/mu-%s:%s", v, AppVersion))
+		resp, err := docker.Publish(ctx, fmt.Sprintf("aaronzjc/mu-%s:%s", v, Version))
 		if err != nil {
 			return err
 		}
@@ -140,20 +141,29 @@ func deploy(ctx context.Context) error {
 	}
 	defer client.Close()
 
-	kubeconfig := client.Host().Workdir().File("./scripts/kubeconf.yaml")
-	deployments := client.Host().Workdir().Directory("./scripts/k8s")
+	// 更新部署的版本
+	dir := "./scripts/k8s"
+	files := []string{"mu-api.yaml", "mu-agent.yaml", "mu-commander.yaml"}
+	for _, v := range files {
+		file := dir + "/" + v
+		data, err := os.ReadFile(file)
+		if err != nil {
+			return err
+		}
+		out := strings.ReplaceAll(string(data), "latest", Version)
+		os.WriteFile(file, []byte(out), 0666)
+	}
+
 	kubectl := client.Container().From("bitnami/kubectl")
+	kubeconfig := client.Host().Workdir().File("./scripts/kubeconf.yaml")
 	kubectl = kubectl.WithMountedFile("/.kube/config", kubeconfig)
+	deployments := client.Host().Workdir().Directory(dir)
 	kubectl = kubectl.WithMountedDirectory("/tmp", deployments)
-	kubectl = kubectl.Exec(dagger.ContainerExecOpts{
-		Args: []string{"apply", "-f", "/tmp/mu-api.yaml", "-n", "k3s-apps"},
-	})
-	kubectl = kubectl.Exec(dagger.ContainerExecOpts{
-		Args: []string{"apply", "-f", "/tmp/mu-agent.yaml", "-n", "k3s-apps"},
-	})
-	kubectl = kubectl.Exec(dagger.ContainerExecOpts{
-		Args: []string{"apply", "-f", "/tmp/mu-commander.yaml", "-n", "k3s-apps"},
-	})
+	for _, f := range files {
+		kubectl = kubectl.Exec(dagger.ContainerExecOpts{
+			Args: []string{"apply", "-f", "/tmp/" + f, "-n", "k3s-apps"},
+		})
+	}
 	logs, err := kubectl.Stdout().Contents(ctx)
 	if err != nil {
 		return err

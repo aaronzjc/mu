@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/aaronzjc/mu/internal/api/res"
+	"github.com/aaronzjc/mu/internal/api/handler/res"
 
 	"github.com/gin-gonic/gin"
 )

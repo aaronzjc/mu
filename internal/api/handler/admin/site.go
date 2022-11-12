@@ -3,7 +3,7 @@ package admin
 import (
 	"strconv"
 
-	"github.com/aaronzjc/mu/internal/api"
+	"github.com/aaronzjc/mu/internal/api/handler"
 	"github.com/aaronzjc/mu/internal/application/dto"
 	"github.com/aaronzjc/mu/internal/application/service"
 	"github.com/aaronzjc/mu/internal/application/store"
@@ -26,7 +26,7 @@ type SiteQueryForm struct {
 func (s *Site) List(ctx *gin.Context) {
 	var r SiteQueryForm
 	if err := ctx.ShouldBindQuery(&r); err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 
@@ -41,7 +41,7 @@ func (s *Site) List(ctx *gin.Context) {
 	}
 	sites, err := s.svc.Get(ctx, q)
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
 	nodes, _ := s.nodeSvc.Get(ctx, &dto.Query{
@@ -49,7 +49,7 @@ func (s *Site) List(ctx *gin.Context) {
 		Args:  []interface{}{model.Enable},
 	})
 
-	api.Resp(ctx, constant.CodeSuccess, "success", map[string]interface{}{
+	handler.Resp(ctx, constant.CodeSuccess, "success", map[string]interface{}{
 		"nodeList": nodes,
 		"siteList": sites,
 	})
@@ -66,42 +66,42 @@ type UpsertSiteForm struct {
 func (s *Site) Upsert(ctx *gin.Context) {
 	var r dto.Site
 	if err := ctx.ShouldBind(&r); err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	r.ID = id
 	err = s.svc.Upsert(ctx, &r)
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
 
-	api.Resp(ctx, constant.CodeSuccess, "success", nil)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nil)
 }
 
 func (s *Site) Del(ctx *gin.Context) {
 	var r SiteQueryForm
 	if err := ctx.ShouldBindQuery(&r); err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	err := s.svc.Del(ctx, r.Id)
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
-	api.Resp(ctx, constant.CodeSuccess, "success", nil)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nil)
 }
 
 func (s *Site) Craw(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	if id <= 0 {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	sites, _ := s.svc.Get(ctx, &dto.Query{
@@ -109,15 +109,15 @@ func (s *Site) Craw(ctx *gin.Context) {
 		Args:  []interface{}{id},
 	})
 	if len(sites) <= 0 {
-		api.Resp(ctx, constant.CodeError, "站点不存在", nil)
+		handler.Resp(ctx, constant.CodeError, "站点不存在", nil)
 		return
 	}
 	err := s.crawSvc.Craw(ctx, sites[0])
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
-	api.Resp(ctx, constant.CodeSuccess, "success", nil)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nil)
 }
 
 func NewSite() *Site {

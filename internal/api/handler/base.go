@@ -1,10 +1,10 @@
-package api
+package handler
 
 import (
 	"net/http"
 	"time"
 
-	"github.com/aaronzjc/mu/internal/api/res"
+	"github.com/aaronzjc/mu/internal/api/handler/res"
 
 	"github.com/gin-gonic/gin"
 )

@@ -3,7 +3,7 @@ package admin
 import (
 	"strconv"
 
-	"github.com/aaronzjc/mu/internal/api"
+	"github.com/aaronzjc/mu/internal/api/handler"
 	"github.com/aaronzjc/mu/internal/application/dto"
 	"github.com/aaronzjc/mu/internal/application/service"
 	"github.com/aaronzjc/mu/internal/application/store"
@@ -23,7 +23,7 @@ type ListForm struct {
 func (n *Node) List(ctx *gin.Context) {
 	var r ListForm
 	if err := ctx.ShouldBindQuery(&r); err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 
@@ -38,11 +38,11 @@ func (n *Node) List(ctx *gin.Context) {
 	}
 	nodes, err := n.svc.Get(ctx, q)
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
 
-	api.Resp(ctx, constant.CodeSuccess, "success", nodes)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nodes)
 }
 
 type UpsertForm struct {
@@ -56,12 +56,12 @@ type UpsertForm struct {
 func (n *Node) Upsert(ctx *gin.Context) {
 	var r UpsertForm
 	if err := ctx.ShouldBind(&r); err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	err = n.svc.Upsert(ctx, &dto.Node{
@@ -72,24 +72,24 @@ func (n *Node) Upsert(ctx *gin.Context) {
 		Enable: r.Enable,
 	})
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
-	api.Resp(ctx, constant.CodeSuccess, "success", nil)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nil)
 }
 
 func (n *Node) Del(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, "参数错误", nil)
+		handler.Resp(ctx, constant.CodeError, "参数错误", nil)
 		return
 	}
 	err = n.svc.Del(ctx, id)
 	if err != nil {
-		api.Resp(ctx, constant.CodeError, err.Error(), nil)
+		handler.Resp(ctx, constant.CodeError, err.Error(), nil)
 		return
 	}
-	api.Resp(ctx, constant.CodeSuccess, "success", nil)
+	handler.Resp(ctx, constant.CodeSuccess, "success", nil)
 }
 
 func NewNode() *Node {

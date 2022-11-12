@@ -25,7 +25,7 @@ spec:
         emptyDir: {}
       containers:
       - name: mu-commander
-        image: aaronzjc/mu-commander:8.0
+        image: aaronzjc/mu-commander:8.1
         imagePullPolicy: Always
         volumeMounts:
         - name: mu-conf

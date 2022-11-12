@@ -11,7 +11,7 @@ import (
 	"github.com/aaronzjc/mu/internal/config"
 	"github.com/aaronzjc/mu/internal/domain/model"
 	"github.com/aaronzjc/mu/internal/domain/repo"
-	"github.com/aaronzjc/mu/internal/utils"
+	"github.com/aaronzjc/mu/internal/util"
 	"github.com/aaronzjc/mu/pkg/oauth"
 )
 
@@ -52,7 +52,7 @@ func (s *UserServiceImpl) Auth(ctx context.Context, t string, ou oauth.User) (st
 		Args:  []interface{}{ou.Username, t},
 	})
 	conf := config.Get()
-	token := utils.GenerateToken(ou.Username, conf.Salt)
+	token := util.GenerateToken(ou.Username, conf.Salt)
 	expireAt := time.Now().Add(time.Hour * 24 * 30).Unix()
 	if exist.ID > 0 {
 		if err := s.repo.Update(ctx, exist, map[string]interface{}{

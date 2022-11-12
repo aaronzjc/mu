@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"github.com/aaronzjc/mu/internal/application/service"

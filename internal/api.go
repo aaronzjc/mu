@@ -10,12 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/aaronzjc/mu/internal/api"
 	"github.com/aaronzjc/mu/internal/application/service"
 	"github.com/aaronzjc/mu/internal/application/store"
 	"github.com/aaronzjc/mu/internal/config"
 	"github.com/aaronzjc/mu/internal/infra/cache"
 	"github.com/aaronzjc/mu/internal/infra/db"
-	"github.com/aaronzjc/mu/internal/route"
 	"github.com/aaronzjc/mu/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -71,7 +71,7 @@ func RunApi(ctx *cli.Context) error {
 	}
 	// 启动服务器
 	app := gin.New()
-	route.Setup(app)
+	api.SetupRoute(app)
 	server := &http.Server{
 		Addr:         addr,
 		Handler:      app,
