@@ -4,16 +4,20 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aaronzjc/mu/internal/api/handler/res"
-
 	"github.com/gin-gonic/gin"
 )
+
+type RespSt struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
 
 func Resp(ctx *gin.Context, code int, msg string, data interface{}) {
 	if data == nil {
 		data = make(map[string]struct{})
 	}
-	ctx.JSON(http.StatusOK, &res.RespSt{
+	ctx.JSON(http.StatusOK, &RespSt{
 		Code: code,
 		Msg:  msg,
 		Data: data,

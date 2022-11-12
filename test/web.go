@@ -6,8 +6,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/aaronzjc/mu/internal/api/handler/res"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -61,7 +59,11 @@ func (r *Response) Body() string {
 }
 
 func (r *Response) TryDecode() (code int, msg string, data any, err error) {
-	var dataSt res.RespSt
+	var dataSt struct {
+		Code int         `json:"code"`
+		Msg  string      `json:"msg"`
+		Data interface{} `json:"data"`
+	}
 	err = json.Unmarshal([]byte(r.Body()), &dataSt)
 	if err != nil {
 		return
