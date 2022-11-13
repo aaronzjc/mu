@@ -48,9 +48,12 @@ func (s *Site) List(ctx *gin.Context) {
 		Query: "`enable` = ?",
 		Args:  []interface{}{model.Enable},
 	})
-
+	nodeList := make(map[int]*dto.Node)
+	for _, v := range nodes {
+		nodeList[v.ID] = v
+	}
 	handler.Resp(ctx, constant.CodeSuccess, "success", map[string]interface{}{
-		"nodeList": nodes,
+		"nodeList": nodeList,
 		"siteList": sites,
 	})
 }

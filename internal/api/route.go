@@ -20,7 +20,7 @@ func SetupRoute(app *gin.Engine) {
 		AllowCredentials: true,
 	}))
 
-	// oauth
+	// auth
 	rAuth := app.Group("/auth")
 	{
 		auth := handler.NewAuth()

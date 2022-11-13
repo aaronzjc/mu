@@ -74,7 +74,7 @@ func (s *Site) FillByModel(site model.Site) *Site {
 	}
 	s.NodeHosts = []int{}
 	if site.NodeHosts != "" {
-		if err = json.Unmarshal([]byte(site.NodeHosts), &hosts); err != nil {
+		if err = json.Unmarshal([]byte(site.NodeHosts), &hosts); err == nil {
 			s.NodeHosts = hosts
 		}
 	}
