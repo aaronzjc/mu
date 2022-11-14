@@ -1,6 +1,7 @@
 package test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/aaronzjc/mu/internal/config"
@@ -29,4 +30,14 @@ func SetupTestDb(t *testing.T, dbName string) {
 	if !ok {
 		require.Nil(t, db.Setup(&conf, &gorm.Config{}))
 	}
+}
+
+func SetupProxy() {
+	os.Setenv("HTTP_PROXY", "http://172.29.176.1:51081")
+	os.Setenv("HTTPS_PROXY", "http://172.29.176.1:51081")
+}
+
+func ClearProxy() {
+	os.Unsetenv("HTTP_PROXY")
+	os.Unsetenv("HTTPS_PROXY")
 }
