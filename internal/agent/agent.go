@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/aaronzjc/mu/internal/core/site"
@@ -43,7 +44,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *pb.Job) (*pb.Result, er
 				logger.Error("craw page error, err %v .", err)
 				return
 			}
-			logger.Info("craw page done %s .", link.Url)
+			logger.Info(fmt.Sprintf("craw page %s done", link.Url))
 			pageMap[link.Tag] = page
 		}(link)
 	}

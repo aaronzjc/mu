@@ -64,7 +64,7 @@ func (h *Hacker) CrawPage(link Link, headers map[string]string) (Page, error) {
 	doc := page.Doc
 	doc.Find(".athing").Each(func(i int, s *goquery.Selection) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
-		text := s.Find(".title").Find(".titlelink").Text()
+		text := s.Find(".title").Find("a").Text()
 		if text == "" || url == "" {
 			return
 		}

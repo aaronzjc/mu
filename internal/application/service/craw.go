@@ -57,6 +57,7 @@ func (c *CrawServiceImpl) PickAgent(ctx context.Context, site *dto.Site) (*dto.N
 func (c *CrawServiceImpl) Craw(ctx context.Context, site *dto.Site) error {
 	picked, err := c.PickAgent(ctx, site)
 	if err != nil {
+		logger.Error("no agent avaiable for site ", site.Name)
 		return errors.New("no agent avaiable")
 	}
 	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
