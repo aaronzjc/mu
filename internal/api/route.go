@@ -33,6 +33,13 @@ func SetupRoute(app *gin.Engine) {
 		rAuth.Use(middleware.ApiAuth(true)).GET("/info/admin", auth.LoginInfo)
 	}
 
+	// 数据统计等
+	statGroup := app.Group("/stat").Use(middleware.SetOnline())
+	{
+		stat := handler.NewStat()
+		statGroup.GET("/online", stat.Online)
+	}
+
 	// index页面
 	indexGroup := app.Group("/api")
 	{

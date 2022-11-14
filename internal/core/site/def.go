@@ -129,7 +129,7 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 	client := http.Client{}
 	req, err := http.NewRequest(link.Method, link.Url, data)
 	if err != nil {
-		logger.Error("init http request error e = %v", err)
+		logger.Error("init http request error e = " + err.Error())
 		return
 	}
 
@@ -147,7 +147,7 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		logger.Error("request error e = %v", err)
+		logger.Error("request error e = " + err.Error())
 		return
 	}
 	defer resp.Body.Close()

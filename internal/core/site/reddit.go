@@ -81,7 +81,7 @@ func (r *Reddit) CrawPage(link Link, headers map[string]string) (Page, error) {
 
 	var list RedditList
 	if err := json.Unmarshal([]byte(page.Content), &list); err != nil {
-		logger.Error("%v", err.Error())
+		logger.Error(err.Error())
 		return Page{}, err
 	}
 

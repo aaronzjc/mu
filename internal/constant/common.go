@@ -13,4 +13,5 @@ const (
 
 	// svc定义
 	SvcCommander SvcName = "commander"
+	SvcOnline    SvcName = "online"
 )
