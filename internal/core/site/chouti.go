@@ -11,21 +11,21 @@ import (
 
 const SITE_CT = "chouti"
 
-var ChoutiTabs = []map[string]string{
+var ChoutiTabs = []SiteTab{
 	{
-		"url":  "/link/hot",
-		"tag":  "hot",
-		"name": "新热榜",
+		Url:  "/link/hot",
+		Tag:  "hot",
+		Name: "新热榜",
 	},
 	{
-		"url":  "/top/24hr",
-		"tag":  "24hr",
-		"name": "24小时最热",
+		Url:  "/top/24hr",
+		Tag:  "24hr",
+		Name: "24小时最热",
 	},
 	{
-		"url":  "/top/72hr",
-		"tag":  "72hr",
-		"name": "3天最热",
+		Url:  "/top/72hr",
+		Tag:  "72hr",
+		Name: "3天最热",
 	},
 }
 
@@ -39,21 +39,6 @@ type Chouti struct {
 	Site
 }
 
-var _ Spider = &Chouti{}
-
-func init() {
-	RegistSite(SITE_CT, &Chouti{
-		Site{
-			Name:     "抽屉",
-			Key:      SITE_CT,
-			Root:     "https://dig.chouti.com",
-			Desc:     "抽屉新热榜",
-			CrawType: CrawApi,
-			Tabs:     ChoutiTabs,
-		},
-	})
-}
-
 func (c *Chouti) GetSite() *Site {
 	return &c.Site
 }
@@ -62,9 +47,9 @@ func (c *Chouti) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, item := range ChoutiTabs {
 		link := Link{
-			Key: item["url"],
-			Url: fmt.Sprintf("%s%s", c.Root, item["url"]),
-			Tag: item["tag"],
+			Key: item.Url,
+			Url: fmt.Sprintf("%s%s", c.Root, item.Url),
+			Tag: item.Tag,
 		}
 
 		list = append(list, link)
@@ -111,4 +96,23 @@ func (c *Chouti) FetchKey(link string) string {
 		return ""
 	}
 	return helper.Md5(link)
+}
+
+func NewChouti() *Chouti {
+	return &Chouti{
+		Site{
+			Name:     "抽屉",
+			Key:      SITE_CT,
+			Root:     "https://dig.chouti.com",
+			Desc:     "抽屉新热榜",
+			CrawType: CrawApi,
+			Tabs:     ChoutiTabs,
+		},
+	}
+}
+
+var _ Spider = &Chouti{}
+
+func init() {
+	RegistSite(SITE_CT, NewChouti())
 }

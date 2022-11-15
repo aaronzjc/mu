@@ -8,18 +8,22 @@ import (
 
 const SITE_WBVIDEO = "wbvideo"
 
-var WbvideoTabs = []map[string]string{
+var WbvideoTabs = []SiteTab{
 	{
-		"tag":  "all",
-		"url":  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard",
-		"cid":  "4418213501411061",
-		"name": "全站",
+		Tag:  "all",
+		Url:  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard",
+		Name: "全站",
+		Args: map[string]string{
+			"cid": "4418213501411061",
+		},
 	},
 	{
-		"tag":  "funny",
-		"url":  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard%2F4418219809678869",
-		"cid":  "4418219809678869",
-		"name": "搞笑幽默",
+		Tag:  "funny",
+		Url:  "https://weibo.com/tv/api/component?page=%2Ftv%2Fbillboard%2F4418219809678869",
+		Name: "搞笑幽默",
+		Args: map[string]string{
+			"cid": "4418219809678869",
+		},
 	},
 }
 
@@ -45,21 +49,6 @@ type Wbvideo struct {
 	Site
 }
 
-var _ Spider = &Wbvideo{}
-
-func init() {
-	RegistSite(SITE_WBVIDEO, &Wbvideo{
-		Site{
-			Name:     "微博视频",
-			Key:      SITE_WBVIDEO,
-			Root:     "https://weibo.com/tv/home",
-			Desc:     "微博视频榜单",
-			CrawType: CrawApi,
-			Tabs:     WbvideoTabs,
-		},
-	})
-}
-
 func (w *Wbvideo) GetSite() *Site {
 	return &w.Site
 }
@@ -67,11 +56,11 @@ func (w *Wbvideo) GetSite() *Site {
 func (w *Wbvideo) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range WbvideoTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
-			Key:    tab["cid"],
+			Key:    tab.Args["cid"],
 			Url:    url,
-			Tag:    tab["tag"],
+			Tag:    tab.Tag,
 			Method: "POST",
 		}
 		list = append(list, link)
@@ -139,4 +128,23 @@ func (w *Wbvideo) CrawPage(link Link, headers map[string]string) (res Page, err 
 
 func (w *Wbvideo) FetchKey(key string) string {
 	return key
+}
+
+func NewWbvideo() *Wbvideo {
+	return &Wbvideo{
+		Site{
+			Name:     "微博视频",
+			Key:      SITE_WBVIDEO,
+			Root:     "https://weibo.com/tv/home",
+			Desc:     "微博视频榜单",
+			CrawType: CrawApi,
+			Tabs:     WbvideoTabs,
+		},
+	}
+}
+
+var _ Spider = &Wbvideo{}
+
+func init() {
+	RegistSite(SITE_WBVIDEO, NewWbvideo())
 }

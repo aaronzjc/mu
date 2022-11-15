@@ -81,6 +81,13 @@ type Page struct {
 	T    time.Time
 }
 
+type SiteTab struct {
+	Tag  string
+	Name string
+	Url  string
+	Args map[string]string
+}
+
 // 站点信息
 type Site struct {
 	Name     string
@@ -88,7 +95,7 @@ type Site struct {
 	Root     string
 	Desc     string
 	CrawType int8
-	Tabs     []map[string]string
+	Tabs     []SiteTab
 }
 
 func (s *Site) FetchData(link Link, params map[string]string, headers map[string]string) (res Page, err error) {

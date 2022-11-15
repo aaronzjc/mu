@@ -3,6 +3,7 @@ package cache
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/aaronzjc/mu/internal/config"
 	"github.com/go-redis/redis"
@@ -10,18 +11,23 @@ import (
 
 var (
 	client *redis.Client
+	once   sync.Once
 )
 
 func Setup(conf *config.RedisConfig) error {
-	if client == nil {
-		client = redis.NewClient(&redis.Options{
+	once.Do(func() {
+		c := redis.NewClient(&redis.Options{
 			Addr:     fmt.Sprintf("%s:%d", conf.Host, conf.Port),
 			Password: conf.Password,
 			DB:       0,
 		})
-		if _, err := client.Ping().Result(); err != nil {
-			return errors.New("init redis err")
+		if _, err := c.Ping().Result(); err != nil {
+			return
 		}
+		client = c
+	})
+	if client == nil {
+		return errors.New("init redis err")
 	}
 	return nil
 }

@@ -11,21 +11,21 @@ import (
 
 const SITE_REDDIT = "reddit"
 
-var RedditTabs = []map[string]string{
+var RedditTabs = []SiteTab{
 	{
-		"tag":  "AskReddit",
-		"name": "AskReddit",
-		"url":  "AskReddit",
+		Tag:  "AskReddit",
+		Name: "AskReddit",
+		Url:  "AskReddit",
 	},
 	{
-		"tag":  "Jokes",
-		"name": "Jokes",
-		"url":  "Jokes",
+		Tag:  "Jokes",
+		Name: "Jokes",
+		Url:  "Jokes",
 	},
 	{
-		"tag":  "leagueoflegends",
-		"name": "lol",
-		"url":  "leagueoflegends",
+		Tag:  "leagueoflegends",
+		Name: "lol",
+		Url:  "leagueoflegends",
 	},
 }
 
@@ -37,21 +37,6 @@ type Reddit struct {
 	Site
 }
 
-var _ Spider = &Reddit{}
-
-func init() {
-	RegistSite(SITE_REDDIT, &Reddit{
-		Site{
-			Name:     "Reddit",
-			Key:      SITE_REDDIT,
-			Root:     "https://www.reddit.com/",
-			Desc:     "老外的贴吧",
-			CrawType: CrawApi,
-			Tabs:     RedditTabs,
-		},
-	})
-}
-
 func (r *Reddit) GetSite() *Site {
 	return &r.Site
 }
@@ -61,11 +46,11 @@ func (r *Reddit) BuildUrl() ([]Link, error) {
 
 	var list []Link
 	for _, tab := range RedditTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: fmt.Sprintf(str, url),
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -123,4 +108,23 @@ func (r *Reddit) CrawPage(link Link, headers map[string]string) (Page, error) {
 
 func (r *Reddit) FetchKey(key string) string {
 	return key
+}
+
+func NewReddit() *Reddit {
+	return &Reddit{
+		Site{
+			Name:     "Reddit",
+			Key:      SITE_REDDIT,
+			Root:     "https://www.reddit.com/",
+			Desc:     "老外的贴吧",
+			CrawType: CrawApi,
+			Tabs:     RedditTabs,
+		},
+	}
+}
+
+var _ Spider = &Reddit{}
+
+func init() {
+	RegistSite(SITE_REDDIT, NewReddit())
 }

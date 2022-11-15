@@ -62,12 +62,12 @@ func (s *SiteServiceImpl) Init(ctx context.Context) error {
 		var e int8
 		for _, tag := range siteConf.Tabs {
 			e = 1
-			if _, ok := tagMap[tag["tag"]]; ok {
+			if _, ok := tagMap[tag.Tag]; ok {
 				e = 0
 			}
 			tags = append(tags, dto.Tag{
-				Key:    tag["tag"],
-				Name:   tag["name"],
+				Key:    tag.Tag,
+				Name:   tag.Name,
 				Enable: e,
 			})
 		}

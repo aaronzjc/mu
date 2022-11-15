@@ -124,9 +124,14 @@ func (s *Site) Craw(ctx *gin.Context) {
 }
 
 func NewSite() *Site {
+	siteRepo := store.NewSiteRepo()
+	nodeRepo := store.NewNodeRepo()
+	siteSvc := service.NewSiteService(siteRepo, nil)
+	nodeSvc := service.NewNodeService(nodeRepo)
+	crawSvc := service.NewCrawService(siteRepo, nodeRepo)
 	return &Site{
-		svc:     service.NewSiteService(store.NewSiteRepo(), nil),
-		nodeSvc: service.NewNodeService(store.NewNodeRepo()),
-		crawSvc: service.NewCrawService(),
+		svc:     siteSvc,
+		nodeSvc: nodeSvc,
+		crawSvc: crawSvc,
 	}
 }

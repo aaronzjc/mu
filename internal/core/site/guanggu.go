@@ -11,36 +11,21 @@ import (
 
 const SITE_GUANGGU = "guanggu"
 
-var GuangGuTabs = []map[string]string{
+var GuangGuTabs = []SiteTab{
 	{
-		"tag":  "default",
-		"name": "默认",
-		"url":  "https://www.guozaoke.com/",
+		Tag:  "default",
+		Name: "默认",
+		Url:  "https://www.guozaoke.com/",
 	},
 	{
-		"tag":  "latest",
-		"name": "最新",
-		"url":  "https://www.guozaoke.com/?tab=latest",
+		Tag:  "latest",
+		Name: "最新",
+		Url:  "https://www.guozaoke.com/?tab=latest",
 	},
 }
 
 type Guanggu struct {
 	Site
-}
-
-var _ Spider = &Guanggu{}
-
-func init() {
-	RegistSite(SITE_GUANGGU, &Guanggu{
-		Site{
-			Name:     "光谷",
-			Key:      SITE_GUANGGU,
-			Root:     "https://www.guozaoke.com",
-			Desc:     "武汉光谷社区",
-			CrawType: CrawHtml,
-			Tabs:     GuangGuTabs,
-		},
-	})
 }
 
 func (g *Guanggu) GetSite() *Site {
@@ -51,9 +36,9 @@ func (g *Guanggu) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range GuangGuTabs {
 		link := Link{
-			Key: tab["url"],
-			Url: tab["url"],
-			Tag: tab["tag"],
+			Key: tab.Url,
+			Url: tab.Url,
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -103,4 +88,23 @@ func (g *Guanggu) FetchKey(link string) string {
 	reg := regexp.MustCompile(`.*/t/(\d+).*`)
 	id := reg.ReplaceAllString(link, "$1")
 	return id
+}
+
+func NewGuanggu() *Guanggu {
+	return &Guanggu{
+		Site{
+			Name:     "光谷",
+			Key:      SITE_GUANGGU,
+			Root:     "https://www.guozaoke.com",
+			Desc:     "武汉光谷社区",
+			CrawType: CrawHtml,
+			Tabs:     GuangGuTabs,
+		},
+	}
+}
+
+var _ Spider = &Guanggu{}
+
+func init() {
+	RegistSite(SITE_GUANGGU, NewGuanggu())
 }

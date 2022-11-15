@@ -11,41 +11,26 @@ import (
 
 const SITE_GITHUB = "github"
 
-var GithubTabs = []map[string]string{
+var GithubTabs = []SiteTab{
 	{
-		"tag":  "trending",
-		"url":  "https://github.com/trending",
-		"name": "Trending",
+		Tag:  "trending",
+		Url:  "https://github.com/trending",
+		Name: "Trending",
 	},
 	{
-		"tag":  "trending-php",
-		"url":  "https://github.com/trending/php?since=daily",
-		"name": "Trending-PHP",
+		Tag:  "trending-php",
+		Url:  "https://github.com/trending/php?since=daily",
+		Name: "Trending-PHP",
 	},
 	{
-		"tag":  "trending-go",
-		"url":  "https://github.com/trending/go?since=daily",
-		"name": "Trending-Go",
+		Tag:  "trending-go",
+		Url:  "https://github.com/trending/go?since=daily",
+		Name: "Trending-Go",
 	},
 }
 
 type Github struct {
 	Site
-}
-
-var _ Spider = &Github{}
-
-func init() {
-	RegistSite(SITE_GITHUB, &Github{
-		Site{
-			Name:     "Github",
-			Key:      SITE_GITHUB,
-			Root:     "https://github.com",
-			Desc:     "Github.com",
-			CrawType: CrawHtml,
-			Tabs:     GithubTabs,
-		},
-	})
 }
 
 func (g *Github) GetSite() *Site {
@@ -55,11 +40,11 @@ func (g *Github) GetSite() *Site {
 func (g *Github) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range GithubTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -107,4 +92,23 @@ func (g *Github) FetchKey(link string) string {
 		return ""
 	}
 	return helper.Md5(link)
+}
+
+func NewGithub() *Github {
+	return &Github{
+		Site{
+			Name:     "Github",
+			Key:      SITE_GITHUB,
+			Root:     "https://github.com",
+			Desc:     "Github.com",
+			CrawType: CrawHtml,
+			Tabs:     GithubTabs,
+		},
+	}
+}
+
+var _ Spider = &Github{}
+
+func init() {
+	RegistSite(SITE_GITHUB, NewGithub())
 }

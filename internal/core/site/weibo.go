@@ -10,31 +10,16 @@ import (
 
 const SITE_WEIBO = "weibo"
 
-var WeiboTabs = []map[string]string{
+var WeiboTabs = []SiteTab{
 	{
-		"tag":  "hot",
-		"url":  "https://s.weibo.com/top/summary?cate=realtimehot",
-		"name": "热搜",
+		Tag:  "hot",
+		Url:  "https://s.weibo.com/top/summary?cate=realtimehot",
+		Name: "热搜",
 	},
 }
 
 type Weibo struct {
 	Site
-}
-
-var _ Spider = &Weibo{}
-
-func init() {
-	RegistSite(SITE_WEIBO, &Weibo{
-		Site{
-			Name:     "微博",
-			Key:      SITE_WEIBO,
-			Root:     "https://s.weibo.com",
-			Desc:     "微博热搜",
-			CrawType: CrawHtml,
-			Tabs:     WeiboTabs,
-		},
-	})
 }
 
 func (w *Weibo) GetSite() *Site {
@@ -44,11 +29,11 @@ func (w *Weibo) GetSite() *Site {
 func (w *Weibo) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range WeiboTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -92,4 +77,23 @@ func (w *Weibo) FetchKey(link string) string {
 		return ""
 	}
 	return helper.Md5(link)
+}
+
+func NewWeibo() *Weibo {
+	return &Weibo{
+		Site{
+			Name:     "微博",
+			Key:      SITE_WEIBO,
+			Root:     "https://s.weibo.com",
+			Desc:     "微博热搜",
+			CrawType: CrawHtml,
+			Tabs:     WeiboTabs,
+		},
+	}
+}
+
+var _ Spider = &Weibo{}
+
+func init() {
+	RegistSite(SITE_WEIBO, NewWeibo())
 }

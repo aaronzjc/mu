@@ -9,31 +9,16 @@ import (
 
 const SITE_ZHIHU = "zhihu"
 
-var ZhihuTabs = []map[string]string{
+var ZhihuTabs = []SiteTab{
 	{
-		"tag":  "all",
-		"url":  "https://www.zhihu.com/hot",
-		"name": "知乎热榜",
+		Tag:  "all",
+		Url:  "https://www.zhihu.com/hot",
+		Name: "知乎热榜",
 	},
 }
 
 type Zhihu struct {
 	Site
-}
-
-var _ Spider = &Zhihu{}
-
-func init() {
-	RegistSite(SITE_ZHIHU, &Zhihu{
-		Site{
-			Name:     "知乎",
-			Key:      SITE_ZHIHU,
-			Root:     "https://zhihu.com",
-			Desc:     "知乎热榜",
-			CrawType: CrawHtml,
-			Tabs:     ZhihuTabs,
-		},
-	})
 }
 
 func (z *Zhihu) GetSite() *Site {
@@ -43,11 +28,11 @@ func (z *Zhihu) GetSite() *Site {
 func (z *Zhihu) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range ZhihuTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -89,4 +74,23 @@ func (z *Zhihu) FetchKey(link string) string {
 	reg := regexp.MustCompile(`.*/question/(\d+)`)
 	id := reg.ReplaceAllString(link, "$1")
 	return id
+}
+
+func NewZhihu() *Zhihu {
+	return &Zhihu{
+		Site{
+			Name:     "知乎",
+			Key:      SITE_ZHIHU,
+			Root:     "https://zhihu.com",
+			Desc:     "知乎热榜",
+			CrawType: CrawHtml,
+			Tabs:     ZhihuTabs,
+		},
+	}
+}
+
+var _ Spider = &Zhihu{}
+
+func init() {
+	RegistSite(SITE_ZHIHU, NewZhihu())
 }

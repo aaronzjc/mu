@@ -30,7 +30,7 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *pb.Job) (*pb.Result, er
 	}
 	spider, ok := site.SiteMap[msg.Name]
 	if !ok {
-		return nil, errors.New("not supported site")
+		return nil, errors.New("not supported site " + msg.Name)
 	}
 
 	links, _ := spider.BuildUrl()
@@ -40,10 +40,10 @@ func (agent *AgentServer) Craw(ctx context.Context, msg *pb.Job) (*pb.Result, er
 			defer wg.Done()
 			page, err := spider.CrawPage(link, headers)
 			if err != nil {
-				logger.Error("craw page error, err %v .", err)
+				logger.Error("craw page error, err " + err.Error())
 				return
 			}
-			logger.Info("craw page done %s .", link.Url)
+			logger.Info("craw page done, link = " + link.Url)
 			pageMap[link.Tag] = page
 		}(link)
 	}

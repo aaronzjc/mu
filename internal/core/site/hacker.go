@@ -9,31 +9,16 @@ import (
 
 const SITE_HACKER = "hacker"
 
-var HackerTabs = []map[string]string{
+var HackerTabs = []SiteTab{
 	{
-		"tag":  "new",
-		"name": "最新",
-		"url":  "https://news.ycombinator.com/",
+		Tag:  "new",
+		Name: "最新",
+		Url:  "https://news.ycombinator.com/",
 	},
 }
 
 type Hacker struct {
 	Site
-}
-
-var _ Spider = &Hacker{}
-
-func init() {
-	RegistSite(SITE_HACKER, &Hacker{
-		Site{
-			Name:     "Hacker",
-			Key:      SITE_HACKER,
-			Root:     "https://news.ycombinator.com/",
-			Desc:     "Hacker News",
-			CrawType: CrawHtml,
-			Tabs:     HackerTabs,
-		},
-	})
 }
 
 func (h *Hacker) GetSite() *Site {
@@ -43,11 +28,11 @@ func (h *Hacker) GetSite() *Site {
 func (h *Hacker) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range HackerTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -64,7 +49,7 @@ func (h *Hacker) CrawPage(link Link, headers map[string]string) (Page, error) {
 	doc := page.Doc
 	doc.Find(".athing").Each(func(i int, s *goquery.Selection) {
 		url, _ := s.Find(".title").Find("a").Attr("href")
-		text := s.Find(".title").Find(".titlelink").Text()
+		text := s.Find(".title").Find("a").Text()
 		if text == "" || url == "" {
 			return
 		}
@@ -90,4 +75,23 @@ func (h *Hacker) FetchKey(link string) string {
 		return ""
 	}
 	return helper.Md5(link)
+}
+
+func NewHacker() *Hacker {
+	return &Hacker{
+		Site{
+			Name:     "Hacker",
+			Key:      SITE_HACKER,
+			Root:     "https://news.ycombinator.com/",
+			Desc:     "Hacker News",
+			CrawType: CrawHtml,
+			Tabs:     HackerTabs,
+		},
+	}
+}
+
+var _ Spider = &Hacker{}
+
+func init() {
+	RegistSite(SITE_HACKER, NewHacker())
 }

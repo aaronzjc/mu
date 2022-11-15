@@ -9,15 +9,20 @@ import (
 	"github.com/aaronzjc/mu/internal/agent"
 	"github.com/aaronzjc/mu/internal/pb"
 	"github.com/aaronzjc/mu/pkg/logger"
+	"github.com/aaronzjc/mu/test"
 	"github.com/urfave/cli"
 	"google.golang.org/grpc"
 )
 
 func SetupAgent(ctx *cli.Context) error {
-	// 初始化日志组件
-	err := logger.Setup("agent", "/var/log/mu-agent.log")
+	err := logger.Setup("agent", "")
 	if err != nil {
 		return err
+	}
+
+	// 测试环境配置代理
+	if os.Getenv("APP_ENV") != "prod" {
+		test.SetupProxy()
 	}
 	return nil
 }

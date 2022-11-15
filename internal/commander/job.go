@@ -27,9 +27,12 @@ func (j *CrawJob) Run() {
 }
 
 func NewCrawJob(site *dto.Site) *CrawJob {
+	siteRepo := store.NewSiteRepo()
+	nodeRepo := store.NewNodeRepo()
+	crawSvc := service.NewCrawService(siteRepo, nodeRepo)
 	return &CrawJob{
 		site: site,
-		svc:  service.NewCrawService(),
+		svc:  crawSvc,
 	}
 }
 

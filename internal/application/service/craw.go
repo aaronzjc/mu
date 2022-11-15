@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/aaronzjc/mu/internal/application/dto"
-	"github.com/aaronzjc/mu/internal/application/store"
 	"github.com/aaronzjc/mu/internal/core/rpc"
 	"github.com/aaronzjc/mu/internal/domain/model"
 	"github.com/aaronzjc/mu/internal/domain/repo"
@@ -35,7 +34,7 @@ func (c *CrawServiceImpl) PickAgent(ctx context.Context, site *dto.Site) (*dto.N
 	q := &dto.Query{}
 	if site.NodeOption == model.ByType {
 		q.Query = "`type` = ? AND `ping` = ?"
-		q.Args = []interface{}{model.ByType, model.PingOk}
+		q.Args = []interface{}{site.NodeType, model.PingOk}
 	} else {
 		if len(site.NodeHosts) == 0 {
 			return nil, errors.New("no nodes configured")
@@ -82,7 +81,7 @@ func (c *CrawServiceImpl) Craw(ctx context.Context, site *dto.Site) error {
 		Name:    site.Key,
 		Headers: headers,
 	}); err != nil {
-		logger.Error("remote craw err %v", err)
+		logger.Error("remote craw err " + err.Error())
 		return err
 	}
 	logger.Info("remote craw [" + site.Key + "] done")
@@ -101,9 +100,9 @@ func (c *CrawServiceImpl) Craw(ctx context.Context, site *dto.Site) error {
 	return nil
 }
 
-func NewCrawService() *CrawServiceImpl {
+func NewCrawService(site repo.SiteRepo, node repo.NodeRepo) *CrawServiceImpl {
 	return &CrawServiceImpl{
-		siteRepo: store.NewSiteRepo(),
-		nodeRepo: store.NewNodeRepo(),
+		siteRepo: site,
+		nodeRepo: node,
 	}
 }

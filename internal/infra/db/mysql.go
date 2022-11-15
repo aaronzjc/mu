@@ -1,7 +1,9 @@
 package db
 
 import (
+	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/aaronzjc/mu/internal/config"
 	"github.com/aaronzjc/mu/pkg/logger"
@@ -14,7 +16,10 @@ type DBPool struct {
 	dbMap map[string]*gorm.DB
 }
 
-var pool *DBPool
+var (
+	pool *DBPool
+	once sync.Once
+)
 
 func init() {
 	pool = &DBPool{
@@ -23,28 +28,28 @@ func init() {
 }
 
 func Setup(conf *config.Config, config *gorm.Config) error {
-	defer func() {
-		if err := recover(); err != nil {
-			logger.Error("setup db panic")
-		}
-	}()
 	var err error
-	for dbname, v := range conf.Database {
-		// 初始化DB等
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True",
-			v.Username,
-			v.Password,
-			v.Host,
-			v.Port,
-			dbname,
-			v.Charset,
-		)
-		if pool.dbMap[dbname], err = gorm.Open(mysql.Open(dsn), config); err != nil {
-			logger.Error("connect db " + dbname + " err")
-			return err
+	once.Do(func() {
+		for dbname, v := range conf.Database {
+			// 初始化DB等
+			dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True",
+				v.Username,
+				v.Password,
+				v.Host,
+				v.Port,
+				dbname,
+				v.Charset,
+			)
+			if client, errr := gorm.Open(mysql.Open(dsn), config); errr != nil {
+				logger.Error("init db err, ", errr.Error())
+				err = errors.New("connect to " + dbname + " err")
+				return
+			} else {
+				pool.dbMap[dbname] = client
+			}
 		}
-	}
-	return nil
+	})
+	return err
 }
 
 func Get(dbname string) (*gorm.DB, bool) {

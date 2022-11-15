@@ -10,31 +10,16 @@ import (
 
 const SITE_ZAOBAO = "zaobao"
 
-var ZaobaoTabs = []map[string]string{
+var ZaobaoTabs = []SiteTab{
 	{
-		"tag":  "focus",
-		"url":  "http://www.zaobao.com/",
-		"name": "今日焦点",
+		Tag:  "focus",
+		Url:  "http://www.zaobao.com/",
+		Name: "今日焦点",
 	},
 }
 
 type Zaobao struct {
 	Site
-}
-
-var _ Spider = &Zaobao{}
-
-func init() {
-	RegistSite(SITE_ZAOBAO, &Zaobao{
-		Site{
-			Name:     "联合早报",
-			Key:      SITE_ZAOBAO,
-			Root:     "http://www.zaobao.com",
-			Desc:     "新加坡新闻",
-			CrawType: CrawHtml,
-			Tabs:     ZaobaoTabs,
-		},
-	})
 }
 
 func (z *Zaobao) GetSite() *Site {
@@ -44,11 +29,11 @@ func (z *Zaobao) GetSite() *Site {
 func (z *Zaobao) BuildUrl() ([]Link, error) {
 	var list []Link
 	for _, tab := range ZaobaoTabs {
-		url := tab["url"]
+		url := tab.Url
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -107,4 +92,23 @@ func (z *Zaobao) FetchKey(link string) string {
 		return ""
 	}
 	return helper.Md5(link)
+}
+
+func NewZaobao() *Zaobao {
+	return &Zaobao{
+		Site{
+			Name:     "联合早报",
+			Key:      SITE_ZAOBAO,
+			Root:     "http://www.zaobao.com",
+			Desc:     "新加坡新闻",
+			CrawType: CrawHtml,
+			Tabs:     ZaobaoTabs,
+		},
+	}
+}
+
+var _ Spider = &Zaobao{}
+
+func init() {
+	RegistSite(SITE_ZAOBAO, NewZaobao())
 }

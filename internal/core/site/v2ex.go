@@ -11,34 +11,19 @@ import (
 
 const SITE_V2EX = "v2ex"
 
-var V2exTabs = []map[string]string{
+var V2exTabs = []SiteTab{
 	{
-		"tag":  "all",
-		"name": "全部",
+		Tag:  "all",
+		Name: "全部",
 	},
 	{
-		"tag":  "hot",
-		"name": "最热",
+		Tag:  "hot",
+		Name: "最热",
 	},
 }
 
 type V2ex struct {
 	Site
-}
-
-var _ Spider = &V2ex{}
-
-func init() {
-	RegistSite(SITE_V2EX, &V2ex{
-		Site{
-			Name:     "v2ex",
-			Key:      SITE_V2EX,
-			Root:     "https://www.v2ex.com",
-			Desc:     "way to explore",
-			CrawType: CrawHtml,
-			Tabs:     V2exTabs,
-		},
-	})
 }
 
 func (v *V2ex) GetSite() *Site {
@@ -52,11 +37,11 @@ func (v *V2ex) BuildUrl() ([]Link, error) {
 
 	var list []Link
 	for _, tab := range V2exTabs {
-		url := f(v.Root, tab["tag"])
+		url := f(v.Root, tab.Tag)
 		link := Link{
 			Key: url,
 			Url: url,
-			Tag: tab["tag"],
+			Tag: tab.Tag,
 		}
 		list = append(list, link)
 	}
@@ -106,4 +91,23 @@ func (v *V2ex) FetchKey(link string) string {
 	reg := regexp.MustCompile(`.*/t/(\\d+).*`)
 	id := reg.ReplaceAllString(link, "$1")
 	return id
+}
+
+func NewV2ex() *V2ex {
+	return &V2ex{
+		Site{
+			Name:     "v2ex",
+			Key:      SITE_V2EX,
+			Root:     "https://www.v2ex.com",
+			Desc:     "way to explore",
+			CrawType: CrawHtml,
+			Tabs:     V2exTabs,
+		},
+	}
+}
+
+var _ Spider = &V2ex{}
+
+func init() {
+	RegistSite(SITE_V2EX, NewV2ex())
 }
