@@ -175,7 +175,7 @@ func masterDuty(ctx context.Context) {
 		case <-t.C:
 			if !IsLeader {
 				// 再次判断是否是master，可能中途出现状况，执行了主从切换
-				logger.Info("%s no more master, done own duty", Identifier)
+				logger.Info("i am not master, id = ", Identifier)
 				break
 			}
 

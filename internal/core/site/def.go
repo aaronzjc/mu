@@ -130,6 +130,7 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 	}
 
 	if err != nil {
+		logger.Error("fetch page data err = " + err.Error())
 		return
 	}
 
@@ -166,6 +167,7 @@ func (s *Site) FetchData(link Link, params map[string]string, headers map[string
 	if s.CrawType == CrawHtml {
 		doc, err = goquery.NewDocumentFromReader(strings.NewReader(bodyStr))
 		if err != nil {
+			logger.Error("convert html page err = " + err.Error())
 			return
 		}
 	}
