@@ -21,7 +21,7 @@
 
 ## 构建部署
 
-因为windows原生不支持`make`，为了考虑跨平台负担，项目采用`mage`和`dagger`作为CI/CD工具集。
+因为windows原生不支持`make`，项目采用`mage`和`dagger`作为CI/CD工具集。
 
 安装参考`magefile/mage`项目。
 
