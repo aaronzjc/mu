@@ -43,6 +43,6 @@ type NewsItem struct {
 	Ext       map[string]string `json:"ext"`
 }
 type News struct {
-	T    string
-	List []NewsItem
+	T    string     `json:"t"`
+	List []NewsItem `json:"list"`
 }

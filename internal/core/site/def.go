@@ -15,13 +15,13 @@ import (
 
 const (
 	// 抓取类型
-	CrawApi = iota + 1
-	CrawHtml
+	CrawApi  = 1
+	CrawHtml = 2
 
 	// 渲染的样式
-	CardText = iota
-	CardRichText
-	CardVideo
+	CardText     = 0
+	CardRichText = 1
+	CardVideo    = 2
 )
 
 var (
