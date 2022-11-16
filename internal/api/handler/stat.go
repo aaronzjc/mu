@@ -20,7 +20,7 @@ func (ctr *Stat) Online(c *gin.Context) {
 		})
 		return
 	}
-	url := fmt.Sprintf("%s/online/%s", svcUrl, "prin")
+	url := fmt.Sprintf("%s/online/%s", svcUrl, "mu")
 	resp, err := http.Get(url)
 	if err != nil {
 		Resp(c, constant.CodeSuccess, "success", map[string]string{
