@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version = "8.11"
+	Version = "8.12"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 		fw.Step("image", buildAndPushImage)
 	case "deploy":
 		fw.Step("backend", buildBackend)
-		fw.Step("frontend", buildFrontend)
+		// fw.Step("frontend", buildFrontend)
 		fw.Step("image", buildAndPushImage)
 		fw.Step("deploy", deploy)
 	default:
