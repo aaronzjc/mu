@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version = "8.12"
+	Version = "8.13"
 )
 
 func main() {
@@ -52,7 +52,6 @@ func buildFrontend(ctx context.Context) error {
 		Exclude: []string{"node_modules"},
 	})
 	npm := client.Container().From("node:14-alpine")
-	npm = npm.WithEnvVariable("APP_VERSION", Version)
 	npm = npm.WithMountedDirectory("/src/web", src).WithWorkdir("/src/web")
 	npm = npm.WithEnvVariable("VERSION", Version)
 	npm = npm.WithExec([]string{"cat", ".env"})
@@ -62,7 +61,13 @@ func buildFrontend(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if _, err := npm.Directory("/src/public").Export(ctx, "dagger/frontend"); err != nil {
+
+	dst := "dagger/frontend"
+	// 清空目标输出目录
+	if err := os.RemoveAll(dst); err != nil {
+		return err
+	}
+	if _, err := npm.Directory("/src/public").Export(ctx, dst); err != nil {
 		return err
 	}
 	// just for dev
