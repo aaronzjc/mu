@@ -31,7 +31,7 @@ func main() {
 		fw.Step("image", buildAndPushImage)
 	case "deploy":
 		fw.Step("backend", buildBackend)
-		// fw.Step("frontend", buildFrontend)
+		fw.Step("frontend", buildFrontend)
 		fw.Step("image", buildAndPushImage)
 		fw.Step("deploy", deploy)
 	default:
@@ -55,16 +55,10 @@ func buildFrontend(ctx context.Context) error {
 	npm = npm.WithEnvVariable("APP_VERSION", Version)
 	npm = npm.WithMountedDirectory("/src/web", src).WithWorkdir("/src/web")
 	npm = npm.WithEnvVariable("VERSION", Version)
-	npm = npm.Exec(dagger.ContainerExecOpts{
-		Args: []string{"cat", ".env"},
-	})
-	npm = npm.Exec(dagger.ContainerExecOpts{
-		Args: []string{"npm", "install", "--sass_binary_site=https://npm.taobao.org/mirrors/node-sass/"},
-	})
-	npm = npm.Exec(dagger.ContainerExecOpts{
-		Args: []string{"npm", "run", "build"},
-	})
-	build, err := npm.Stdout().Contents(ctx)
+	npm = npm.WithExec([]string{"cat", ".env"})
+	npm = npm.WithExec([]string{"npm", "install", "--sass_binary_site=https://npm.taobao.org/mirrors/node-sass/"})
+	npm = npm.WithExec([]string{"npm", "run", "build"})
+	build, err := npm.Stdout(ctx)
 	if err != nil {
 		return err
 	}
@@ -87,7 +81,7 @@ func buildBackend(ctx context.Context) error {
 	defer client.Close()
 
 	// 获取本地项目路径
-	src := client.Host().Workdir()
+	src := client.Host().Directory(".")
 	golang := client.Container().From("golang:1.19-alpine3.15")
 	golang = golang.WithMountedDirectory("/src", src).WithWorkdir("/src")
 	golang = golang.WithEnvVariable("GO111MODULE", "on")
@@ -97,14 +91,13 @@ func buildBackend(ctx context.Context) error {
 	golang = golang.WithEnvVariable("GOARCH", "amd64")
 	path := "dagger/backend/"
 	for _, target := range []string{"api", "commander", "agent"} {
-		golang = golang.Exec(dagger.ContainerExecOpts{
-			Args: []string{
-				"go",
-				"build",
-				"-ldflags", "-X main.version=" + Version,
-				"-o", path + target,
-				"cmd/" + target + "/main.go"},
-		})
+		golang = golang.WithExec([]string{
+			"go",
+			"build",
+			"-ldflags", "-X main.version=" + Version,
+			"-o", path + target,
+			"cmd/" + target + "/main.go"},
+		)
 	}
 	if _, err := golang.Directory(path).Export(ctx, path); err != nil {
 		return err
@@ -120,7 +113,7 @@ func buildAndPushImage(ctx context.Context) error {
 	}
 	defer client.Close()
 
-	src := client.Host().Workdir()
+	src := client.Host().Directory(".")
 	for _, v := range []string{"api", "commander", "agent"} {
 		docker := client.Container()
 		docker = docker.Build(src, dagger.ContainerBuildOpts{Dockerfile: "./scripts/dockerfiles/" + v + ".Dockerfile"})
@@ -162,16 +155,14 @@ func deploy(ctx context.Context) error {
 	}()
 
 	kubectl := client.Container().From("bitnami/kubectl")
-	kubeconfig := client.Host().Workdir().File("./scripts/kubeconf.yaml")
+	kubeconfig := client.Host().Directory(".").File("./scripts/kubeconf.yaml")
 	kubectl = kubectl.WithMountedFile("/.kube/config", kubeconfig)
-	deployments := client.Host().Workdir().Directory(dir)
+	deployments := client.Host().Directory(dir)
 	kubectl = kubectl.WithMountedDirectory("/tmp", deployments)
 	for _, f := range files {
-		kubectl = kubectl.Exec(dagger.ContainerExecOpts{
-			Args: []string{"apply", "-f", "/tmp/" + f, "-n", "k3s-apps"},
-		})
+		kubectl = kubectl.WithExec([]string{"apply", "-f", "/tmp/" + f, "-n", "k3s-apps"})
 	}
-	logs, err := kubectl.Stdout().Contents(ctx)
+	logs, err := kubectl.Stdout(ctx)
 	if err != nil {
 		return err
 	}
