@@ -15,6 +15,11 @@ var HackerTabs = []SiteTab{
 		Name: "最新",
 		Url:  "https://news.ycombinator.com/",
 	},
+	{
+		Tag:  "show",
+		Name: "作品展示",
+		Url:  "https://news.ycombinator.com/shownew",
+	},
 }
 
 type Hacker struct {
