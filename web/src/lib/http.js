@@ -1,13 +1,12 @@
 import axios from "axios";
-import * as ls from  "./ls"
 
 const client = axios.create({
-    baseURL: process.env.VUE_APP_URL,
+    baseURL: import.meta.env.VITE_APP_URL,
     withCredentials: true
 });
 
 client.interceptors.request.use(req => {
-    let token = ls.Get("token")
+    let token = localStorage.getItem(import.meta.env.VITE_TOKEN_KEY)
     if (token) {
         req.headers.Authorization = token;
     }

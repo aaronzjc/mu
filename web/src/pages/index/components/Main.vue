@@ -1,50 +1,40 @@
 <template>
-<main class="container">
-    <Navbar></Navbar>
-    <router-view></router-view>
-</main>
+    <main class="container">
+        <Navbar></Navbar>
+        <router-view></router-view>
+    </main>
 </template>
 
-<script>
-import Navbar from "./Navbar"
-import { Get } from "@/tools/http"
-import { Get as lsGet } from "@/tools/ls"
+<script setup>
+import Navbar from "./Navbar.vue"
+import { Get } from "@/lib/http"
 import { onMounted } from 'vue'
-import { useStore } from "vuex";
+import { useMainStore } from "@idx/store/main";
 
 const API = {
     LoginInfo: "/auth/info/index"
 }
 
-export default {
-    name: "Main",
-    setup() {
-        const store = useStore()
-        async function fetchUserInfo() {
-            // 如果本地没有用户cookie，不发送请求了。
-            let token = lsGet("token")
-            if (!token) {
-                return false
-            }
-            try {
-                let resp = await Get(API.LoginInfo)
-                if (resp.data.code == 10000) {
-                    let info = resp.data.data;
-                    await store.dispatch("account/initUser", {
-                        id: info.id,
-                        username: info.username,
-                        nickname: info.nickname,
-                        avatar: info.avatar
-                    });
-                }
-            } catch(err) {
-                // err happends
-            }
+const store = useMainStore()
+
+async function fetchUserInfo() {
+    // 如果本地没有用户cookie，不发送请求了。
+    let token = localStorage.getItem(import.meta.env.VITE_TOKEN_KEY)
+    if (!token) {
+        return false
+    }
+    try {
+        let resp = await Get(API.LoginInfo)
+        if (resp.data.code == 10000) {
+            let info = resp.data.data;
+            store.setUser({
+                username: info.username,
+                avatar: info.avatar
+            })
         }
-        onMounted(fetchUserInfo)
-    },
-    components: {
-        Navbar
+    } catch (err) {
+        // err happends
     }
 }
+onMounted(fetchUserInfo)
 </script>

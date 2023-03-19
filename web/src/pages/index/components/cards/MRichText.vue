@@ -13,14 +13,7 @@
 </div>
 </template>
 
-<script>
-import Opt from "./Opt"
-
-export default {
-    name: "MRichText",
-    props: ["idx", "item"],
-    components: {
-        Opt
-    }
-}
+<script setup>
+import Opt from "./Opt.vue"
+const props = defineProps(['idx', 'item'])
 </script>

@@ -1,9 +1,9 @@
 <template>
     <div class="hot card2">
-        <div class="hot-item" @click="redirect(item.origin_url)">
+        <div class="hot-item" @click="window.open(item.origin_url)">
             <div class="hot-cover">
                 <span class="rank">{{ idx+1 }}</span>
-                <img src="../../assets/video.jpg" alt="">
+                <img src="@idx/assets/video.jpg" alt="">
             </div>
             <div class="hot-content">
                 <div class="hot-title">
@@ -18,14 +18,6 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "MVideo",
-    props: ["idx", "item"],
-    methods: {
-        redirect(url) {
-            window.open(url)
-        },
-    }
-}
+<script setup>
+const props = defineProps(['idx', 'item'])
 </script>

@@ -1,0 +1,53 @@
+.is-divider {
+    display: flex;
+    align-items: center;
+    color: #aaa;
+    margin: 1rem 0;
+    font-size: $size-base * 0.85;
+    align-self: stretch;
+    gap: 1rem;
+    word-break: keep-all;
+    &::before,
+    &::after {
+        content: '';
+        width: 100%;
+        height: 1px;
+        background-color: #dadada;
+    }
+}
+
+.notice-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 999;
+    pointer-events: none;
+    background-color: transparent;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    .toast {
+        display: block;
+        background-color: $primary;
+        color: #fff;
+        padding: 0.5rem 2rem;
+        border-radius: $radius;
+        margin: 0.25rem 0;
+        z-index: auto;
+        animation-duration: 150ms;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+        &.danger {
+            background-color: $danger;
+        }
+        &.warning {
+            background-color: $warning;
+        }
+        &.success {
+            background-color: $success;
+        }
+    }
+}

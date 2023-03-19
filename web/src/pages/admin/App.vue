@@ -1,12 +1,7 @@
-<template>
-<section id="app">
-    <router-view></router-view>
-</section>
-</template>
-
-<script>
-export default {
-    name: 'App',
-    components: {}
-}
+<script setup>
+import { RouterView } from 'vue-router'
 </script>
+
+<template>
+    <RouterView />
+</template>
