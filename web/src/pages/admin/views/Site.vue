@@ -11,9 +11,6 @@
                             <p class="control">
                                 <a class="button is-primary">搜索</a>
                             </p>
-                            <p class="control">
-                                <button class="button is-info">新增</button>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -66,7 +63,7 @@
                                             <button class="button is-small is-primary" @click="router.push({name: 'siteEdit', query: {id: item.id}})">
                                                 <BasicIcon :name="mdiPencil"></BasicIcon>
                                             </button>
-                                            <button class="button is-small is-warning">
+                                            <button class="button is-small is-warning" @click="craw(item.id)">
                                                 <BasicIcon :name="mdiDownload"></BasicIcon>
                                             </button>
                                         </div>
@@ -84,12 +81,14 @@
 <script setup>
 import BasicIcon from '@adm/components/BasicIcon.vue'
 import BoxMain from '@adm/components/BoxMain.vue'
-import { mdiDownload, mdiPencil, mdiTable } from '@mdi/js'
+import { mdiDownload, mdiPencil } from '@mdi/js'
 
-import { Get } from "@/lib/http";
+import { Get, Post } from "@/lib/http";
 import { reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { nodeType, crawType } from '@adm/config';
+
+import {useToast} from '@adm/components/toast'
 
 const API = {
     list: "/admin/sites",
@@ -114,6 +113,20 @@ async function fetchList() {
             console.log(resp.data.msg);
             state.nodes = [];
             state.list = [];
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const Toast = useToast()
+async function craw(id) {
+    try {
+        let resp = await Post(API.craw(id))
+        if (resp.data.code === 10000) {
+            Toast.show('抓取成功')
+        } else {
+            Toast.error('抓取失败')
         }
     } catch (err) {
         console.log(err)
