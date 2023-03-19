@@ -91,7 +91,7 @@ func RegistStatic(r *gin.Engine) {
 	for _, v := range []string{"favicon.png", "index.manifest", "sw.js"} {
 		r.StaticFile(v, path+dist+v)
 	}
-	for _, v := range []string{"pwa", "static"} {
+	for _, v := range []string{"pwa", "assets"} {
 		r.Static("/"+v, path+dist+""+v)
 	}
 }

@@ -1,47 +1,32 @@
-/* styles */
-import "./scss/main.scss"
+import { createApp } from "vue";
+import App from "./App.vue";
+
+const app = createApp(App);
+
+/** 样式 */
+import "./scss/main.scss";
+
+/** 路由 */
+import router from "./router/router";
+app.use(router);
+
+import client from "@/lib/http";
+client.interceptors.response.use((resp) => {
+  let res = resp.data;
+  if (res.code === 10003) {
+    localStorage.removeItem(import.meta.env.VITE_TOKEN_KEY);
+    router.push({ name: "login" }).catch(() => {});
+    return Promise.reject(resp);
+  }
+  return resp;
+});
+
+/** 状态 */
+import { createPinia } from "pinia";
+const pinia = createPinia();
+app.use(pinia);
+
+app.mount("#app");
 
 /* register sw */
-import "./registerSW"
-
-import { createApp } from 'vue'
-import App from './App'
-
-const app = createApp(App)
-
-/* vue-router staff */
-import router from "./router/router";
-import client from "@/tools/http"
-import * as ls from "@/tools/ls"
-
-client.interceptors.response.use(resp => {
-    let res = resp.data;
-    if (res.code === 10003) {
-      ls.Del("token")
-      router.push({"name": "login"}).catch(() => {});
-      return Promise.reject(resp);
-    }
-
-    return resp;
-});
-  
-router.beforeEach((to, from, next) => {
-  let token = to.query.token
-
-  if (token != "" && token != undefined && token != null) {
-    ls.Set("token", token, -1)
-    router.replace({path: '/'})
-  } else {
-    next()
-  }
-});
-
-app.use(router)
-
-/* vuex staff */
-import { store } from "./store"
-
-app.use(store)
-
-/* mount #app */
-app.mount('#app')
+import "./registerSW";

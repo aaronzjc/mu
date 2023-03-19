@@ -1,34 +1,32 @@
-import { createApp } from 'vue'
-import App from './App'
+import { createApp } from "vue";
+import App from "./App.vue";
+import "./styles/main.scss";
 
-const app = createApp(App)
+const app = createApp(App);
 
-import * as ls from "@/tools/ls"
-import router from "./router/router"
+/** 路由 */
+import router from "./router";
+app.use(router);
 
-router.beforeEach((to, from, next) => {
-    let token = to.query.token;
 
-    if (token != "" && token != undefined && token != null) {
-        ls.Set("token", token, -1)
-        router.replace({path: '/'})
-    } else {
-        next()
-    }
+import client from "@/lib/http";
+client.interceptors.response.use((resp) => {
+  let res = resp.data;
+  if (res.code === 10003) {
+    router.push({ name: "login" }).catch(() => {});
+    return Promise.reject(resp);
+  }
+
+  return resp;
 });
 
-app.use(router)
+/** 全局状态管理 */
+import { createPinia } from "pinia";
+const pinia = createPinia();
+app.use(pinia);
 
-import client from "@/tools/http"
+/** 自定义组件 */
+import { Toast } from "@adm/components/toast";
+app.use(Toast);
 
-client.interceptors.response.use(resp => {
-    let res = resp.data;
-    if (res.code === 10003) {
-        router.push({"name": "login"}).catch(() => {});
-        return Promise.reject(resp);
-    }
-
-    return resp;
-});
-
-app.mount('#app')
+app.mount("#app");

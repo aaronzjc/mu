@@ -15,7 +15,7 @@
 
 <script>
 import { inject } from 'vue'
-import { Post } from "@/tools/http"
+import { Post } from "@/lib/http"
 
 const API = {
     add: "/api/favors",
