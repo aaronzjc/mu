@@ -76,6 +76,10 @@ func SetupRoute(app *gin.Engine) {
 		// 用户管理
 		user := handler.NewUser()
 		adminGroup.GET("/users", user.List)
+
+		// 在线人数
+		stat := handler.NewStat()
+		adminGroup.GET("/stats/online/list", stat.OnlineList)
 	}
 
 	// 静态资源托管

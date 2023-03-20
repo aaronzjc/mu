@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -38,6 +39,37 @@ func (ctr *Stat) Online(c *gin.Context) {
 	}
 	Resp(c, constant.CodeSuccess, "success", map[string]string{
 		"count": string(body),
+	})
+}
+
+func (ctr *Stat) OnlineList(c *gin.Context) {
+	onlineList := []string{}
+	svcUrl := config.Get().GetServiceUrl(constant.SvcOnline)
+	if svcUrl == "" {
+		Resp(c, constant.CodeSuccess, "success", map[string][]string{
+			"onlineList": onlineList,
+		})
+		return
+	}
+	url := fmt.Sprintf("%s/online/%s/dump", svcUrl, "mu")
+	resp, err := http.Get(url)
+	if err != nil {
+		Resp(c, constant.CodeSuccess, "success", map[string][]string{
+			"onlineList": onlineList,
+		})
+		return
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		Resp(c, constant.CodeSuccess, "success", map[string][]string{
+			"onlineList": onlineList,
+		})
+		return
+	}
+	json.Unmarshal(body, &onlineList)
+	Resp(c, constant.CodeSuccess, "success", map[string][]string{
+		"onlineList": onlineList,
 	})
 }
 
