@@ -5,6 +5,7 @@ import (
 	"github.com/aaronzjc/mu/internal/application/service"
 	"github.com/aaronzjc/mu/internal/application/store"
 	"github.com/aaronzjc/mu/internal/constant"
+	"github.com/aaronzjc/mu/internal/core/site"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,7 +32,7 @@ func (f *Favor) List(ctx *gin.Context) {
 	}
 
 	favorList := dto.FavorList{
-		Tabs: []string{},
+		Tabs: []*dto.IndexSite{},
 		List: []*dto.Favor{},
 	}
 
@@ -40,7 +41,17 @@ func (f *Favor) List(ctx *gin.Context) {
 		Resp(ctx, constant.CodeSuccess, "success", favorList)
 		return
 	}
-	favorList.Tabs = sites
+	for _, v := range sites {
+		site, ok := site.SiteMap[v]
+		if !ok {
+			continue
+		}
+		favorList.Tabs = append(favorList.Tabs, &dto.IndexSite{
+			Name: site.GetSite().Name,
+			Key:  site.GetSite().Key,
+			Tags: []dto.Tag{},
+		})
+	}
 
 	site := r.Site
 	if site == "" {

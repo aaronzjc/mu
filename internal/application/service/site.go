@@ -19,7 +19,7 @@ import (
 type SiteService interface {
 	Init(context.Context) error
 	ListOfIndex(context.Context) ([]*dto.IndexSite, error)
-	News(context.Context, string, string) (*dto.News, error)
+	News(context.Context, int, string, string) (*dto.News, error)
 
 	Upsert(context.Context, *dto.Site) error
 	Del(context.Context, int) error
@@ -137,20 +137,23 @@ func (s *SiteServiceImpl) ListOfIndex(ctx context.Context) ([]*dto.IndexSite, er
 	return idxSites, nil
 }
 
-func (s *SiteServiceImpl) News(ctx context.Context, k string, kk string) (*dto.News, error) {
+func (s *SiteServiceImpl) News(ctx context.Context, loginUser int, k string, kk string) (*dto.News, error) {
 	var sn dto.News
 	news, err := s.repo.GetNews(ctx, k, kk)
 	if err != nil {
 		return nil, err
 	}
-	favors, _ := s.favorRepo.Get(ctx, &dto.Query{
-		Query: "`user_id` = ? AND `site` = ?",
-		Args:  []interface{}{0, k},
-	})
 	mp := make(map[string]bool)
-	for _, v := range favors {
-		mp[v.Key] = true
+	if loginUser > 0 {
+		favors, _ := s.favorRepo.Get(ctx, &dto.Query{
+			Query: "`user_id` = ? AND `site` = ?",
+			Args:  []interface{}{loginUser, k},
+		})
+		for _, v := range favors {
+			mp[v.Key] = true
+		}
 	}
+
 	sn.T = news.T
 	for _, v := range news.List {
 		_, ok := mp[v.Key]

@@ -71,7 +71,7 @@ func (s *FavorServiceImpl) UserFavors(ctx context.Context, uid int, site string,
 }
 
 func (s *FavorServiceImpl) UserFavorSites(ctx context.Context, uid int, keyword string) ([]string, error) {
-
+	var sites []string
 	q := &dto.Query{}
 	if keyword == "" {
 		q.Query = "`user_id` = ?"
@@ -81,12 +81,8 @@ func (s *FavorServiceImpl) UserFavorSites(ctx context.Context, uid int, keyword 
 		q.Args = []interface{}{uid, "%" + keyword + "%"}
 	}
 
-	sites := s.repo.Sites(ctx, q)
-	if len(sites) == 0 {
-		return sites, nil
-	}
-
-	return nil, nil
+	sites = s.repo.Sites(ctx, q)
+	return sites, nil
 }
 
 func NewFavorService(repo repo.FavorRepo) *FavorServiceImpl {

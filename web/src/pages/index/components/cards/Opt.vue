@@ -13,7 +13,7 @@
 </div>
 </template>
 
-<script>
+<script setup>
 import { inject } from 'vue'
 import { Post } from "@/lib/http"
 
@@ -24,51 +24,41 @@ const API = {
     }
 }
 
-export default {
-    name: "Opt",
-    props: ["idx", "item"],
-    setup(props) {
-        const site = inject("currentSite")
-        const updateMark = inject("updateMark")
+const props = defineProps(["idx", "item"])
 
-        async function add() {
-            let resp = await Post(API.Add, {
-                key: props.item.key,
-                url: props.item.origin_url,
-                title: props.item.title,
-                site: site.value
-            })
-            if (resp.data.code != 10000) {
-                alert("操作失败");
-                return false;
-            }
-            updateMark(props.idx, true)
-        }
-        async function remove() {
-            let resp = await Post(API.del(props.item.id), {
-                key: props.item.key,
-                site: site
-            })
-            if (resp.data.code != 10000) {
-                alert("操作失败");
-                return false;
-            }
-            updateMark(props.idx, false)
-        }
+const site = inject("currentSite")
+const updateMark = inject("updateMark")
 
-        let toggle = () => {
-            if (props.item.mark == true) {
-                remove()
-            } else {
-                add()
-            }
-        }
+async function add() {
+    let resp = await Post(API.add, {
+        key: props.item.key,
+        url: props.item.origin_url,
+        title: props.item.title,
+        site: site.value
+    })
+    if (resp.data.code != 10000) {
+        alert("操作失败");
+        return false;
+    }
+    updateMark(props.idx, true)
+}
+async function remove() {
+    let resp = await Post(API.del(props.item.id), {
+        key: props.item.key,
+        site: site
+    })
+    if (resp.data.code != 10000) {
+        alert("操作失败");
+        return false;
+    }
+    updateMark(props.idx, false)
+}
 
-        return {
-            add,
-            remove,
-            toggle
-        }
+let toggle = () => {
+    if (props.item.mark == true) {
+        remove()
+    } else {
+        add()
     }
 }
 </script>

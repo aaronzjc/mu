@@ -5,11 +5,11 @@
                 <ul>
                     <li v-for="(tab, idx) in tabs" :class="{ 'is-active': idx == state.selected.tab }"
                         @click="switchTab(idx)" :key="idx">
-                        <a href="#">{{ tab.name }}</a>
+                        <a>{{ tab.name }}</a>
                     </li>
                 </ul>
             </div>
-            <div class="tags" v-if="tabs[state.selected.tab].tags.length > 0">
+            <div class="tags" v-if="tabs[state.selected.tab].tags.length > 0"> 
                 <span @click="switchTag(idx)" :class="['tag', { 'is-light-dark': idx == state.selected.tag }]"
                     v-for="(tag, idx) in tabs[state.selected.tab]['tags']" :key="idx">{{ tag.name }}</span>
             </div>

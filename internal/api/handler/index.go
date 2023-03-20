@@ -21,7 +21,8 @@ func (idx *Index) News(ctx *gin.Context) {
 	k := ctx.Request.URL.Query()["key"][0]
 	kk := ctx.Request.URL.Query()["hkey"][0]
 
-	news, _ := idx.svc.News(ctx, k, kk)
+	loginUser := ctx.GetInt(constant.LoginKey)
+	news, _ := idx.svc.News(ctx, loginUser, k, kk)
 	if news == nil {
 		news = &dto.News{List: make([]dto.NewsItem, 0)}
 	}

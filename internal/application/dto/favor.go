@@ -26,6 +26,6 @@ func (f *Favor) FillByModel(favor model.Favor) *Favor {
 }
 
 type FavorList struct {
-	Tabs []string `json:"tabs"`
-	List []*Favor `json:"list"`
+	Tabs []*IndexSite `json:"tabs"`
+	List []*Favor     `json:"list"`
 }
