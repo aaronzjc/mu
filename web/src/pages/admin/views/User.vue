@@ -24,6 +24,7 @@
                                     <th></th>
                                     <th>ID</th>
                                     <th>用户名</th>
+                                    <th>昵称</th>
                                     <th>认证方式</th>
                                     <th>认证时间</th>
                                 </tr>
@@ -37,6 +38,7 @@
                                     </td>
                                     <td>{{ item.id }}</td>
                                     <td>{{ item.username }}</td>
+                                    <td>{{ item.nickname }}</td>
                                     <td><span class="tag is-light">{{ item.auth_type }}</span></td>
                                     <td><span class="tag is-light">{{ item.auth_time }}</span></td>
                                 </tr>
